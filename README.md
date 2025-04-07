@@ -1,6 +1,6 @@
 # Modele HTML <aside> Modèle de site HTML/CSS </aside>
 
-Ce projet est un modèle de site web **simple en HTML et CSS**, hébergé sur **La Forge des Communs Numériques Éducatifs**.
+Ce projet est [un modèle de site web](https://iaconellicyril.forge.apps.education.fr/modele-html/) **simple en HTML et CSS**, hébergé sur **La Forge des Communs Numériques Éducatifs**.
 
 ## 🔧 Comment l'utiliser
 
