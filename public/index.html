@@ -17,9 +17,9 @@
                 <li>Créez une bifurcation de <a href="https://forge.apps.education.fr/iaconellicyril/modele-html" target="_blank">ce projet dans la Forge</a>. Cette étape est bien détaillée <a href="https://docs.forge.apps.education.fr/modeles/tutoriels/tutoriel-site-simple/08_tuto_fork/1_fork_projet/" target="_blank">ici</a>.
                 <img src="images/bifurcation.png" style="max-width:100%;">
                 </li>
-                <li>Modifiez la page <code>index.html</code>, ajoutez des pages HTML, ajoutez des images, modifiez le <code>style.css</code>, etc. en utilisant éventuellement le WebIDE.</li>
+                <li>Modifiez la page <code>public/index.html</code>, ajoutez des pages HTML, ajoutez des images, modifiez le <code>public/style.css</code>, etc. en utilisant éventuellement le WebIDE.</li>
                 <li>Conservez et ne modifiez pas le document <code>.gitlab-ci.yml</code></li>
-                <li>Simplifiez l'url de votre site-web en décohant <i>Utiliser un domaine unique</i> dans <code>Déploiement</code> → <code>Pages</code>.
+                <li>Simplifiez l'url de votre site-web en décochant <i>Utiliser un domaine unique</i> dans <code>Déploiement</code> → <code>Pages</code>.
                 <img src="images/domaine.png" style="max-width:100%;"></li>
             </ol>
             
@@ -32,11 +32,14 @@
         <section>
             <h2>De quoi est constitué le dépôt ?</h2>
             <ul>
-                <li>d'une page <code>index.html</code> (que vous pouvez modifier)</li>
-                <li>de quelques images (que vous pouvez supprimer)</li>
                 <li>d'un document <code>readme.md</code> (à modifier pour présenter votre projet sur le dépôt)</li>
-                <li>d’un style <code>style.css</code> (que vous pouvez modifier)</li>
                 <li>d’un document <code>.gitlab-ci.yml</code> (à conserver et ne pas modifier)</li>
+                <li>du dossier <code>public/</code> contenant votre site web, et contenant lui-même :</li>
+                <ul>
+                  <li>une page <code>index.html</code> (que vous pouvez modifier)</li>
+                  <li>quelques images (que vous pouvez supprimer)</li>
+                  <li>un style <code>style.css</code> (que vous pouvez modifier)</li>
+                </ul>
             </ul>
         </section>
 
@@ -48,7 +51,7 @@
 
         <section>
             <h2>Licence</h2>
-            <p>Ce projet est sous licence <strong>Creative Commons</strong>.</p>
+            <p>Ce projet est sous licence <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.fr"><strong>Creative Commons</strong></a>.</p>
         </section>
     </main>
 
