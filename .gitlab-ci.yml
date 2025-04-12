@@ -1,6 +1,7 @@
 pages:
   script:
-    - echo "Rien à faire…"
+  - mkdir -p public
+  - cp index.html public/
   artifacts:
     paths:
       - public
