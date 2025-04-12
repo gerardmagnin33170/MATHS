@@ -1,8 +1,6 @@
 pages:
   script:
-    - mkdir .public
-    - cp -r * .public
-    - mv .public public
+    - echo "Rien à faire…"
   artifacts:
     paths:
       - public
