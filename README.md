@@ -25,6 +25,18 @@ Vous pouvez ajouter :
 - D'autres pages HTML (`public/page2.html`, `public/contact.html`...)
 - Des ressources comme des polices, des icônes, etc.
 
+
+## Au sujet du `.gitlab-ci` (⚠️ pour les curieux du code ⚠️)
+
+- Dans le `.gitlab-ci` de [cette vidéo](https://tube-numerique-educatif.apps.education.fr/w/vAMyPdtMNRPe8c4TuqhX1d), le job *pages* déplace manuellement les fichiers dans un dossier `public` via une suite de commandes (`mkdir`, `cp`, `rm`, `mv`). Il définit aussi explicitement un stage et l’environnement.
+- Dans celui de ce modèle, aucune manipulation de fichiers : on suppose que le dossier `public` est déjà présent dans le dépôt. Le script se limite à un message, et l’essentiel est que `public` soit publié en artefact.
+
+Pourquoi celui de ce modèle est préférable :
+- Plus simple, lisible et maintenable.
+- Respecte davantage la philosophie GitLab Pages : *ne pas copier tout le dépôt*, mais uniquement ce qui doit être publié.
+- Réduit les risques d’erreurs et le temps d’exécution.
+- Évite la duplication inutile de fichiers, ce qui économise de l’espace et accélère les pipelines.
+
 ## 📄 Licence
 
 Ce projet est sous licence [**Creative Commons Zero v1.0 Universal**](https://creativecommons.org/publicdomain/zero/1.0/deed.fr) — vous pouvez le réutiliser, le modifier et le partager en citant l’auteur.
