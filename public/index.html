@@ -662,7 +662,7 @@
                 step.setAttribute('ondrop', 'deposerDansMarche(event)');
                 
                 // Calcul de la hauteur de la marche (Progression quadratique validée)
-                const progression = Math.pow(((i + 1) / numSteps), 1);
+                const progression = Math.pow(((i + 1) / numSteps), 2);
                 
                 // Hauteur de la marche = (Progression * Hauteur disponible) + Offset de base
                 const minStepHeight = (progression * baseHeightAvailableForProgression) + heightOffset;
