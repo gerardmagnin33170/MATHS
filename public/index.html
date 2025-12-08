@@ -2,61 +2,984 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Modèle de site HTML</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressivité IA - Outil de planification (Escalier Natif)</title>
+    <style>
+        :root {
+            --couleur-fond: #f4f6f8;
+            --couleur-texte: #2c3e50;
+            --police-principale: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            
+            /* Couleurs pour les cartes et bordures */
+            --border-col-savoir: #f1c40f;   /* Jaune */
+            --border-col-enjeux: #3498db;   /* Bleu */
+            --border-col-apprendre: #2ecc71; /* Vert */
+            
+            /* Couleurs pour le tableau d'impression / synthèse */
+            --bg-col-savoir: #fff9e6;
+            --bg-col-enjeux: #eef6fb;
+            --bg-col-apprendre: #e8f8f5;
+            --bg-col-niveau: #34495e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--police-principale);
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #fff;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h1 { font-size: 1.8rem; color: #2c3e50; margin-bottom: 0.5rem; }
+        .sous-titre { font-size: 1.1rem; color: #7f8c8d; font-weight: 400; }
+
+        .barre-outils {
+            background: #fff;
+            padding: 15px 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .barre-outils .btn-print {
+            border-color: #3498db;
+            color: #3498db;
+            background: #fff;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+        .barre-outils .btn-print:hover { background: #3498db; color: #fff; }
+
+        button {
+            padding: 8px 16px;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        button:hover { background: #e2e6ea; }
+        
+        .hidden {
+            display: none !important;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            /* Disposition verticale */
+            display: flex;
+            gap: 20px; 
+        }
+
+        /* --- ZONE BANQUE (Colonne Gauche) --- */
+        .zone-banque {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+            
+            width: 300px; 
+            min-width: 300px;
+            height: fit-content; 
+            margin-bottom: 0; 
+        }
+
+        .titre-section {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #zone-banque {
+            min-height: 120px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+        }
+
+        #zone-banque.drop-target {
+            background: #e8f5e9;
+            border-color: #4CAF50;
+        }
+
+        /* --- CONTENEUR DES ESCALIERS (Colonne Droite) --- */
+        .tabs-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+            
+            flex-grow: 1;
+        }
+        
+        /* --- CARTES ET ÉTIQUETTES --- */
+        .carte-item {
+            padding: 10px 14px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: grab;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 100%; 
+            border-left-width: 4px;
+            user-select: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .carte-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .carte-item:active { cursor: grabbing; }
+        .carte-item.hidden { display: none; }
+
+        .carte-savoir { border-left-color: var(--border-col-savoir); }
+        .carte-enjeux { border-left-color: var(--border-col-enjeux); }
+        .carte-apprendre { border-left-color: var(--border-col-apprendre); }
+
+        /* --- STRUCTURE À ONGLETS --- */
+        .tabs-header {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95rem; /* Rétabli 0.95rem pour que les 4 onglets tiennent */
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button.active {
+            background: #fff;
+        }
+
+        .tab-button.savoir.active {
+            color: #7d6608;
+            border-bottom-color: var(--border-col-savoir);
+        }
+         .tab-button.enjeux.active {
+            color: #1a5490;
+            border-bottom-color: var(--border-col-enjeux);
+        }
+         .tab-button.apprendre.active {
+            color: #1a7a4e;
+            border-bottom-color: var(--border-col-apprendre);
+        }
+         .tab-button.synthese.active {
+            color: var(--couleur-texte);
+            border-bottom-color: #7f8c8d;
+        }
+
+
+        .tabs-content {
+            padding: 10px; 
+            min-height: 720px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* --- ESCALIER VISUEL --- */
+        .stair-container {
+            position: relative;
+            width: 100%;
+            height: 700px; 
+            padding: 20px; 
+        }
+
+        .stair-step {
+            position: absolute;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            
+            height: auto !important; 
+            min-height: 50px; 
+            
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start;
+            justify-content: flex-start; 
+            overflow-y: auto; 
+            padding-top: 40px; 
+            padding-bottom: 10px; 
+            gap: 5px; 
+        }
+
+        .tab-pane.savoir .stair-step {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+        }
+
+        .tab-pane.enjeux .stair-step {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        }
+
+        .tab-pane.apprendre .stair-step {
+            background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+        }
+
+        .stair-step.drop-target {
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+            transform: scale(1.02);
+        }
+
+        .step-label {
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            pointer-events: none;
+            position: absolute; 
+            top: 5px;
+            left: 5px;
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        /* --- CARTES DÉPOSÉES (Tiles) --- */
+        .dropped-tile {
+            position: static; 
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            cursor: grab; 
+            transition: all 0.3s ease;
+            z-index: 10;
+            user-select: none;
+            background: #fff;
+            border-left-width: 4px;
+            border-left-style: solid;
+            width: 100%; 
+            min-height: 40px;
+        }
+        
+        /* Styles pour le Drag & Drop Natif */
+        .carte-item[draggable="true"]:active,
+        .dropped-tile[draggable="true"]:active {
+            cursor: grabbing;
+        }
+        .carte-item.drag-source,
+        .dropped-tile.drag-source {
+            opacity: 0.5;
+            border: 2px dashed #000;
+        }
+
+        .dropped-tile.savoir { border-left-color: var(--border-col-savoir); }
+        .dropped-tile.enjeux { border-left-color: var(--border-col-enjeux); }
+        .dropped-tile.apprendre { border-left-color: var(--border-col-apprendre); }
+        .carte-savoir { border-left-color: var(--border-col-savoir); }
+        .carte-enjeux { border-left-color: var(--border-col-enjeux); }
+        .carte-apprendre { border-left-color: var(--border-col-apprendre); }
+        
+        /* --- Styles du Tableau de Synthèse (Écran) --- */
+        #tableau-synthese {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        #tableau-synthese th, #tableau-synthese td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            vertical-align: top;
+            text-align: left;
+        }
+        #tableau-synthese th {
+            background-color: #f8f8f8;
+            text-align: center;
+        }
+        .synthese-col-niveau {
+            background-color: var(--bg-col-niveau);
+            color: #fff;
+            font-weight: bold;
+            text-align: center !important;
+            width: 100px;
+        }
+        .synthese-cell-savoir { background-color: var(--bg-col-savoir); }
+        .synthese-cell-enjeux { background-color: var(--bg-col-enjeux); }
+        .synthese-cell-apprendre { background-color: var(--bg-col-apprendre); }
+
+        .synthese-card-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .synthese-card {
+            display: inline-block;
+            padding: 4px 8px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            background: #fff;
+            line-height: 1.2;
+        }
+        .synthese-card.savoir { border-left: 4px solid var(--border-col-savoir); }
+        .synthese-card.enjeux { border-left: 4px solid var(--border-col-enjeux); }
+        .synthese-card.apprendre { border-left: 4px solid var(--border-col-apprendre); }
+
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+
+        /* --- STYLE D'IMPRESSION (A3 PAYSAGE - TABLEAU) --- */
+        @media print {
+            @page {
+                size: A3 landscape;
+                margin: 1cm;
+            }
+            
+            body { 
+                background: white;
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important; 
+                display: block; /* S'assurer que le corps est visible */
+            }
+            
+            /* 1. Masquer l'interface principale */
+            body > *:not(#tableau-impression) {
+                display: none !important;
+            }
+            
+            /* 2. Afficher le conteneur d'impression pleine page */
+            #tableau-impression { 
+                display: block !important; 
+                position: relative;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0; /* Gérer les marges via @page */
+            }
+            
+            /* 3. Styles du tableau injecté (Quadrillage complet & Tailles A3) */
+            #tableau-impression h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+                font-weight: bold;
+                font-family: var(--police-principale);
+                text-align: center;
+            }
+            
+            #tableau-impression table { 
+                width: 100%; 
+                border-collapse: collapse; 
+            }
+            
+            /* Correction: Appliquer la bordure complète à toutes les cellules */
+            #tableau-impression th, #tableau-impression td { 
+                border: 1px solid #aaa !important; /* Bordure d'origine pour toutes les cellules */
+                padding: 5px; /* Padding d'origine */
+                font-size: 10pt; /* Taille de police d'origine */
+                vertical-align: top; 
+                line-height: 1.2;
+            }
+            
+            /* Styles des vignettes */
+            .print-card {
+                font-size: 9pt; /* Taille de police d'origine pour les cartes */
+                padding: 4px 8px;
+                border: 1px solid #aaa;
+                line-height: 1.2;
+                background: #fff;
+                border-left-width: 4px;
+            }
+
+            /* Conserver les couleurs de fond */
+            .print-col-niveau {
+                background-color: var(--bg-col-niveau) !important;
+                color: #fff !important;
+                font-weight: bold;
+                text-align: center;
+            }
+            .print-col-savoir { background-color: var(--bg-col-savoir) !important; }
+            .print-col-enjeux { background-color: var(--bg-col-enjeux) !important; }
+            .print-col-apprendre { background-color: var(--bg-col-apprendre) !important; }
+        }
+    </style>
 </head>
 <body>
+
     <header>
-        <h1>Modèle de site HTML codé en HTML/CSS sur La Forge des Communs Numériques Éducatifs</h1>
+        <h1>Progressivité IA - Élèves</h1>
+        <div class="sous-titre">Outil d'explicitation d'une progressivité des compétences</div>
     </header>
 
+    <div class="barre-outils">
+        <button onclick="reinitialiser()">Réinitialiser tout</button>
+        <button id="btn-print-tableau" class="btn-print hidden" onclick="imprimerTableau()">🖨️ Imprimer en Tableau</button>
+    </div>
+
     <main>
-        <section>
-            <h2>Comment procéder</h2>
-            <ol>
-                <li>Créez une bifurcation de <a href="https://forge.apps.education.fr/iaconellicyril/modele-html" target="_blank">ce projet dans la Forge</a>. Cette étape est bien détaillée <a href="https://docs.forge.apps.education.fr/modeles/tutoriels/tutoriel-site-simple/08_tuto_fork/1_fork_projet/" target="_blank">ici</a>.
-                <img src="images/bifurcation.png" style="max-width:100%;">
-                </li>
-                <li>Modifiez la page <code>public/index.html</code>, ajoutez des pages HTML, ajoutez des images, modifiez le <code>public/style.css</code>, etc. en utilisant éventuellement le WebIDE.</li>
-                <li>Conservez et ne modifiez pas le document <code>.gitlab-ci.yml</code></li>
-                <li>Simplifiez l'url de votre site-web en décochant <i>Utiliser un domaine unique</i> dans <code>Déploiement</code> → <code>Pages</code>.
-                <img src="images/domaine.png" style="max-width:100%;"></li>
-            </ol>
-            
-            <h3>Vidéo explicative pas à pas</h3>
-            <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"> 
-                <iframe title="Publier une application web statique (en 3min) sur La Forge des Communs Numériques Éducatifs" src="https://tube-sciences-technologies.apps.education.fr/videos/embed/117b6010-1bf6-43cc-9b89-8c39b0a3016e" allowfullscreen="" sandbox="allow-same-origin allow-scripts allow-popups" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" frameborder="0"></iframe>
+        <div id="zone-vignettes-wrapper" class="zone-banque">
+            <div class="titre-section">
+                <span>Banque de compétences à classer</span>
             </div>
-        </section>
+            <div id="zone-banque" ondragover="autoriserDepot(event)" ondrop="deposerDansBanque(event)"></div>
+        </div>
 
-        <section>
-            <h2>De quoi est constitué le dépôt ?</h2>
-            <ul>
-                <li>d'un document <code>readme.md</code> (à modifier pour présenter votre projet sur le dépôt)</li>
-                <li>d’un document <code>.gitlab-ci.yml</code> (à conserver et ne pas modifier)</li>
-                <li>du dossier <code>public/</code> contenant votre site web, et contenant lui-même :</li>
-                <ul>
-                  <li>une page <code>index.html</code> (que vous pouvez modifier)</li>
-                  <li>quelques images (que vous pouvez supprimer)</li>
-                  <li>un style <code>style.css</code> (que vous pouvez modifier)</li>
-                </ul>
-            </ul>
-        </section>
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-button savoir active" onclick="switchTab('savoir')">
+                    💡 Savoir
+                </button>
+                <button class="tab-button enjeux" onclick="switchTab('enjeux')">
+                    🛡️ Enjeux
+                </button>
+                <button class="tab-button apprendre" onclick="switchTab('apprendre')">
+                    🚀 Apprendre
+                </button>
+                 <button class="tab-button synthese" onclick="switchTab('synthese')">
+                    📋 Synthèse (Tableau)
+                </button>
+            </div>
 
-        <section>
-            <h2>Quand utiliser ce modèle ?</h2>
-            <p>Pour créer un site internet simple en HTML/CSS hébergé sur La Forge des Communs Numériques Éducatifs.</p>
-            <p>Pour créer une application web (des documents annexes, par exemple <code>script.js</code>, peuvent être ajoutés).</p>
-        </section>
+            <div class="tabs-content">
+                <div id="tab-savoir" class="tab-pane savoir active">
+                    <div class="stair-container" id="stair-savoir"></div>
+                </div>
 
-        <section>
-            <h2>Licence</h2>
-            <p>Ce projet est sous licence <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.fr"><strong>Creative Commons</strong></a>.</p>
-        </section>
+                <div id="tab-enjeux" class="tab-pane enjeux">
+                    <div class="stair-container" id="stair-enjeux"></div>
+                </div>
+
+                <div id="tab-apprendre" class="tab-pane apprendre">
+                    <div class="stair-container" id="stair-apprendre"></div>
+                </div>
+                 <div id="tab-synthese" class="tab-pane synthese">
+                    </div>
+            </div>
+        </div>
     </main>
 
     <footer>
-        <a href="https://forge.apps.education.fr/"><img src="https://forge.apps.education.fr/docs/communication/visuels/-/raw/main/logo/Logo_La_Forge_large.svg" style="background-color: aliceblue; max-height:5em;"></a>
+        <p>Auteur : Moi | Licence : <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3</a></p>
     </footer>
+
+    <div id="tableau-impression"></div>
+
+    <script>
+        const NIVEAUX = ["Sixième", "Cinquième", "Quatrième", "Troisième", "Seconde", "Première", "Terminale"];
+        const CATEGORIES_DATA = [
+            { id: "savoir", titre: "Savoir comment fonctionnent les IA", class: "print-col-savoir" },
+            { id: "enjeux", titre: "Identifier les enjeux des IA", class: "print-col-enjeux" },
+            { id: "apprendre", titre: "Apprendre avec les IA", class: "print-col-apprendre" }
+        ];
+
+        const DONNEES_CARTES = [
+            // Savoir (8 cartes)
+            { id: 11, cat: "savoir", texte: "Comprendre ce qu'est un algorithme, un token" },
+            { id: 12, cat: "savoir", texte: "Estimer le coût environnemental des IA" },
+            { id: 13, cat: "savoir", texte: "Comprendre les biais des réponses" },
+            { id: 14, cat: "savoir", texte: "Comprendre l'approche statistique" },
+            { id: 15, cat: "savoir", texte: "Comprendre l'entrainement des IA génératives" },
+            { id: 16, cat: "savoir", texte: "Distinguer IA adaptative et IA générative" },
+            { id: 17, cat: "savoir", texte: "Diversité des réponses selon le prompt" },
+            { id: 18, cat: "savoir", texte: "Connaitre le fonctionnement de l'auto-Tune" },
+            // Enjeux (8 cartes)
+            { id: 19, cat: "enjeux", texte: "Identifier des métiers impactés" },
+            { id: 20, cat: "enjeux", texte: "Choix éclairés (utiliser ou non)" },
+            { id: 21, cat: "enjeux", texte: "Importance de la vérification" },
+            { id: 22, cat: "enjeux", texte: "Identifier les usages favorisant l'autonomie" },
+            { id: 23, cat: "enjeux", texte: "Maîtrise des décisions humaine" },
+            { id: 24, cat: "enjeux", texte: "Préserver santé mentale et lien social" },
+            { id: 25, cat: "enjeux", texte: "Plagiat et IA" },
+            { id: 26, cat: "enjeux", texte: "Financement et IA souveraines" },
+            // Apprendre (10 cartes)
+            { id: 1, cat: "apprendre", texte: "Renforcer l'accessibilité linguistique" },
+            { id: 2, cat: "apprendre", texte: "Utiliser les IA pour mémoriser" },
+            { id: 3, cat: "apprendre", texte: "Confronter production personnelle à IA" },
+            { id: 4, cat: "apprendre", texte: "S'entraîner à l'oral en interaction" },
+            { id: 5, cat: "apprendre", texte: "Pistes d'amélioration production écrite" },
+            { id: 6, cat: "apprendre", texte: "Soumettre son travail pour approfondir" },
+            { id: 7, cat: "apprendre", texte: "Usages créatifs respectueux" },
+            { id: 8, cat: "apprendre", texte: "Créer des fiches de révision" },
+            { id: 9, cat: "apprendre", texte: "Générer cartes mentales / QCM" },
+            { id: 10, cat: "apprendre", texte: "Mettre en voix une leçon en LV" }
+        ];
+
+        const stairs = {
+            savoir: { container: null, steps: [] },
+            enjeux: { container: null, steps: [] },
+            apprendre: { container: null, steps: [] }
+        };
+
+        const droppedTiles = {};
+        let currentTab = 'savoir';
+
+        // Constantes pour le calcul de la hauteur d'offset
+        const TILE_HEIGHT_ESTIMATE = 50; 
+        
+        const TILE_COUNTS = {
+            'savoir': DONNEES_CARTES.filter(c => c.cat === 'savoir').length,
+            'enjeux': DONNEES_CARTES.filter(c => c.cat === 'enjeux').length,
+            'apprendre': DONNEES_CARTES.filter(c => c.cat === 'apprendre').length
+        };
+
+        // --- GESTION DES ONGLETS ---
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.tab-button.${tabName}`).classList.add('active');
+            
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            const activePane = document.getElementById(`tab-${tabName}`);
+            activePane.classList.add('active');
+            
+            const zoneBanqueElement = document.getElementById('zone-vignettes-wrapper');
+            const tabsContainerElement = document.querySelector('.tabs-container');
+            const printButton = document.getElementById('btn-print-tableau');
+
+            
+            if (tabName === 'synthese') {
+                genererTableauSynthese();
+                // Masquer la banque de vignettes et étendre le conteneur des onglets
+                zoneBanqueElement.classList.add('hidden');
+                tabsContainerElement.classList.add('full-width');
+                printButton.classList.remove('hidden'); // Afficher le bouton Imprimer
+            } else {
+                // Afficher la banque de vignettes et restaurer la largeur
+                zoneBanqueElement.classList.remove('hidden');
+                tabsContainerElement.classList.remove('full-width');
+                printButton.classList.add('hidden'); // Masquer le bouton Imprimer
+                
+                createStairs(tabName);
+            }
+            filterBanque(tabName);
+        }
+
+        function filterBanque(category) {
+            const cartes = document.querySelectorAll('#zone-banque .carte-item');
+            cartes.forEach(carte => {
+                const catCarte = carte.dataset.cat;
+                if (category === 'synthese') {
+                    carte.classList.add('hidden'); // Masquer toutes les cartes si synthèse est actif
+                } else if (catCarte === category) {
+                    carte.classList.remove('hidden');
+                } else {
+                    carte.classList.add('hidden');
+                }
+            });
+        }
+
+        // --- INITIALISATION ---
+        function init() {
+            ['savoir', 'enjeux', 'apprendre'].forEach(cat => {
+                stairs[cat].container = document.getElementById(`stair-${cat}`);
+            });
+
+            genererEtiquettes();
+            setupDragAndDrop(); 
+            
+            switchTab('savoir'); 
+        }
+
+        // --- CRÉATION DE L'ESCALIER ---
+        function createStairs(category) {
+            const container = stairs[category].container;
+            if (!container) return; 
+
+            container.innerHTML = ''; 
+            
+            const numSteps = NIVEAUX.length; 
+            const paddingValue = 5;
+            const totalPadding = 2 * paddingValue;
+            
+            const containerWidth = container.offsetWidth - totalPadding; 
+            const containerHeight = container.offsetHeight - totalPadding; 
+            
+            const stepWidth = (containerWidth * 0.98) / numSteps; 
+            
+            stairs[category].steps = [];
+            
+            // --- Calcul de l'Offset Dynamique pour la Marche la plus Basse (Sixième) ---
+            const totalCategoryTiles = TILE_COUNTS[category];
+            const requiredHeightForOffset = (totalCategoryTiles * TILE_HEIGHT_ESTIMATE) + 50; // Hauteur requise + padding/marge
+            
+            const heightOffset = requiredHeightForOffset; 
+            
+            const baseHeightAvailableForProgression = containerHeight - heightOffset;
+            
+            for (let i = 0; i < numSteps; i++) {
+                const step = document.createElement('div');
+                step.className = 'stair-step';
+                step.dataset.step = i;
+                step.dataset.category = category;
+                
+                step.setAttribute('ondragover', 'autoriserDepot(event)');
+                step.setAttribute('ondrop', 'deposerDansMarche(event)');
+                
+                // Calcul de la hauteur de la marche (Progression quadratique validée)
+                const progression = Math.pow(((i + 1) / numSteps), 1);
+                
+                // Hauteur de la marche = (Progression * Hauteur disponible) + Offset de base
+                const minStepHeight = (progression * baseHeightAvailableForProgression) + heightOffset;
+                const left = i * stepWidth;
+                
+                // Calcul du TOP
+                const top = containerHeight - minStepHeight + paddingValue; 
+                
+                step.style.left = left + paddingValue + 'px'; 
+                step.style.top = top + 'px';
+                step.style.width = stepWidth + 'px';
+                
+                // Fixer la hauteur de la marche
+                step.style.minHeight = minStepHeight + 'px'; 
+                
+                const label = document.createElement('div');
+                label.className = 'step-label';
+                label.textContent = NIVEAUX[i];
+                step.appendChild(label);
+                
+                container.appendChild(step);
+                
+                const newStepObj = {
+                    element: step,
+                    index: i,
+                    left: left + paddingValue, 
+                    top: top, 
+                    width: stepWidth,
+                    minHeight: minStepHeight,
+                    tiles: [] 
+                };
+                stairs[category].steps.push(newStepObj);
+                
+                // RESTAURATION des cartes déposées
+                Object.values(droppedTiles).forEach(tile => {
+                    const tileStepIndex = parseInt(tile.dataset.stepIndex);
+                    const tileCategory = tile.dataset.category;
+
+                    if (tileCategory === category && tileStepIndex === i) {
+                        step.appendChild(tile);
+                        newStepObj.tiles.push({ id: tile.id, element: tile });
+                        
+                        tile.setAttribute('draggable', 'true');
+                        tile.setAttribute('ondragstart', 'glisser(event)');
+                        
+                        tile.style.position = 'static';
+                        tile.style.transform = 'none';
+                    }
+                });
+            }
+        }
+
+        function genererEtiquettes() {
+            const zoneBanque = document.getElementById('zone-banque');
+            zoneBanque.innerHTML = '';
+            
+            DONNEES_CARTES.forEach(c => {
+                const carte = document.createElement('div');
+                carte.className = `carte-item carte-${c.cat}`;
+                carte.id = `c-${c.id}`;
+                
+                carte.setAttribute('draggable', 'true');
+                carte.setAttribute('ondragstart', 'glisser(event)');
+                
+                carte.dataset.cat = c.cat;
+                carte.dataset.text = c.texte;
+                carte.dataset.tileId = `tile-${c.id}`; 
+                carte.textContent = c.texte;
+                zoneBanque.appendChild(carte);
+            });
+        }
+        
+        // --- DRAG AND DROP NATIF (LOGIQUE) ---
+        
+        function setupDragAndDrop() {
+            document.addEventListener('dragstart', function(e) {
+                e.target.classList.add('drag-source');
+                e.dataTransfer.setData("text/id", e.target.id); 
+                e.dataTransfer.setData("text/cat", e.target.dataset.cat); 
+            });
+
+            document.addEventListener('dragend', function(e) {
+                e.target.classList.remove('drag-source');
+                document.querySelectorAll('.stair-step, #zone-banque').forEach(el => {
+                    el.classList.remove('drop-target');
+                });
+            });
+        }
+
+        function glisser(ev) { 
+             // Fonction appelée par ondragstart
+        }
+
+        function autoriserDepot(ev) { 
+            ev.preventDefault();
+            const target = ev.target.closest('.stair-step, #zone-banque');
+            if (target) {
+                document.querySelectorAll('.stair-step, #zone-banque').forEach(el => el.classList.remove('drop-target'));
+                target.classList.add('drop-target');
+            }
+        }
+        
+        function deposerDansMarche(ev) {
+            ev.preventDefault();
+            const id = ev.dataTransfer.getData("text/id");
+            const itemCat = ev.dataTransfer.getData("text/cat");
+            const draggedElement = document.getElementById(id);
+            let targetStepElement = ev.target.closest('.stair-step');
+
+            if (!targetStepElement || !draggedElement) return;
+
+            const category = targetStepElement.dataset.category;
+            const stepIndex = parseInt(targetStepElement.dataset.step);
+
+            if (itemCat !== category) return; 
+
+            if (draggedElement.classList.contains('carte-item')) {
+                draggedElement.classList.add('hidden');
+                createDroppedTile(draggedElement, category, stepIndex);
+            } else if (draggedElement.classList.contains('dropped-tile')) {
+                const oldStepIndex = parseInt(draggedElement.dataset.stepIndex);
+                moveDroppedTile(draggedElement, category, oldStepIndex, stepIndex);
+            }
+            targetStepElement.classList.remove('drop-target');
+        }
+
+        function deposerDansBanque(ev) {
+            ev.preventDefault();
+            const id = ev.dataTransfer.getData("text/id");
+            const draggedElement = document.getElementById(id);
+            const targetBanque = ev.target.closest('#zone-banque');
+
+            if (!targetBanque || !draggedElement.classList.contains('dropped-tile')) return;
+            
+            const tileId = draggedElement.id;
+            const stepIndex = parseInt(draggedElement.dataset.stepIndex);
+            const category = draggedElement.dataset.category;
+            
+            removeTile(tileId, category, stepIndex);
+            
+            const originalId = `c-${tileId.split('-')[1]}`; 
+            const originalTile = document.getElementById(originalId);
+
+            if (originalTile) {
+                originalTile.classList.remove('hidden');
+                filterBanque(currentTab); 
+            }
+            
+            draggedElement.remove();
+            targetBanque.classList.remove('drop-target');
+        }
+        
+        // --- GESTION DES CARTES (Création, Mouvement, Suppression) ---
+        function createDroppedTile(originalTile, category, stepIndex) {
+            const step = stairs[category].steps[stepIndex];
+            const originalNumId = originalTile.id.split('-')[1]; 
+            const tileId = `tile-${originalNumId}`; 
+            
+            const tile = document.createElement('div');
+            tile.className = `dropped-tile ${category}`;
+            tile.id = tileId; 
+            tile.textContent = originalTile.dataset.text;
+
+            tile.setAttribute('draggable', 'true');
+            tile.setAttribute('ondragstart', 'glisser(event)');
+
+            tile.dataset.tileId = tileId;
+            tile.dataset.stepIndex = stepIndex;
+            tile.dataset.category = category;
+            tile.dataset.text = originalTile.dataset.text;
+            tile.dataset.cat = category;
+            
+            step.element.appendChild(tile);
+            tile.style.position = 'static'; 
+            
+            step.tiles.push({ id: tileId, element: tile });
+            droppedTiles[tileId] = tile;
+        }
+
+        function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
+            const tileId = tile.id;
+            const oldStep = stairs[category].steps[oldStepIndex];
+            const newStep = stairs[category].steps[newStepIndex];
+            
+            oldStep.tiles = oldStep.tiles.filter(t => t.id !== tileId);
+            
+            newStep.element.appendChild(tile);
+            
+            tile.dataset.stepIndex = newStepIndex;
+            
+            newStep.tiles.push({ id: tileId, element: tile });
+            
+            tile.style.position = 'static';
+            tile.style.transform = 'none';
+        }
+
+        function removeTile(tileId, category, stepIndex) {
+            const step = stairs[category].steps[stepIndex];
+            const tile = droppedTiles[tileId];
+            
+            if (tile) {
+                delete droppedTiles[tileId];
+                step.tiles = step.tiles.filter(t => t.id !== tileId);
+            }
+        }
+
+        // --- FONCTION: Génération du Tableau de Synthèse dans l'onglet ---
+        function genererTableauSynthese() {
+            const container = document.getElementById('tab-synthese');
+            // 1. Organiser les données par Niveau et Catégorie
+            const tableauData = {}; 
+            NIVEAUX.forEach(niveau => {
+                tableauData[niveau] = { savoir: [], enjeux: [], apprendre: [] };
+            });
+
+            Object.values(droppedTiles).forEach(tile => {
+                const category = tile.dataset.category;
+                const stepIndex = parseInt(tile.dataset.stepIndex);
+                const niveau = NIVEAUX[stepIndex];
+                
+                if (niveau) {
+                    tableauData[niveau][category].push({
+                        texte: tile.dataset.text,
+                        cat: category
+                    });
+                }
+            });
+
+            // 2. Générer le HTML du tableau
+            let htmlTable = `
+                <table id="tableau-synthese">
+                    <thead>
+                        <tr>
+                            <th class="synthese-col-niveau">Niveau</th>
+                            <th class="synthese-cell-savoir">${CATEGORIES_DATA.find(c => c.id === 'savoir').titre}</th>
+                            <th class="synthese-cell-enjeux">${CATEGORIES_DATA.find(c => c.id === 'enjeux').titre}</th>
+                            <th class="synthese-cell-apprendre">${CATEGORIES_DATA.find(c => c.id === 'apprendre').titre}</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            
+            NIVEAUX.forEach(niveau => {
+                htmlTable += `<tr>
+                    <td class="synthese-col-niveau">${niveau}</td>`;
+                
+                CATEGORIES_DATA.forEach(cat => {
+                    const cartes = tableauData[niveau][cat.id];
+                    htmlTable += `<td class="synthese-cell-${cat.id}">
+                        <div class="synthese-card-wrapper">`;
+                    
+                    cartes.forEach(carte => {
+                        htmlTable += `<div class="synthese-card ${carte.cat}">${carte.texte}</div>`;
+                    });
+                    
+                    htmlTable += `</div></td>`;
+                });
+                
+                htmlTable += `</tr>`;
+            });
+            
+            htmlTable += `
+                    </tbody>
+                </table>`;
+            
+            container.innerHTML = htmlTable;
+        }
+
+
+        // --- NOUVELLE FONCTION: Impression en Tableau (Optimisée pour la fenêtre principale) ---
+        function imprimerTableau() {
+            // 1. Assure que le tableau de synthèse est généré dans le DOM visible
+            genererTableauSynthese();
+            
+            const tableauDom = document.getElementById('tableau-synthese');
+            const printContainer = document.getElementById('tableau-impression');
+            
+            if (!tableauDom || !printContainer) return;
+            
+            // 2. Cloner le contenu et le préparer avec le titre pour l'impression
+            const tableauContentHtml = `
+                <h1 style="text-align:center; margin-bottom: 20px;">Matrice de Progressivité IA - Compétences Élèves</h1>
+                ${tableauDom.outerHTML}`;
+            
+            // 3. Injecter le contenu dans le conteneur d'impression
+            printContainer.innerHTML = tableauContentHtml;
+            
+            // 4. Déclencher l'impression de la fenêtre actuelle
+            // Les règles @media print dans le CSS gèrent le masquage du reste du contenu
+            window.print();
+            
+            // 5. Nettoyer le conteneur d'impression après un court délai
+            setTimeout(() => { 
+                printContainer.innerHTML = '';
+            }, 100); 
+        }
+
+
+        // --- GESTION DES EVENEMENTS & DÉMARRAGE ---
+        function reinitialiser() {
+            Object.values(droppedTiles).forEach(tile => tile.remove());
+            Object.keys(droppedTiles).forEach(key => delete droppedTiles[key]);
+            
+            ['savoir', 'enjeux', 'apprendre'].forEach(cat => {
+                stairs[cat].steps.forEach(step => {
+                    step.tiles = [];
+                });
+            });
+            
+            genererEtiquettes();
+            switchTab(currentTab); 
+        }
+
+        window.addEventListener('resize', () => {
+            createStairs(currentTab);
+        });
+
+        init();
+    </script>
 </body>
 </html>
