@@ -1,7 +1,5 @@
 # Progression IA
 
-
-
 ## 📄 Licence
 
-Ce projet est sous licence [**Creative Commons Zero v1.0 Universal**](https://creativecommons.org/publicdomain/zero/1.0/deed.fr) — vous pouvez le réutiliser, le modifier et le partager en citant l’auteur.
+Ce projet est sous licence [**GNU General Public License v3.0**](https://www.gnu.org/licenses/gpl-3.0.html).
