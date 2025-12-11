@@ -221,7 +221,7 @@ main {
 .stair-container {
     position: relative;
     width: 100%;
-    height: 700px; 
+    height: 900px; 
     padding: 20px; 
 }
 
@@ -244,30 +244,47 @@ main {
 }
 
 .tab-pane.savoir .stair-step {
-    background: linear-gradient(135deg, var(--coul-savoir) 0%, var(--coul-savoir) 100%);
+    background: linear-gradient(135deg,
+        hsl(from var(--coul-savoir) h s calc(l + 20)) 0%,
+        hsl(from var(--coul-savoir) h s calc(l - 5)) 100%);
 }
 
 .tab-pane.savoir .stair-step[data-level="Sixième"], 
 .tab-pane.savoir .stair-step[data-level="Cinquième"] {
-    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    background: color-mix(in hsl,
+        hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
+        white 5%);
+    /* background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); */
 }
 
 .tab-pane.enjeux .stair-step {
-    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 10%);
+    background: linear-gradient(135deg,
+        hsl(from var(--coul-enjeux) h s calc(l + 20)) 0%,
+        hsl(from var(--coul-enjeux) h s calc(l - 5)) 100%);
+    /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 10%); */
 }
 
 .tab-pane.enjeux .stair-step[data-level="Sixième"], 
 .tab-pane.enjeux .stair-step[data-level="Cinquième"] {
-    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    background: color-mix(in hsl,
+        hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
+        white 5%);
+    /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); */
 }
 
 .tab-pane.apprendre .stair-step {
-    background: linear-gradient(135deg, #55efc4 0%, #00b894 10%);
+    background: linear-gradient(135deg,
+        hsl(from var(--coul-apprendre) h s calc(l + 20)) 0%,
+        hsl(from var(--coul-apprendre) h s calc(l - 5)) 100%);
+    /* background: linear-gradient(135deg, #55efc4 0%, #00b894 10%); */
 }
 
 .tab-pane.apprendre .stair-step[data-level="Sixième"], 
 .tab-pane.apprendre .stair-step[data-level="Cinquième"] {
-    background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
+    background: color-mix(in hsl,
+        hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
+        white 5%);
+    /* background: linear-gradient(135deg, #55efc4 0%, #00b894 100%); */
 }
 
 .stair-step.drop-target {

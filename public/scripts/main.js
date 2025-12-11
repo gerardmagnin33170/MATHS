@@ -1,3 +1,15 @@
+// Charger les cartes depuis le fichier YAML
+(async () => {
+  try {
+    const response = await fetch('../data/cartes.yaml');
+    const yamlText = await response.text();
+    const doc = jsyaml.load(yamlText);
+    console.log('Cartes chargées depuis YAML:', doc);
+  } catch (e) {
+    console.error('Erreur lors du chargement du YAML:', e);
+  }
+})();
+
 const NIVEAUX = ["Sixième", "Cinquième", "Quatrième", "Troisième", "Seconde", "Première", "Terminale"];
 const CATEGORIES_DATA = [
     { id: "savoir", titre: "Savoir comment fonctionnent les IA", class: "print-col-savoir" },
@@ -127,7 +139,7 @@ function createStairs(category) {
     
     const numSteps = NIVEAUX.length; 
     const paddingValue = 5;
-    const totalPadding = 2 * paddingValue;
+    const totalPadding = 5 * paddingValue;
     
     const containerWidth = container.offsetWidth - totalPadding; 
     const containerHeight = container.offsetHeight - totalPadding; 
@@ -138,7 +150,7 @@ function createStairs(category) {
     
     // --- Calcul de l'Offset Dynamique pour la Marche la plus Basse (Sixième) ---
     const totalCategoryTiles = TILE_COUNTS[category];
-    const requiredHeightForOffset = (totalCategoryTiles * TILE_HEIGHT_ESTIMATE) + 50; // Hauteur requise + padding/marge
+    const requiredHeightForOffset = ((totalCategoryTiles/2) * TILE_HEIGHT_ESTIMATE) + 50; // Hauteur requise + padding/marge
     
     const heightOffset = requiredHeightForOffset; 
     
@@ -157,7 +169,7 @@ function createStairs(category) {
         step.setAttribute('ondrop', 'deposerDansMarche(event)');
         
         // Calcul de la hauteur de la marche (Progression quadratique validée)
-        const progression = Math.pow(((i + 1) / numSteps), 2);
+        const progression = .9 * Math.pow(((i + 1) / numSteps), 1.75);
         
         // Hauteur de la marche = (Progression * Hauteur disponible) + Offset de base
         const minStepHeight = (progression * baseHeightAvailableForProgression) + heightOffset;
