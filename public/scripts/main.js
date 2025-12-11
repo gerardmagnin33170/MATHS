@@ -144,11 +144,14 @@ function createStairs(category) {
     
     const baseHeightAvailableForProgression = containerHeight - heightOffset;
     
+    const stepSpacing = 2; // Espacement entre les marches en px
+    
     for (let i = 0; i < numSteps; i++) {
         const step = document.createElement('div');
         step.className = 'stair-step';
         step.dataset.step = i;
         step.dataset.category = category;
+        step.dataset.level = NIVEAUX[i];
         
         step.setAttribute('ondragover', 'autoriserDepot(event)');
         step.setAttribute('ondrop', 'deposerDansMarche(event)');
@@ -158,14 +161,14 @@ function createStairs(category) {
         
         // Hauteur de la marche = (Progression * Hauteur disponible) + Offset de base
         const minStepHeight = (progression * baseHeightAvailableForProgression) + heightOffset;
-        const left = i * stepWidth;
+        const left = i * stepWidth + (i * stepSpacing);
         
         // Calcul du TOP
         const top = containerHeight - minStepHeight + paddingValue; 
         
         step.style.left = left + paddingValue + 'px'; 
         step.style.top = top + 'px';
-        step.style.width = stepWidth + 'px';
+        step.style.width = (stepWidth - stepSpacing) + 'px';
         
         // Fixer la hauteur de la marche
         step.style.minHeight = minStepHeight + 'px'; 

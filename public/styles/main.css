@@ -3,16 +3,21 @@
     --couleur-texte: #2c3e50;
     --police-principale: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     
+    /* Couleurs des catégories */
+    --coul-savoir: #f1c40f;   /* f39c12*/
+    --coul-enjeux: #3498db;   /* 2980b9 */
+    --coul-apprendre: #2ecc71; /* 27ae60 */   
+
     /* Couleurs pour les cartes et bordures */
-    --border-col-savoir: #f1c40f;   /* Jaune */
-    --border-col-enjeux: #3498db;   /* Bleu */
-    --border-col-apprendre: #2ecc71; /* Vert */
+    --coul-bord-savoir: hsl(from var(--coul-savoir) h s calc(l - 2)); /* Orange foncé */
+    --coul-bord-enjeux: hsl(from var(--coul-enjeux) h s calc(l - 5)); /* Bleu foncé */
+    --coul-bord-apprendre: hsl(from var(--coul-apprendre) h s calc(l - 5)); /* Vert foncé */
     
     /* Couleurs pour le tableau d'impression / synthèse */
-    --bg-col-savoir: #fff9e6;
-    --bg-col-enjeux: #eef6fb;
-    --bg-col-apprendre: #e8f8f5;
-    --bg-col-niveau: #34495e;
+    --coul-fond-tableau-savoir: hsl(from var(--coul-savoir) h s calc(l + 45));
+    --coul-fond-tableau-enjeux: hsl(from var(--coul-enjeux) h s calc(l + 45));
+    --coul-fond-tableau-apprendre: hsl(from var(--coul-apprendre) h s calc(l + 45));
+    --coul-fond-tableau-niveau: #34495e;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -75,7 +80,7 @@ button:hover { background: #e2e6ea; }
 main {
     flex: 1;
     padding: 2rem;
-    max-width: 1600px;
+    max-width: 1920px;
     margin: 0 auto;
     width: 100%;
     /* Disposition verticale */
@@ -154,9 +159,9 @@ main {
 .carte-item:active { cursor: grabbing; }
 .carte-item.hidden { display: none; }
 
-.carte-savoir { border-left-color: var(--border-col-savoir); }
-.carte-enjeux { border-left-color: var(--border-col-enjeux); }
-.carte-apprendre { border-left-color: var(--border-col-apprendre); }
+.carte-savoir { border-left-color: var(--coul-bord-savoir); }
+.carte-enjeux { border-left-color: var(--coul-bord-enjeux); }
+.carte-apprendre { border-left-color: var(--coul-bord-apprendre); }
 
 /* --- STRUCTURE À ONGLETS --- */
 .tabs-header {
@@ -183,15 +188,15 @@ main {
 
 .tab-button.savoir.active {
     color: #7d6608;
-    border-bottom-color: var(--border-col-savoir);
+    border-bottom-color: var(--coul-bord-savoir);
 }
     .tab-button.enjeux.active {
     color: #1a5490;
-    border-bottom-color: var(--border-col-enjeux);
+    border-bottom-color: var(--coul-bord-enjeux);
 }
     .tab-button.apprendre.active {
     color: #1a7a4e;
-    border-bottom-color: var(--border-col-apprendre);
+    border-bottom-color: var(--coul-bord-apprendre);
 }
     .tab-button.synthese.active {
     color: var(--couleur-texte);
@@ -235,18 +240,33 @@ main {
     overflow-y: auto; 
     padding-top: 40px; 
     padding-bottom: 10px; 
-    gap: 5px; 
+    gap: 5px;
 }
 
 .tab-pane.savoir .stair-step {
+    background: linear-gradient(135deg, var(--coul-savoir) 0%, var(--coul-savoir) 100%);
+}
+
+.tab-pane.savoir .stair-step[data-level="Sixième"], 
+.tab-pane.savoir .stair-step[data-level="Cinquième"] {
     background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
 }
 
 .tab-pane.enjeux .stair-step {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 10%);
+}
+
+.tab-pane.enjeux .stair-step[data-level="Sixième"], 
+.tab-pane.enjeux .stair-step[data-level="Cinquième"] {
     background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
 }
 
 .tab-pane.apprendre .stair-step {
+    background: linear-gradient(135deg, #55efc4 0%, #00b894 10%);
+}
+
+.tab-pane.apprendre .stair-step[data-level="Sixième"], 
+.tab-pane.apprendre .stair-step[data-level="Cinquième"] {
     background: linear-gradient(135deg, #55efc4 0%, #00b894 100%);
 }
 
@@ -299,12 +319,12 @@ main {
     border: 2px dashed #000;
 }
 
-.dropped-tile.savoir { border-left-color: var(--border-col-savoir); }
-.dropped-tile.enjeux { border-left-color: var(--border-col-enjeux); }
-.dropped-tile.apprendre { border-left-color: var(--border-col-apprendre); }
-.carte-savoir { border-left-color: var(--border-col-savoir); }
-.carte-enjeux { border-left-color: var(--border-col-enjeux); }
-.carte-apprendre { border-left-color: var(--border-col-apprendre); }
+.dropped-tile.savoir { border-left-color: var(--coul-bord-savoir); }
+.dropped-tile.enjeux { border-left-color: var(--coul-bord-enjeux); }
+.dropped-tile.apprendre { border-left-color: var(--coul-bord-apprendre); }
+.carte-savoir { border-left-color: var(--coul-bord-savoir); }
+.carte-enjeux { border-left-color: var(--coul-bord-enjeux); }
+.carte-apprendre { border-left-color: var(--coul-bord-apprendre); }
 
 /* --- Styles du Tableau de Synthèse (Écran) --- */
 #tableau-synthese {
@@ -324,15 +344,15 @@ main {
     text-align: center;
 }
 .synthese-col-niveau {
-    background-color: var(--bg-col-niveau);
+    background-color: var(--coul-fond-tableau-niveau);
     color: #fff;
     font-weight: bold;
     text-align: center !important;
     width: 100px;
 }
-.synthese-cell-savoir { background-color: var(--bg-col-savoir); }
-.synthese-cell-enjeux { background-color: var(--bg-col-enjeux); }
-.synthese-cell-apprendre { background-color: var(--bg-col-apprendre); }
+.synthese-cell-savoir { background-color: var(--coul-fond-tableau-savoir); }
+.synthese-cell-enjeux { background-color: var(--coul-fond-tableau-enjeux); }
+.synthese-cell-apprendre { background-color: var(--coul-fond-tableau-apprendre); }
 
 .synthese-card-wrapper {
     display: flex;
@@ -348,9 +368,9 @@ main {
     background: #fff;
     line-height: 1.2;
 }
-.synthese-card.savoir { border-left: 4px solid var(--border-col-savoir); }
-.synthese-card.enjeux { border-left: 4px solid var(--border-col-enjeux); }
-.synthese-card.apprendre { border-left: 4px solid var(--border-col-apprendre); }
+.synthese-card.savoir { border-left: 4px solid var(--coul-bord-savoir); }
+.synthese-card.enjeux { border-left: 4px solid var(--coul-bord-enjeux); }
+.synthese-card.apprendre { border-left: 4px solid var(--coul-bord-apprendre); }
 
 
 footer {
@@ -427,12 +447,12 @@ footer {
 
     /* Conserver les couleurs de fond */
     .print-col-niveau {
-        background-color: var(--bg-col-niveau) !important;
+        background-color: var(--coul-fond-tableau-niveau) !important;
         color: #fff !important;
         font-weight: bold;
         text-align: center;
     }
-    .print-col-savoir { background-color: var(--bg-col-savoir) !important; }
-    .print-col-enjeux { background-color: var(--bg-col-enjeux) !important; }
-    .print-col-apprendre { background-color: var(--bg-col-apprendre) !important; }
+    .print-col-savoir { background-color: var(--coul-fond-tableau-savoir) !important; }
+    .print-col-enjeux { background-color: var(--coul-fond-tableau-enjeux) !important; }
+    .print-col-apprendre { background-color: var(--coul-fond-tableau-apprendre) !important; }
 }
