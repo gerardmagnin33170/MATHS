@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 
 export default defineConfig({
   root: './public',
-  base: '/progression_ia/',
+  base: '/pole-socle-numerique/progression_ia/',
   build: {
     outDir: '../build',
     emptyOutDir: true,
