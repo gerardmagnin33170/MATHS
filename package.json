@@ -4,7 +4,7 @@
   },
   "scripts": {
     "dev": "vite --cors public",
-    "build": "vite build public --outdir build"
+    "build": "vite build"
   },
   "dependencies": {
     "js-yaml": "^4.1.1"
