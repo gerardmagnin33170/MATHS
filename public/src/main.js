@@ -4,6 +4,7 @@ import yaml from 'js-yaml';
 // CONSTANTES
 // =============================================================================
 const TILE_HEIGHT_ESTIMATE = 50;
+const ALERT_TIMEOUT = 5000;  // Durée d'affichage de l'alerte en millisecondes (5000 ms = 5 sec)
 
 // =============================================================================
 // VARIABLES GLOBALES
@@ -16,11 +17,12 @@ const droppedTiles = {};
 // =============================================================================
 // CLASSES DE DONNÉES
 // =============================================================================
-function Card(category, text) {
+function Card(category, text, minLevel = null) {
     Card.nextId = Card.nextId || 0;
     this.id = Card.nextId++;
     this.category = category;
     this.text = text;
+    this.minLevel = minLevel;  // null = sans restriction, 0 = 6ème+, 1 = 5ème+, 2 = 4ème+, etc.
 }
 
 function Category(id, title) {
@@ -65,7 +67,7 @@ async function loadCards() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const textYaml = await response.text();
         const data = yaml.load(textYaml);
-        const cards = data.map(item => new Card(item.categorie || '', item.texte || ''));
+        const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.minLevel || null));
         console.log('✓ Cartes chargées depuis YAML:', cards);
         sessionStorage.setItem('cartes', JSON.stringify(cards));
     } catch (e) {
@@ -89,6 +91,7 @@ function generateCards() {
         card.dataset.category = c.category;
         card.dataset.text = c.text;
         card.dataset.tileId = `tile-${c.id}`;
+        card.dataset.minLevel = c.minLevel !== null ? c.minLevel : '';
         
         // Contenu texte
         const textSpan = document.createElement('span');
@@ -207,9 +210,15 @@ function createStairs(category) {
                 tile.setAttribute('ondragstart', 'drag(event)');
                 tile.style.position = 'static';
                 tile.style.transform = 'none';
+                
+                // Vérifier l'alerte pour cette carte
+                checkTileAlert(category, tileStepIndex, tile.id);
             }
         });
     }
+    
+    // Mettre à jour l'affichage global des alertes
+    updateStairAlerts(category);
 }
 
 function generateSummaryTable() {
@@ -368,12 +377,16 @@ function createDroppedTile(originalTile, category, stepIndex) {
     tile.dataset.stepIndex = stepIndex;
     tile.dataset.category = category;
     tile.dataset.text = originalTile.dataset.text;
+    tile.dataset.minLevel = originalTile.dataset.minLevel || '';
     
     step.element.appendChild(tile);
     tile.style.position = 'static'; 
     
     step.tiles.push({ id: tileId, element: tile });
     droppedTiles[tileId] = tile;
+    
+    // Vérifier si une alerte doit être affichée
+    checkTileAlert(category, stepIndex, tileId);
 }
 
 function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
@@ -387,6 +400,9 @@ function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
     newStep.tiles.push({ id: tileId, element: tile });
     tile.style.position = 'static';
     tile.style.transform = 'none';
+    
+    // Vérifier les alertes
+    checkTileAlert(category, newStepIndex, tileId);
 }
 
 function removeTile(tileId, category, stepIndex) {
@@ -396,6 +412,61 @@ function removeTile(tileId, category, stepIndex) {
     if (tile) {
         delete droppedTiles[tileId];
         step.tiles = step.tiles.filter(t => t.id !== tileId);
+    }
+    
+    // Mettre à jour l'alerte si nécessaire
+    updateStairAlerts(category);
+}
+
+function checkTileAlert(category, stepIndex, tileId) {
+    // Vérifie si une carte est placée sur un niveau inférieur à minLevel
+    const tile = droppedTiles[tileId];
+    if (!tile) return;
+    
+    const minLevelStr = tile.dataset.minLevel;
+    if (minLevelStr === '' || minLevelStr === undefined || minLevelStr === null) {
+        // Pas de restriction
+        tile.classList.remove('tile-alert');
+    } else {
+        const minLevel = parseInt(minLevelStr);
+        if (stepIndex < minLevel) {
+            // Alerte : la carte est trop haute dans l'escalier
+            tile.classList.add('tile-alert');
+        } else {
+            tile.classList.remove('tile-alert');
+        }
+    }
+    
+    updateStairAlerts(category);
+}
+
+function updateStairAlerts(category) {
+    const container = stairs[category].container;
+    if (!container) return;
+    
+    // Supprimer les anciennes alertes
+    const oldAlerts = container.querySelectorAll('.stair-alert');
+    oldAlerts.forEach(alert => {
+        // Annuler le timeout s'il existe
+        if (alert.alertTimeout) {
+            clearTimeout(alert.alertTimeout);
+        }
+        alert.remove();
+    });
+    
+    // Vérifier s'il y a des cartes en alerte
+    const alertTiles = container.querySelectorAll('.dropped-tile.tile-alert');
+    if (alertTiles.length > 0) {
+        // Ajouter une alerte sur le côté droit du conteneur
+        const alert = document.createElement('div');
+        alert.className = 'stair-alert';
+        alert.innerHTML = `<div class="alert-icon">⚠️</div><div class="alert-text">${alertTiles.length} carte(s) mal placée(s)</div>`;
+        container.appendChild(alert);
+        
+        // Définir un timeout pour supprimer l'alerte après ALERT_TIMEOUT millisecondes
+        alert.alertTimeout = setTimeout(() => {
+            alert.remove();
+        }, ALERT_TIMEOUT);
     }
 }
 
@@ -567,6 +638,7 @@ function makeCardEditable(cardId) {
     if (!cardData) return;
     
     const originalText = cardData.text;
+    const originalMinLevel = cardData.minLevel !== null ? cardData.minLevel : '';
     const isNewCard = originalText.startsWith('Nouvelle carte ');
     
     // Masquer les éléments existants
@@ -584,6 +656,38 @@ function makeCardEditable(cardId) {
     input.className = 'card-edit-input';
     input.maxLength = 200;
     
+    // Conteneur pour le champ minLevel
+    const minLevelContainer = document.createElement('div');
+    minLevelContainer.className = 'card-edit-minlevel';
+    
+    const minLevelLabel = document.createElement('label');
+    minLevelLabel.htmlFor = `minlevel-${cardId}`;
+    minLevelLabel.textContent = 'Niveau minimum:';
+    
+    const minLevelSelect = document.createElement('select');
+    minLevelSelect.id = `minlevel-${cardId}`;
+    minLevelSelect.className = 'card-edit-minlevel-select';
+    
+    // Option pour pas de limite
+    const optionNone = document.createElement('option');
+    optionNone.value = '';
+    optionNone.textContent = '— Aucune limite';
+    minLevelSelect.appendChild(optionNone);
+    
+    // Options pour chaque niveau
+    const levelNames = ['6ème', '5ème', '4ème', '3ème', '2nde', '1ère', 'Terminale'];
+    levelNames.forEach((name, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = name + ' et au-delà';
+        minLevelSelect.appendChild(option);
+    });
+    
+    minLevelSelect.value = originalMinLevel;
+    
+    minLevelContainer.appendChild(minLevelLabel);
+    minLevelContainer.appendChild(minLevelSelect);
+    
     const saveBtn = document.createElement('button');
     saveBtn.textContent = '✓';
     saveBtn.className = 'card-edit-btn-save';
@@ -598,6 +702,7 @@ function makeCardEditable(cardId) {
     btnContainer.appendChild(cancelBtn);
     
     editContainer.appendChild(input);
+    editContainer.appendChild(minLevelContainer);
     editContainer.appendChild(btnContainer);
     
     // Insérer à la place de la carte
@@ -610,12 +715,15 @@ function makeCardEditable(cardId) {
         const newText = input.value.trim();
         if (newText.length > 0) {
             cardData.text = newText;
+            cardData.minLevel = minLevelSelect.value === '' ? null : parseInt(minLevelSelect.value);
             sessionStorage.setItem('cartes', JSON.stringify(CARDS));
         }
         editContainer.remove();
         cardElement.style.display = '';
         generateCards();
         filterBank(currentTab);
+        // Mettre à jour les alertes pour l'escalier actif
+        updateStairAlerts(currentTab);
     }
     
     function cancelEdit() {

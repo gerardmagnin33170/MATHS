@@ -1,5 +1,6 @@
 - categorie: savoir
   texte: Comprendre ce qu'est un algorithme, un token
+  minLevel: 3
 - categorie: savoir
   texte: Estimer le coût environnemental des IA
 - categorie: savoir
