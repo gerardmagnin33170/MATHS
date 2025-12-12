@@ -1,8 +1,20 @@
+image:
+  node:lts
 pages:
+  stage: deploy
+  cache:
+    key:
+      files:
+        - package-lock.json
+      prefix: npm
+    paths:
+      - node_modules/
   script:
-    - echo "Rien à faire…"
+    - npm install
+    - npm run build
+    - cp -a build/. public/
   artifacts:
     paths:
       - public
   rules:
-        - if: '$CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "main"'

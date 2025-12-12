@@ -14,8 +14,8 @@
     </header>
 
     <div class="barre-outils">
-        <button onclick="reinitialiser()">Réinitialiser tout</button>
-        <button id="btn-print-tableau" class="btn-print hidden" onclick="imprimerTableau()">🖨️ Imprimer en Tableau</button>
+        <button onclick="reset()">Réinitialiser tout</button>
+        <button id="btn-print-tableau" class="btn-print hidden" onclick="printTable()">🖨️ Imprimer en Tableau</button>
     </div>
 
     <main>
@@ -23,7 +23,7 @@
             <div class="titre-section">
                 <span>Banque de compétences à classer</span>
             </div>
-            <div id="zone-banque" ondragover="autoriserDepot(event)" ondrop="deposerDansBanque(event)"></div>
+            <div id="zone-banque" ondragover="allowDrop(event)" ondrop="dropOnBank(event)"></div>
         </div>
 
         <div class="tabs-container">
@@ -66,7 +66,6 @@
 
     <div id="tableau-impression"></div>
 
-    <script src="scripts/js-yaml.min.js"></script>
-    <script src="scripts/main.js"></script>
+    <script type="module" src="src/main.js"></script>
 </body>
 </html>

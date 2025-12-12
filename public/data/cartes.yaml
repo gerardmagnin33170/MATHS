@@ -1,52 +1,52 @@
-- cat: savoir
+- categorie: savoir
   texte: Comprendre ce qu'est un algorithme, un token
-- cat: savoir
+- categorie: savoir
   texte: Estimer le coût environnemental des IA
-- cat: savoir
+- categorie: savoir
   texte: Comprendre les biais des réponses
-- cat: savoir
+- categorie: savoir
   texte: Comprendre l'approche statistique
-- cat: savoir
+- categorie: savoir
   texte: Comprendre l'entrainement des IA génératives
-- cat: savoir
+- categorie: savoir
   texte: Distinguer IA adaptative et IA générative
-- cat: savoir
+- categorie: savoir
   texte: Diversité des réponses selon le prompt
-- cat: savoir
+- categorie: savoir
   texte: Connaitre le fonctionnement de l'auto-Tune
-- cat: enjeux
+- categorie: enjeux
   texte: Identifier des métiers impactés
-- cat: enjeux
+- categorie: enjeux
   texte: Choix éclairés (utiliser ou non)
-- cat: enjeux
+- categorie: enjeux
   texte: Importance de la vérification
-- cat: enjeux
+- categorie: enjeux
   texte: Identifier les usages favorisant l'autonomie
-- cat: enjeux
+- categorie: enjeux
   texte: Maîtrise des décisions humaine
-- cat: enjeux
+- categorie: enjeux
   texte: Préserver santé mentale et lien social
-- cat: enjeux
+- categorie: enjeux
   texte: Plagiat et IA
-- cat: enjeux
+- categorie: enjeux
   texte: Financement et IA souveraines
-- cat: apprendre
+- categorie: apprendre
   texte: Renforcer l'accessibilité linguistique
-- cat: apprendre
+- categorie: apprendre
   texte: Utiliser les IA pour mémoriser
-- cat: apprendre
+- categorie: apprendre
   texte: Confronter production personnelle à IA
-- cat: apprendre
+- categorie: apprendre
   texte: S'entraîner à l'oral en interaction
-- cat: apprendre
+- categorie: apprendre
   texte: Pistes d'amélioration production écrite
-- cat: apprendre
+- categorie: apprendre
   texte: Soumettre son travail pour approfondir
-- cat: apprendre
+- categorie: apprendre
   texte: Usages créatifs respectueux
-- cat: apprendre
+- categorie: apprendre
   texte: Créer des fiches de révision
-- cat: apprendre
+- categorie: apprendre
   texte: Générer cartes mentales / QCM
-- cat: apprendre
+- categorie: apprendre
   texte: Mettre en voix une leçon en LV
