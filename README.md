@@ -115,15 +115,10 @@ Requiert des modifications aux fichiers YAML, structure HTML et CSS :
 3. Ajoutez `<div id="stair-{categoryid}"></div>` à `public/index.html`
 4. Ajoutez les variables de couleur de catégorie à `public/styles/main.css`
 
-Voir copilot-instructions.md pour des conseils architecturaux détaillés.
-
 ## Tests et débogage
 
 ### Vérifier les erreurs console
 Ouvrez DevTools du navigateur (F12) → onglet Console. Surveillez les erreurs d'analyse YAML ou les fichiers de données manquants.
-
-### Tester la mise en page responsive
-DevTools → Toggle Device Toolbar (Ctrl+Shift+M) → testez les tailles téléphone/tablette.
 
 ### Imprimer la vue de synthèse
 1. Cliquez sur l'onglet "Synthèse"
