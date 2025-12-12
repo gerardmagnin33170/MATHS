@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Fond blanc -->
+  <rect width="64" height="64" fill="#ffffff"/>
+  
+  <!-- Escalier en trois marches (progressivité) -->
+  <!-- Marche 1 (Savoir - jaune) -->
+  <rect x="8" y="44" width="16" height="12" fill="#f1c40f" stroke="#e6a800" stroke-width="1.5"/>
+  
+  <!-- Marche 2 (Enjeux - bleu) -->
+  <rect x="24" y="32" width="16" height="12" fill="#3498db" stroke="#2980b9" stroke-width="1.5"/>
+  
+  <!-- Marche 3 (Apprendre - vert) -->
+  <rect x="40" y="20" width="16" height="12" fill="#2ecc71" stroke="#27ae60" stroke-width="1.5"/>
+  
+  <!-- Petit symbole IA (brain/neural network) en haut -->
+  <circle cx="48" cy="12" r="3" fill="#e74c3c"/>
+  <circle cx="44" cy="8" r="2" fill="#e74c3c"/>
+  <circle cx="52" cy="8" r="2" fill="#e74c3c"/>
+  <line x1="48" y1="12" x2="44" y2="8" stroke="#e74c3c" stroke-width="1"/>
+  <line x1="48" y1="12" x2="52" y2="8" stroke="#e74c3c" stroke-width="1"/>
+</svg>
