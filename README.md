@@ -18,7 +18,7 @@ cd progressivite_ia
 
 2. Installer les dépendances :
 ```bash
-npm install
+npm instal
 ```
 
 Cela installe Vite (outil de build) et js-yaml (parseur YAML pour le chargement des données).
