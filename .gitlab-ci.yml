@@ -1,5 +1,4 @@
-image:
-  node:lts
+image: node:lts
 pages:
   stage: deploy
   cache:
@@ -10,9 +9,10 @@ pages:
     paths:
       - node_modules/
   script:
-    - npm install
+    - npm ci
     - npm run build
-    - cp -a build/. public/
+    - rm -rf public
+    - mv build public
   artifacts:
     paths:
       - public
