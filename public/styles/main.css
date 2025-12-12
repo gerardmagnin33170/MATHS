@@ -61,6 +61,26 @@ h1 { font-size: 1.8rem; color: #2c3e50; margin-bottom: 0.5rem; }
 }
 .barre-outils .btn-print:hover { background: #3498db; color: #fff; }
 
+.edit-mode-controls {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.btn-edit-mode,
+.btn-lock-mode {
+    background-color: #7f8c8d;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-weight: 500;
+}
+
+.btn-edit-mode:hover,
+.btn-lock-mode:hover {
+    background-color: #5a6c7d;
+}
+
 button {
     padding: 8px 16px;
     border: 1px solid #ccc;
@@ -124,6 +144,200 @@ main {
 #zone-banque.drop-target {
     background: #e8f5e9;
     border-color: #4CAF50;
+}
+
+.banque-actions {
+    display: flex;
+    justify-content: center;
+    padding: 10px 15px;
+    gap: 10px;
+}
+
+.btn-new-card {
+    padding: 10px 18px;
+    background-color: var(--coul-bord-savoir);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    display: none;
+}
+
+.btn-new-card:hover {
+    background-color: hsl(from var(--coul-bord-savoir) h s calc(l - 5));
+}
+
+.btn-new-card:active {
+    transform: scale(0.98);
+}
+
+/* --- ÉDITION DE CARTES --- */
+.carte-item.card-editing {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    min-width: 250px;
+    background-color: #fff9e6;
+}
+
+.card-edit-input {
+    padding: 8px 10px;
+    border: 2px solid #f1c40f;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    font-family: inherit;
+}
+
+.card-edit-input:focus {
+    outline: none;
+    border-color: #e6b800;
+    box-shadow: 0 0 4px rgba(241, 196, 15, 0.5);
+}
+
+/* Couleurs d'input selon la catégorie */
+.card-edit-container.savoir .card-edit-input {
+    border-color: var(--coul-bord-savoir);
+}
+
+.card-edit-container.savoir .card-edit-input:focus {
+    border-color: hsl(47.9, 85.5%, 38.9%);
+    box-shadow: 0 0 4px rgba(241, 196, 15, 0.4);
+}
+
+.card-edit-container.enjeux .card-edit-input {
+    border-color: var(--coul-bord-enjeux);
+}
+
+.card-edit-container.enjeux .card-edit-input:focus {
+    border-color: hsl(204, 70%, 43%);
+    box-shadow: 0 0 4px rgba(52, 152, 219, 0.4);
+}
+
+.card-edit-container.apprendre .card-edit-input {
+    border-color: var(--coul-bord-apprendre);
+}
+
+.card-edit-container.apprendre .card-edit-input:focus {
+    border-color: hsl(141, 71%, 38%);
+    box-shadow: 0 0 4px rgba(46, 204, 113, 0.4);
+}
+
+.card-edit-buttons {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+
+.card-edit-btn-save,
+.card-edit-btn-cancel {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.card-edit-btn-save {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.card-edit-btn-save:hover {
+    background-color: #45a049;
+}
+
+.card-edit-btn-cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+.card-edit-btn-cancel:hover {
+    background-color: #da190b;
+}
+
+/* --- CARTES AVEC ACTIONS --- */
+.carte-item {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
+}
+
+.carte-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    word-break: break-word;
+}
+
+.carte-actions {
+    display: none;
+    flex-direction: row;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.carte-item:hover .carte-actions {
+    display: flex;
+}
+
+.carte-action-btn {
+    flex: 1;
+    padding: 4px 6px;
+    border: none;
+    background-color: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+.carte-edit-btn {
+    color: #f39c12;
+}
+
+.carte-edit-btn:hover {
+    background-color: rgba(243, 156, 18, 0.1);
+}
+
+.carte-delete-btn {
+    color: #e74c3c;
+}
+
+.carte-delete-btn:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+/* --- CONTENEUR D'ÉDITION DE CARTE --- */
+.card-edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background-color: #fff9e6 !important;
+    min-width: 250px;
+    border-left: 4px solid var(--coul-bord-savoir);
+}
+
+.card-edit-container.savoir {
+    background-color: hsl(47.9, 100%, 95%) !important;
+    border-left-color: var(--coul-bord-savoir);
+}
+
+.card-edit-container.enjeux {
+    background-color: hsl(204, 100%, 95%) !important;
+    border-left-color: var(--coul-bord-enjeux);
+}
+
+.card-edit-container.apprendre {
+    background-color: hsl(141, 100%, 95%) !important;
+    border-left-color: var(--coul-bord-apprendre);
 }
 
 /* --- CONTENEUR DES ESCALIERS (Colonne Droite) --- */
@@ -221,7 +435,7 @@ main {
 .stair-container {
     position: relative;
     width: 100%;
-    height: 900px; 
+    height: 850px; 
     padding: 20px; 
 }
 
@@ -347,6 +561,7 @@ main {
 #tableau-synthese {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
     font-size: 0.9rem;
     margin-top: 10px;
 }
@@ -365,7 +580,7 @@ main {
     color: #fff;
     font-weight: bold;
     text-align: center !important;
-    width: 100px;
+    width: 120px;
 }
 .synthese-cell-savoir { background-color: var(--coul-fond-tableau-savoir); }
 .synthese-cell-enjeux { background-color: var(--coul-fond-tableau-enjeux); }

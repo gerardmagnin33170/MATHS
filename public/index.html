@@ -16,6 +16,10 @@
     <div class="barre-outils">
         <button onclick="reset()">Réinitialiser tout</button>
         <button id="btn-print-tableau" class="btn-print hidden" onclick="printTable()">🖨️ Imprimer en Tableau</button>
+        <div class="edit-mode-controls">
+            <button id="btn-edit-mode" class="btn-edit-mode">✏️ Mode édition</button>
+            <button id="btn-lock-mode" class="btn-lock-mode hidden">🔒 Verrouiller</button>
+        </div>
     </div>
 
     <main>
@@ -24,6 +28,9 @@
                 <span>Banque de compétences à classer</span>
             </div>
             <div id="zone-banque" ondragover="allowDrop(event)" ondrop="dropOnBank(event)"></div>
+            <div class="banque-actions">
+                <button id="btn-new-card" class="btn-new-card">➕ Créer une carte vierge</button>
+            </div>
         </div>
 
         <div class="tabs-container">

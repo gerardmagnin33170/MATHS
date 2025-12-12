@@ -10,6 +10,7 @@ const TILE_HEIGHT_ESTIMATE = 50;
 // =============================================================================
 let LEVELS, CATEGORIES, CARDS, TILE_COUNTS, stairs;
 let currentTab = 'savoir';
+let editMode = false;  // Mode édition des cartes
 const droppedTiles = {};
 
 // =============================================================================
@@ -87,8 +88,51 @@ function generateCards() {
         card.setAttribute('ondragstart', 'drag(event)');
         card.dataset.category = c.category;
         card.dataset.text = c.text;
-        card.dataset.tileId = `tile-${c.id}`; 
-        card.textContent = c.text;
+        card.dataset.tileId = `tile-${c.id}`;
+        
+        // Contenu texte
+        const textSpan = document.createElement('span');
+        textSpan.className = 'carte-text';
+        textSpan.textContent = c.text;
+        
+        // Conteneur des actions
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'carte-actions';
+        if (!editMode) {
+            actionsDiv.classList.add('hidden');
+        }
+        
+        // Bouton éditer
+        const editBtn = document.createElement('button');
+        editBtn.className = 'carte-action-btn carte-edit-btn';
+        editBtn.textContent = '✏️';
+        editBtn.title = 'Éditer';
+        editBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (editMode) {
+                makeCardEditable(c.id);
+            }
+        });
+        
+        // Bouton supprimer
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'carte-action-btn carte-delete-btn';
+        deleteBtn.textContent = '🗑️';
+        deleteBtn.title = 'Supprimer';
+        deleteBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (editMode) {
+                deleteCard(c.id);
+            }
+        });
+        
+        actionsDiv.appendChild(editBtn);
+        actionsDiv.appendChild(deleteBtn);
+        
+        card.appendChild(textSpan);
+        card.appendChild(actionsDiv);
         cardBank.appendChild(card);
     });
 }
@@ -383,6 +427,28 @@ function switchTab(tabName) {
         createStairs(tabName);
     }
     filterBank(tabName);
+    updateNewCardButtonColor(tabName);
+}
+
+function updateNewCardButtonColor(category) {
+    const newCardBtn = document.getElementById('btn-new-card');
+    if (!newCardBtn) return;
+    
+    // Mapping des couleurs selon la catégorie
+    const colorMap = {
+        'savoir': 'hsl(from var(--coul-savoir) h s calc(l - 2))',
+        'enjeux': 'hsl(from var(--coul-enjeux) h s calc(l - 5))',
+        'apprendre': 'hsl(from var(--coul-apprendre) h s calc(l - 5))'
+    };
+    
+    // Appliquer les styles CSS avec les variables
+    if (category === 'savoir') {
+        newCardBtn.style.backgroundColor = 'hsl(47.9, 85.5%, 48.9%)';
+    } else if (category === 'enjeux') {
+        newCardBtn.style.backgroundColor = 'hsl(204, 70%, 53%)';
+    } else if (category === 'apprendre') {
+        newCardBtn.style.backgroundColor = 'hsl(141, 71%, 48%)';
+    }
 }
 
 function filterBank(category) {
@@ -396,6 +462,189 @@ function filterBank(category) {
         } else {
             card.classList.add('hidden');
         }
+    });
+}
+
+// =============================================================================
+// GESTION DU MODE ÉDITION
+// =============================================================================
+function toggleEditMode() {
+    editMode = true;
+    
+    // Afficher les boutons d'action
+    document.querySelectorAll('.carte-actions').forEach(actions => {
+        actions.classList.remove('hidden');
+    });
+    
+    // Mettre à jour l'interface des boutons
+    document.getElementById('btn-edit-mode').classList.add('hidden');
+    document.getElementById('btn-lock-mode').classList.remove('hidden');
+    
+    // Afficher le bouton de création de carte (s'il existe)
+    const newCardBtn = document.getElementById('btn-new-card');
+    if (newCardBtn) {
+        newCardBtn.style.display = 'block';
+    }
+}
+
+function lockEditMode() {
+    editMode = false;
+    
+    // Masquer les boutons d'action
+    document.querySelectorAll('.carte-actions').forEach(actions => {
+        actions.classList.add('hidden');
+    });
+    
+    // Annuler toute édition en cours
+    document.querySelectorAll('.card-edit-container').forEach(container => {
+        container.remove();
+    });
+    document.querySelectorAll('.carte-item').forEach(card => {
+        card.style.display = '';
+    });
+    
+    // Mettre à jour l'interface des boutons
+    document.getElementById('btn-lock-mode').classList.add('hidden');
+    document.getElementById('btn-edit-mode').classList.remove('hidden');
+    
+    // Masquer le bouton de création de carte (s'il existe)
+    const newCardBtn = document.getElementById('btn-new-card');
+    if (newCardBtn) {
+        newCardBtn.style.display = 'none';
+    }
+}
+
+// =============================================================================
+// CRÉATION DE CARTE VIERGE
+// =============================================================================
+function createEmptyCard() {
+    // Déterminer la prochaine id disponible
+    const maxId = Math.max(...CARDS.map(c => c.id), 0);
+    const newId = maxId + 1;
+    
+    // Créer une nouvelle carte
+    const newCard = new Card(currentTab, `Nouvelle carte ${newId}`);
+    newCard.id = newId;
+    CARDS.push(newCard);
+    
+    // Ajouter au sessionStorage
+    sessionStorage.setItem('cartes', JSON.stringify(CARDS));
+    
+    // Générer les cartes et focus sur la nouvelle
+    generateCards();
+    filterBank(currentTab);
+    makeCardEditable(newId);
+}
+
+function deleteCard(cardId) {
+    // Confirmation de suppression
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette carte ?')) {
+        return;
+    }
+    
+    // Trouver et supprimer la carte
+    const idx = CARDS.findIndex(c => c.id === cardId);
+    if (idx > -1) {
+        CARDS.splice(idx, 1);
+        sessionStorage.setItem('cartes', JSON.stringify(CARDS));
+    }
+    
+    // Recalculer les compteurs et régénérer
+    TILE_COUNTS = Object.fromEntries(
+        CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
+    );
+    
+    generateCards();
+    filterBank(currentTab);
+    createStairs(currentTab);
+}
+
+function makeCardEditable(cardId) {
+    const cardElement = document.getElementById(`c-${cardId}`);
+    if (!cardElement) return;
+    
+    const cardData = CARDS.find(c => c.id === cardId);
+    if (!cardData) return;
+    
+    const originalText = cardData.text;
+    const isNewCard = originalText.startsWith('Nouvelle carte ');
+    
+    // Masquer les éléments existants
+    cardElement.style.display = 'none';
+    
+    // Créer un conteneur d'édition
+    const editContainer = document.createElement('div');
+    editContainer.id = `edit-${cardId}`;
+    editContainer.className = `card-edit-container carte-item ${cardData.category}`;
+    editContainer.style.width = cardElement.offsetWidth + 'px';
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalText;
+    input.className = 'card-edit-input';
+    input.maxLength = 200;
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = '✓';
+    saveBtn.className = 'card-edit-btn-save';
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = '✕';
+    cancelBtn.className = 'card-edit-btn-cancel';
+    
+    const btnContainer = document.createElement('div');
+    btnContainer.className = 'card-edit-buttons';
+    btnContainer.appendChild(saveBtn);
+    btnContainer.appendChild(cancelBtn);
+    
+    editContainer.appendChild(input);
+    editContainer.appendChild(btnContainer);
+    
+    // Insérer à la place de la carte
+    cardElement.parentNode.insertBefore(editContainer, cardElement);
+    
+    input.focus();
+    input.select();
+    
+    function saveEdit() {
+        const newText = input.value.trim();
+        if (newText.length > 0) {
+            cardData.text = newText;
+            sessionStorage.setItem('cartes', JSON.stringify(CARDS));
+        }
+        editContainer.remove();
+        cardElement.style.display = '';
+        generateCards();
+        filterBank(currentTab);
+    }
+    
+    function cancelEdit() {
+        editContainer.remove();
+        cardElement.style.display = '';
+        
+        // Si c'est une nouvelle carte, la supprimer de CARDS
+        if (isNewCard) {
+            const idx = CARDS.findIndex(c => c.id === cardId);
+            if (idx > -1) {
+                CARDS.splice(idx, 1);
+                sessionStorage.setItem('cartes', JSON.stringify(CARDS));
+                
+                // Recalculer les compteurs
+                TILE_COUNTS = Object.fromEntries(
+                    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
+                );
+                
+                generateCards();
+                filterBank(currentTab);
+            }
+        }
+    }
+    
+    saveBtn.addEventListener('click', saveEdit);
+    cancelBtn.addEventListener('click', cancelEdit);
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') saveEdit();
+        if (e.key === 'Escape') cancelEdit();
     });
 }
 
@@ -457,7 +706,15 @@ async function init() {
     );
 
     generateCards();
-    setupDragAndDrop(); 
+    setupDragAndDrop();
+    
+    // Ajouter les event listeners pour les boutons de mode édition
+    document.getElementById('btn-edit-mode').addEventListener('click', toggleEditMode);
+    document.getElementById('btn-lock-mode').addEventListener('click', lockEditMode);
+    
+    // Ajouter l'event listener pour le bouton de création de carte
+    document.getElementById('btn-new-card').addEventListener('click', createEmptyCard);
+    
     switchTab('savoir');
 }
 
@@ -474,6 +731,8 @@ window.dropOnBank = dropOnBank;
 window.switchTab = switchTab;
 window.reset = reset;
 window.printTable = printTable;
+window.toggleEditMode = toggleEditMode;
+window.lockEditMode = lockEditMode;
 
 // =============================================================================
 // DÉMARRAGE
