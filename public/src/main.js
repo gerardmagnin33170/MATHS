@@ -4,25 +4,25 @@ import yaml from 'js-yaml';
 // CONSTANTES
 // =============================================================================
 const TILE_HEIGHT_ESTIMATE = 50;
-const ALERT_TIMEOUT = 5000;  // Durée d'affichage de l'alerte en millisecondes (5000 ms = 5 sec)
+const ALERT_TIMEOUT = 5000;  // durée d'affichage de l'alerte en millisecondes (5000 ms = 5 sec)
 
 // =============================================================================
 // VARIABLES GLOBALES
 // =============================================================================
 let LEVELS, CATEGORIES, CARDS, TILE_COUNTS, stairs;
 let currentTab = 'savoir';
-let editMode = true;  // Mode édition des cartes
+let editMode = true;  // mode édition des cartes activé par défaut
 const droppedTiles = {};
 
 // =============================================================================
 // CLASSES DE DONNÉES
 // =============================================================================
-function Card(category, text, minLevel = null) {
+function Card(category, text, minLevel = 0) {
     Card.nextId = Card.nextId || 0;
     this.id = Card.nextId++;
     this.category = category;
     this.text = text;
-    this.minLevel = minLevel;  // null = sans restriction, 0 = 6ème+, 1 = 5ème+, 2 = 4ème+, etc.
+    this.minLevel = minLevel;  // 0 = 6ème+, 2 = 4ème+
 }
 
 function Category(id, title) {
@@ -40,10 +40,10 @@ async function loadLevels() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const textYaml = await response.text();
         const data = yaml.load(textYaml);
-        console.log('✓ Niveaux chargés depuis YAML:', data);
+        // console.log('Niveaux chargés depuis YAML:', data);
         sessionStorage.setItem('niveaux', JSON.stringify(data));
     } catch (e) {
-        console.log(`ℹ ${e}`);
+        console.log(`${e}`);
     }
 }
 
@@ -54,10 +54,10 @@ async function loadCategories() {
         const textYaml = await response.text();
         const data = yaml.load(textYaml);
         const categories = data.map(item => new Category(item.id || '', item.titre || ''));
-        console.log('✓ Catégories chargées depuis YAML:', categories);
+        // console.log('Catégories chargées depuis YAML:', categories);
         sessionStorage.setItem('categories', JSON.stringify(categories));
     } catch (e) {
-        console.log(`ℹ ${e}`);
+        console.log(`${e}`);
     }
 }
 
@@ -67,11 +67,11 @@ async function loadCards() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const textYaml = await response.text();
         const data = yaml.load(textYaml);
-        const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.minLevel || null));
-        console.log('✓ Cartes chargées depuis YAML:', cards);
+        const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.minLevel));
+        // console.log('Cartes chargées depuis YAML:', cards);
         sessionStorage.setItem('cartes', JSON.stringify(cards));
     } catch (e) {
-        console.log(`ℹ ${e}`);
+        console.log(`${e}`);
     }
 }
 
@@ -91,21 +91,21 @@ function generateCards() {
         card.dataset.category = c.category;
         card.dataset.text = c.text;
         card.dataset.tileId = `tile-${c.id}`;
-        card.dataset.minLevel = c.minLevel !== null ? c.minLevel : '';
+        card.dataset.minLevel = c.minLevel !== null ? c.minLevel : 0;
         
-        // Contenu texte
+        // contenu texte
         const textSpan = document.createElement('span');
         textSpan.className = 'carte-text';
         textSpan.textContent = c.text;
         
-        // Conteneur des actions
+        // conteneur des actions
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'carte-actions';
         if (!editMode) {
             actionsDiv.classList.add('hidden');
         }
         
-        // Bouton éditer
+        // bouton éditer
         const editBtn = document.createElement('button');
         editBtn.className = 'carte-action-btn carte-edit-btn';
         editBtn.textContent = '✏️';
@@ -118,7 +118,7 @@ function generateCards() {
             }
         });
         
-        // Bouton supprimer
+        // bouton supprimer
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'carte-action-btn carte-delete-btn';
         deleteBtn.textContent = '🗑️';
@@ -199,7 +199,7 @@ function createStairs(category) {
         };
         stairs[category].steps.push(newStepObj);
         
-        // Restauration des cartes déposées
+        // restauration des cartes déposées
         Object.values(droppedTiles).forEach(tile => {
             const tileStepIndex = parseInt(tile.dataset.stepIndex);
             const tileCategory = tile.dataset.category;
@@ -212,13 +212,13 @@ function createStairs(category) {
                 tile.style.position = 'static';
                 tile.style.transform = 'none';
                 
-                // Vérifier l'alerte pour cette carte
+                // on vérifie l'alerte pour cette carte
                 checkTileAlert(category, tileStepIndex, tile.id);
             }
         });
     }
     
-    // Mettre à jour l'affichage global des alertes
+    // mettre à jour l'affichage global des alertes
     updateStairAlerts(category);
 }
 
@@ -298,7 +298,7 @@ function setupDragAndDrop() {
 }
 
 function drag(ev) { 
-    // Fonction appelée par ondragstart
+    // fonction appelée par ondragstart
 }
 
 function allowDrop(ev) { 
@@ -386,7 +386,7 @@ function createDroppedTile(originalTile, category, stepIndex) {
     step.tiles.push({ id: tileId, element: tile });
     droppedTiles[tileId] = tile;
     
-    // Vérifier si une alerte doit être affichée
+    // on vérifie si une alerte doit être affichée
     checkTileAlert(category, stepIndex, tileId);
 }
 
@@ -402,7 +402,7 @@ function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
     tile.style.position = 'static';
     tile.style.transform = 'none';
     
-    // Vérifier les alertes
+    // on vérifie les alertes
     checkTileAlert(category, newStepIndex, tileId);
 }
 
@@ -415,23 +415,23 @@ function removeTile(tileId, category, stepIndex) {
         step.tiles = step.tiles.filter(t => t.id !== tileId);
     }
     
-    // Mettre à jour l'alerte si nécessaire
+    // on met à jour l'alerte si nécessaire
     updateStairAlerts(category);
 }
 
 function checkTileAlert(category, stepIndex, tileId) {
-    // Vérifie si une carte est placée sur un niveau inférieur à minLevel
+    // on vérifie si une carte est placée sur un niveau inférieur à minLevel
     const tile = droppedTiles[tileId];
     if (!tile) return;
     
     const minLevelStr = tile.dataset.minLevel;
-    if (minLevelStr === '' || minLevelStr === undefined || minLevelStr === null) {
-        // Pas de restriction
+    if (minLevelStr === 0 || minLevelStr === '' || minLevelStr === undefined || minLevelStr === null) {
+        // pas de restriction
         tile.classList.remove('tile-alert');
     } else {
         const minLevel = parseInt(minLevelStr);
         if (stepIndex < minLevel) {
-            // Alerte : la carte est trop haute dans l'escalier
+            // on affiche l'alerte : la carte est trop haute dans l'escalier
             tile.classList.add('tile-alert');
         } else {
             tile.classList.remove('tile-alert');
@@ -445,26 +445,26 @@ function updateStairAlerts(category) {
     const container = stairs[category].container;
     if (!container) return;
     
-    // Supprimer les anciennes alertes
+    // on supprime les anciennes alertes
     const oldAlerts = container.querySelectorAll('.stair-alert');
     oldAlerts.forEach(alert => {
-        // Annuler le timeout s'il existe
+        // puis on annule le timeout s'il existe
         if (alert.alertTimeout) {
             clearTimeout(alert.alertTimeout);
         }
         alert.remove();
     });
     
-    // Vérifier s'il y a des cartes en alerte
+    // on vérifie s'il y a des cartes en alerte
     const alertTiles = container.querySelectorAll('.dropped-tile.tile-alert');
     if (alertTiles.length > 0) {
-        // Ajouter une alerte sur le côté droit du conteneur
+        // on ajoute une alerte sur le côté droit du conteneur
         const alert = document.createElement('div');
         alert.className = 'stair-alert';
         alert.innerHTML = `<div class="alert-icon">⚠️</div><div class="alert-text">${alertTiles.length} carte(s) mal placée(s)</div>`;
         container.appendChild(alert);
         
-        // Définir un timeout pour supprimer l'alerte après ALERT_TIMEOUT millisecondes
+        // on définie le timeout de l'alerte
         alert.alertTimeout = setTimeout(() => {
             alert.remove();
         }, ALERT_TIMEOUT);
@@ -506,21 +506,23 @@ function updateNewCardButtonColor(category) {
     const newCardBtn = document.getElementById('btn-new-card');
     if (!newCardBtn) return;
     
-    // Mapping des couleurs selon la catégorie
+    // association des couleurs selon la catégorie
     const colorMap = {
         'savoir': 'hsl(from var(--coul-savoir) h s calc(l - 2))',
         'enjeux': 'hsl(from var(--coul-enjeux) h s calc(l - 5))',
         'apprendre': 'hsl(from var(--coul-apprendre) h s calc(l - 5))'
     };
     
-    // Appliquer les styles CSS avec les variables
-    if (category === 'savoir') {
-        newCardBtn.style.backgroundColor = 'hsl(47.9, 85.5%, 48.9%)';
-    } else if (category === 'enjeux') {
-        newCardBtn.style.backgroundColor = 'hsl(204, 70%, 53%)';
-    } else if (category === 'apprendre') {
-        newCardBtn.style.backgroundColor = 'hsl(141, 71%, 48%)';
-    }
+    // // Appliquer les styles CSS avec les variables
+    // if (category === 'savoir') {
+    //     newCardBtn.style.backgroundColor = 'hsl(47.9, 85.5%, 48.9%)';
+    // } else if (category === 'enjeux') {
+    //     newCardBtn.style.backgroundColor = 'hsl(204, 70%, 53%)';
+    // } else if (category === 'apprendre') {
+    //     newCardBtn.style.backgroundColor = 'hsl(141, 71%, 48%)';
+    // }
+
+    newCardBtn.style.backgroundColor = colorMap[category];
 }
 
 function filterBank(category) {
@@ -543,16 +545,16 @@ function filterBank(category) {
 function toggleEditMode() {
     editMode = true;
     
-    // Afficher les boutons d'action
+    // on afficher les boutons d'action
     document.querySelectorAll('.carte-actions').forEach(actions => {
         actions.classList.remove('hidden');
     });
     
-    // Mettre à jour l'interface des boutons
+    // on met à jour l'interface des boutons
     document.getElementById('btn-edit-mode').classList.add('hidden');
     document.getElementById('btn-lock-mode').classList.remove('hidden');
     
-    // Afficher le bouton de création de carte (s'il existe)
+    // on afficher le bouton de création de carte (s'il existe)
     const newCardBtn = document.getElementById('btn-new-card');
     if (newCardBtn) {
         newCardBtn.style.display = 'block';
@@ -562,12 +564,12 @@ function toggleEditMode() {
 function lockEditMode() {
     editMode = false;
     
-    // Masquer les boutons d'action
+    // on masque les boutons d'action
     document.querySelectorAll('.carte-actions').forEach(actions => {
         actions.classList.add('hidden');
     });
     
-    // Annuler toute édition en cours
+    // on annule toute édition en cours
     document.querySelectorAll('.card-edit-container').forEach(container => {
         container.remove();
     });
@@ -575,11 +577,11 @@ function lockEditMode() {
         card.style.display = '';
     });
     
-    // Mettre à jour l'interface des boutons
+    // on met à jour l'interface des boutons
     document.getElementById('btn-lock-mode').classList.add('hidden');
     document.getElementById('btn-edit-mode').classList.remove('hidden');
     
-    // Masquer le bouton de création de carte (s'il existe)
+    // on masque le bouton de création de carte (s'il existe)
     const newCardBtn = document.getElementById('btn-new-card');
     if (newCardBtn) {
         newCardBtn.style.display = 'none';
@@ -590,38 +592,38 @@ function lockEditMode() {
 // CRÉATION DE CARTE VIERGE
 // =============================================================================
 function createEmptyCard() {
-    // Déterminer la prochaine id disponible
+    // on détermine la prochaine id de carte disponible
     const maxId = Math.max(...CARDS.map(c => c.id), 0);
     const newId = maxId + 1;
     
-    // Créer une nouvelle carte
+    // on crée une nouvelle carte
     const newCard = new Card(currentTab, `Nouvelle carte ${newId}`);
     newCard.id = newId;
-    CARDS.push(newCard);
+    CARDS.unshift(newCard); // on l'ajoute au début de la liste
     
-    // Ajouter au sessionStorage
+    // on l'ajoute au sessionStorage
     sessionStorage.setItem('cartes', JSON.stringify(CARDS));
     
-    // Générer les cartes et focus sur la nouvelle
+    // on régénère les cartes et focus sur la nouvelle
     generateCards();
     filterBank(currentTab);
     makeCardEditable(newId);
 }
 
 function deleteCard(cardId) {
-    // Confirmation de suppression
+    // on demande comfirmation de suppression
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette carte ?')) {
         return;
     }
     
-    // Trouver et supprimer la carte
+    // on cherche et supprime la carte
     const idx = CARDS.findIndex(c => c.id === cardId);
     if (idx > -1) {
         CARDS.splice(idx, 1);
         sessionStorage.setItem('cartes', JSON.stringify(CARDS));
     }
     
-    // Recalculer les compteurs et régénérer
+    // on reset les compteurs et on régénére les cartes
     TILE_COUNTS = Object.fromEntries(
         CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
     );
@@ -642,10 +644,10 @@ function makeCardEditable(cardId) {
     const originalMinLevel = cardData.minLevel !== null ? cardData.minLevel : '';
     const isNewCard = originalText.startsWith('Nouvelle carte ');
     
-    // Masquer les éléments existants
+    // on masque les éléments existants
     cardElement.style.display = 'none';
     
-    // Créer un conteneur d'édition
+    // on crée un conteneur d'édition
     const editContainer = document.createElement('div');
     editContainer.id = `edit-${cardId}`;
     editContainer.className = `card-edit-container carte-item ${cardData.category}`;
@@ -657,7 +659,7 @@ function makeCardEditable(cardId) {
     input.className = 'card-edit-input';
     input.maxLength = 200;
     
-    // Conteneur pour le champ minLevel
+    // conteneur pour le champ minLevel
     const minLevelContainer = document.createElement('div');
     minLevelContainer.className = 'card-edit-minlevel';
     
@@ -669,7 +671,7 @@ function makeCardEditable(cardId) {
     minLevelSelect.id = `minlevel-${cardId}`;
     minLevelSelect.className = 'card-edit-minlevel-select';
     
-    // Options pour chaque niveau
+    // options pour chaque carte
     const levelNames = new Map([
         ['6ème', 0],
         ['4ème', 2],
@@ -685,7 +687,6 @@ function makeCardEditable(cardId) {
         const option = document.createElement('option');
         option.value = level;
         option.textContent = 'à partir de la ' + name;
-        console.log(name);
         minLevelSelect.appendChild(option);
     });
     // for (const name in levelNames) {
@@ -718,7 +719,7 @@ function makeCardEditable(cardId) {
     editContainer.appendChild(minLevelContainer);
     editContainer.appendChild(btnContainer);
     
-    // Insérer à la place de la carte
+    // on insère à la place de la carte
     cardElement.parentNode.insertBefore(editContainer, cardElement);
     
     input.focus();
@@ -735,7 +736,7 @@ function makeCardEditable(cardId) {
         cardElement.style.display = '';
         generateCards();
         filterBank(currentTab);
-        // Mettre à jour les alertes pour l'escalier actif
+        // on met à jour les alertes pour l'escalier actif
         updateStairAlerts(currentTab);
     }
     
@@ -743,14 +744,14 @@ function makeCardEditable(cardId) {
         editContainer.remove();
         cardElement.style.display = '';
         
-        // Si c'est une nouvelle carte, la supprimer de CARDS
+        // si c'est une nouvelle carte, la supprimer de CARDS
         if (isNewCard) {
             const idx = CARDS.findIndex(c => c.id === cardId);
             if (idx > -1) {
                 CARDS.splice(idx, 1);
                 sessionStorage.setItem('cartes', JSON.stringify(CARDS));
                 
-                // Recalculer les compteurs
+                // resetter les compteurs
                 TILE_COUNTS = Object.fromEntries(
                     CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
                 );
@@ -829,11 +830,9 @@ async function init() {
     generateCards();
     setupDragAndDrop();
     
-    // Ajouter les event listeners pour les boutons de mode édition
+    // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
     document.getElementById('btn-edit-mode').addEventListener('click', toggleEditMode);
     document.getElementById('btn-lock-mode').addEventListener('click', lockEditMode);
-    
-    // Ajouter l'event listener pour le bouton de création de carte
     document.getElementById('btn-new-card').addEventListener('click', createEmptyCard);
     
     switchTab('savoir');
@@ -844,7 +843,7 @@ async function init() {
 // =============================================================================
 window.addEventListener('resize', () => createStairs(currentTab));
 
-// Exposer les fonctions au scope global pour les attributs HTML
+// on expose les fonctions au scope global pour les attributs HTML
 window.drag = drag;
 window.allowDrop = allowDrop;
 window.dropOnStep = dropOnStep;
