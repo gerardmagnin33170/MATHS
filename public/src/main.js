@@ -11,7 +11,7 @@ const ALERT_TIMEOUT = 5000;  // Durée d'affichage de l'alerte en millisecondes 
 // =============================================================================
 let LEVELS, CATEGORIES, CARDS, TILE_COUNTS, stairs;
 let currentTab = 'savoir';
-let editMode = false;  // Mode édition des cartes
+let editMode = true;  // Mode édition des cartes
 const droppedTiles = {};
 
 // =============================================================================
@@ -173,7 +173,8 @@ function createStairs(category) {
         const progression = .9 * Math.pow(((i + 1) / numSteps), 1.75);
         const minStepHeight = (progression * baseHeightAvailableForProgression) + heightOffset;
         const left = i * stepWidth + (i * stepSpacing);
-        const top = containerHeight - minStepHeight + paddingValue; 
+        // const top = containerHeight - minStepHeight + paddingValue;
+        const top = containerHeight - minStepHeight - 50;
         
         step.style.left = left + paddingValue + 'px'; 
         step.style.top = top + 'px';
@@ -668,20 +669,32 @@ function makeCardEditable(cardId) {
     minLevelSelect.id = `minlevel-${cardId}`;
     minLevelSelect.className = 'card-edit-minlevel-select';
     
-    // Option pour pas de limite
-    const optionNone = document.createElement('option');
-    optionNone.value = '';
-    optionNone.textContent = '— Aucune limite';
-    minLevelSelect.appendChild(optionNone);
-    
     // Options pour chaque niveau
-    const levelNames = ['6ème', '5ème', '4ème', '3ème', '2nde', '1ère', 'Terminale'];
-    levelNames.forEach((name, index) => {
+    const levelNames = new Map([
+        ['6ème', 0],
+        ['4ème', 2],
+    ]);
+
+    // // Option pour pas de limite
+    // const optionNone = document.createElement('option');
+    // optionNone.value = '';
+    // optionNone.textContent = '— Aucune limite';
+    // minLevelSelect.appendChild(optionNone);
+
+    levelNames.forEach((level, name) => {
         const option = document.createElement('option');
-        option.value = index;
-        option.textContent = name + ' et au-delà';
+        option.value = level;
+        option.textContent = 'à partir de la ' + name;
+        console.log(name);
         minLevelSelect.appendChild(option);
     });
+    // for (const name in levelNames) {
+    //     const option = document.createElement('option');
+    //     option.value = Object.values(name);
+    //     option.textContent = 'à partir de la ' + name;
+    //     console.log(levelNames[name]);
+    //     minLevelSelect.appendChild(option);
+    // };
     
     minLevelSelect.value = originalMinLevel;
     
