@@ -163,7 +163,7 @@ main {
     font-size: 0.95rem;
     font-weight: 500;
     transition: background-color 0.3s ease;
-    display: none;
+    display: block;
 }
 
 .btn-new-card:hover {
@@ -447,8 +447,23 @@ main {
 .carte-item.hidden { display: none; }
 
 .carte-savoir { border-left-color: var(--coul-bord-savoir); }
+.carte-savoir[data-min-level="0"] {
+    border-left-color: color-mix(in hsl,
+        hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
+        white 5%);
+}
 .carte-enjeux { border-left-color: var(--coul-bord-enjeux); }
+.carte-enjeux[data-min-level="0"] {
+    border-left-color: color-mix(in hsl,
+        hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
+        white 5%);
+}
 .carte-apprendre { border-left-color: var(--coul-bord-apprendre); }
+.carte-apprendre[data-min-level="0"] {
+    border-left-color: color-mix(in hsl,
+        hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
+        white 5%);
+}
 
 /* --- STRUCTURE À ONGLETS --- */
 .tabs-header {
@@ -638,9 +653,6 @@ main {
 .dropped-tile.savoir { border-left-color: var(--coul-bord-savoir); }
 .dropped-tile.enjeux { border-left-color: var(--coul-bord-enjeux); }
 .dropped-tile.apprendre { border-left-color: var(--coul-bord-apprendre); }
-.carte-savoir { border-left-color: var(--coul-bord-savoir); }
-.carte-enjeux { border-left-color: var(--coul-bord-enjeux); }
-.carte-apprendre { border-left-color: var(--coul-bord-apprendre); }
 
 /* --- Styles du Tableau de Synthèse (Écran) --- */
 #tableau-synthese {
