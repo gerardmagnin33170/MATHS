@@ -13,7 +13,7 @@ Application web interactive pour visualiser et planifier la progression des comp
 1. Cloner le repository :
 ```bash
 git clone https://forge.apps.education.fr/dane-creteil/pole-socle-numerique/progression_ia.git
-cd progressivite_ia
+cd progression_ia
 ```
 
 2. Installer les dépendances :
