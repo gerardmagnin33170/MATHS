@@ -17,9 +17,14 @@ const droppedTiles = {};
 // =============================================================================
 // CLASSES DE DONNÉES
 // =============================================================================
-function Card(category, text, minLevel = 0) {
-    Card.nextId = Card.nextId || 0;
-    this.id = Card.nextId++;
+function Card(category, text, minLevel = 0, id = null) {
+    if ( id !== null ) {
+        this.id = id;
+        Card.nextId = Math.max(Card.nextId || 0, id + 1);
+    } else {
+        Card.nextId = Card.nextId || 0;
+        this.id = Card.nextId++;
+    }
     this.categorie = category;
     this.texte = text;
     this.niveauMin = minLevel;  // 0 = 6ème+, 2 = 4ème+
@@ -67,7 +72,7 @@ async function loadCards() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const content = await response.text();
         const data = yaml.load(content);
-        const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.minLevel));
+        const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.niveauMin, item.id));
         // console.log('Cartes chargées depuis YAML:', cards);
         sessionStorage.setItem('cartes', JSON.stringify(cards));
     } catch (e) {
@@ -88,16 +93,15 @@ async function importCards() {
                 console.error(`Invalid file type ${ext}. Please upload a YAML file.`);
                 return;
             }
-            
-            console.log("pouet");
 
             const reader = new FileReader();
             reader.onload = () => {
                 const content = reader.result;
                 const data = yaml.load(content);
-                const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.niveauMin));
+                const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.niveauMin, item.id));
                 // console.log('Cartes chargées depuis YAML:', cards);
                 sessionStorage.setItem('cartes', JSON.stringify(cards));
+                // une fois le sessionStorage à jour, il faut mettre à jour la banque de cartes
                 CARDS = cards;
                 TILE_COUNTS = Object.fromEntries(
                     CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length])
@@ -207,20 +211,20 @@ function createStairs(category) {
     const containerHeight = container.offsetHeight; 
     const stepSpacing = 2;
     
-    // Marges horizontales minimales
+    // marges horizontales minimales
     const minHorizontalMargin = 20;
     
-    // Calculer la largeur disponible pour les marches
+    // largeur disponible pour les marches
     const availableWidth = containerWidth - (2 * minHorizontalMargin);
     
-    // Calculer la largeur optimale par marche
+    // largeur optimale par marche
     const totalSpacingWidth = (numSteps - 1) * stepSpacing;
     const stepWidth = (availableWidth - totalSpacingWidth) / numSteps;
     
-    // Calculer la largeur totale réellement utilisée
+    // largeur totale réellement utilisée
     const totalRequiredWidth = (numSteps * stepWidth) + totalSpacingWidth;
     
-    // Centrer horizontalement
+    // centrer horizontalement
     const horizontalMargin = (containerWidth - totalRequiredWidth) / 2;
     
     stairs[category].steps = [];
@@ -582,15 +586,6 @@ function updateNewCardButtonColor(category) {
         'enjeux': 'hsl(from var(--coul-enjeux) h s calc(l - 5))',
         'apprendre': 'hsl(from var(--coul-apprendre) h s calc(l - 5))'
     };
-    
-    // // Appliquer les styles CSS avec les variables
-    // if (category === 'savoir') {
-    //     newCardBtn.style.backgroundColor = 'hsl(47.9, 85.5%, 48.9%)';
-    // } else if (category === 'enjeux') {
-    //     newCardBtn.style.backgroundColor = 'hsl(204, 70%, 53%)';
-    // } else if (category === 'apprendre') {
-    //     newCardBtn.style.backgroundColor = 'hsl(141, 71%, 48%)';
-    // }
 
     newCardBtn.style.backgroundColor = colorMap[category];
 }
@@ -747,7 +742,7 @@ function makeCardEditable(cardId) {
         ['4ème', 2],
     ]);
 
-    // // Option pour pas de limite
+    // // option pour pas de limite
     // const optionNone = document.createElement('option');
     // optionNone.value = '';
     // optionNone.textContent = '— Aucune limite';
@@ -939,15 +934,15 @@ window.exportCards = exportCards;
 // =============================================================================
 // DÉMARRAGE
 // =============================================================================
-window.DEBUG = {
-    LEVELS,
-    CARDS,
-    CATEGORIES,
-    TILE_COUNTS,
-    stairs,
-    currentTab,
-    editMode,
-    droppedTiles
-};
+// window.DEBUG = {
+//     LEVELS,
+//     CARDS,
+//     CATEGORIES,
+//     TILE_COUNTS,
+//     stairs,
+//     currentTab,
+//     editMode,
+//     droppedTiles
+// };
 
 init();
