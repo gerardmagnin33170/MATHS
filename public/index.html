@@ -15,9 +15,9 @@
     </header>
 
     <div class="barre-outils">
-        <button id="btn-export-cards" class="btn-new-cardbtn-export-cards">Exporter les cartes</button>
-        <button onclick="reset()">Réinitialiser tout</button>
-        <button id="btn-print-tableau" class="btn-print hidden" onclick="printTable()">🖨️ Imprimer en Tableau</button>
+        <button id="btn-export-cards" class="btn-export-cards">Exporter les cartes</button>
+        <button id="btn-reset" class="btn-reset">Réinitialiser tout</button>
+        <button id="btn-print-table" class="btn-print hidden">🖨️ Imprimer en Tableau</button>
         <div class="edit-mode-controls">
             <button id="btn-edit-mode" class="btn-edit-mode hidden">✏️ Mode édition</button>
             <button id="btn-lock-mode" class="btn-lock-mode">🔒 Verrouiller</button>
@@ -37,16 +37,16 @@
 
         <div class="tabs-container">
             <div class="tabs-header">
-                <button class="tab-button savoir active" onclick="switchTab('savoir')">
+                <button id="btn-savoir" class="tab-button savoir active">
                     💡 Savoir comment fonctionnent les IA
                 </button>
-                <button class="tab-button enjeux" onclick="switchTab('enjeux')">
+                <button id="btn-enjeux" class="tab-button enjeux">
                     🛡️ Identifier les enjeux des IA
                 </button>
-                <button class="tab-button apprendre" onclick="switchTab('apprendre')">
+                <button id="btn-apprendre" class="tab-button apprendre">
                     🚀 Apprendre avec les IA
                 </button>
-                 <button class="tab-button synthese" onclick="switchTab('synthese')">
+                 <button id="btn-synthese" class="tab-button synthese">
                     📋 Synthèse (Tableau)
                 </button>
             </div>

@@ -514,7 +514,7 @@ function switchTab(tabName) {
     
     const bankElement = document.getElementById('zone-vignettes-wrapper');
     const tabsContainerElement = document.querySelector('.tabs-container');
-    const printButton = document.getElementById('btn-print-tableau');
+    const printButton = document.getElementById('btn-print-table');
     
     if (tabName === 'synthese') {
         generateSummaryTable();
@@ -860,11 +860,20 @@ async function init() {
     setupDragAndDrop();
     
     // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
+    document.getElementById('btn-export-cards').addEventListener('click', exportCards);
+    document.getElementById('btn-reset').addEventListener('click', reset);
     document.getElementById('btn-edit-mode').addEventListener('click', toggleEditMode);
     document.getElementById('btn-lock-mode').addEventListener('click', lockEditMode);
+    document.getElementById('btn-print-table').addEventListener('click', printTable);
     document.getElementById('btn-new-card').addEventListener('click', createEmptyCard);
-    document.getElementById('btn-export-cards').addEventListener('click', exportCards);
+
+    // on ajoute les event listeners pour les onglets
+    const tabs = document.getElementsByClassName('tab-button');
+    for (let tab of tabs) {
+        tab.addEventListener('click', () => switchTab(tab.id.split("-")[1]));
+    }
     
+    // l'onglet affiché au démarrage
     switchTab('savoir');
 }
 
