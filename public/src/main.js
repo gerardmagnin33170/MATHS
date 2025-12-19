@@ -75,6 +75,21 @@ async function loadCards() {
     }
 }
 
+async function exportCards() {
+    try {
+        const cards = JSON.parse(sessionStorage.getItem('cartes'));
+        const data = yaml.dump(cards);
+        const blob = new Blob([data], { type: 'text/yaml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'cartes.yaml';
+        a.click();
+    } catch (e) {
+        console.log(`${e}`);
+    }
+}
+
 // =============================================================================
 // GÉNÉRATION DU DOM
 // =============================================================================
@@ -848,6 +863,7 @@ async function init() {
     document.getElementById('btn-edit-mode').addEventListener('click', toggleEditMode);
     document.getElementById('btn-lock-mode').addEventListener('click', lockEditMode);
     document.getElementById('btn-new-card').addEventListener('click', createEmptyCard);
+    document.getElementById('btn-export-cards').addEventListener('click', exportCards);
     
     switchTab('savoir');
 }
@@ -867,8 +883,20 @@ window.reset = reset;
 window.printTable = printTable;
 window.toggleEditMode = toggleEditMode;
 window.lockEditMode = lockEditMode;
+window.exportCards = exportCards;
 
 // =============================================================================
 // DÉMARRAGE
 // =============================================================================
+window.DEBUG = {
+    LEVELS,
+    CARDS,
+    CATEGORIES,
+    TILE_COUNTS,
+    stairs,
+    currentTab,
+    editMode,
+    droppedTiles
+};
+
 init();
