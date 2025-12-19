@@ -20,9 +20,9 @@ const droppedTiles = {};
 function Card(category, text, minLevel = 0) {
     Card.nextId = Card.nextId || 0;
     this.id = Card.nextId++;
-    this.category = category;
-    this.text = text;
-    this.minLevel = minLevel;  // 0 = 6ème+, 2 = 4ème+
+    this.categorie = category;
+    this.texte = text;
+    this.niveauMin = minLevel;  // 0 = 6ème+, 2 = 4ème+
 }
 
 function Category(id, title) {
@@ -38,8 +38,8 @@ async function loadLevels() {
     try {
         const response = await fetch('./data/niveaux.yaml');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const textYaml = await response.text();
-        const data = yaml.load(textYaml);
+        const content = await response.text();
+        const data = yaml.load(content);
         // console.log('Niveaux chargés depuis YAML:', data);
         sessionStorage.setItem('niveaux', JSON.stringify(data));
     } catch (e) {
@@ -51,8 +51,8 @@ async function loadCategories() {
     try {
         const response = await fetch('./data/categories.yaml');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const textYaml = await response.text();
-        const data = yaml.load(textYaml);
+        const content = await response.text();
+        const data = yaml.load(content);
         const categories = data.map(item => new Category(item.id || '', item.titre || ''));
         // console.log('Catégories chargées depuis YAML:', categories);
         sessionStorage.setItem('categories', JSON.stringify(categories));
@@ -65,8 +65,8 @@ async function loadCards() {
     try {
         const response = await fetch('./data/cartes.yaml');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const textYaml = await response.text();
-        const data = yaml.load(textYaml);
+        const content = await response.text();
+        const data = yaml.load(content);
         const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.minLevel));
         // console.log('Cartes chargées depuis YAML:', cards);
         sessionStorage.setItem('cartes', JSON.stringify(cards));
@@ -75,10 +75,51 @@ async function loadCards() {
     }
 }
 
+async function importCards() {
+    try {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.onchange = (event) => {
+            const file = event.target.files[0];
+            if ( !file ) return;
+
+            const ext = file.name.split(".").pop().toLowerCase();
+            if ( !['yaml', 'yml'].includes(ext) ) {
+                console.error(`Invalid file type ${ext}. Please upload a YAML file.`);
+                return;
+            }
+            
+            console.log("pouet");
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const content = reader.result;
+                const data = yaml.load(content);
+                const cards = data.map(item => new Card(item.categorie || '', item.texte || '', item.niveauMin));
+                // console.log('Cartes chargées depuis YAML:', cards);
+                sessionStorage.setItem('cartes', JSON.stringify(cards));
+                CARDS = cards;
+                TILE_COUNTS = Object.fromEntries(
+                    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length])
+                );
+                generateCards();
+                filterBank(currentTab);
+            };
+            reader.onerror = () => {
+                console.error(`Error reading the file. Please try again. ${reader.error}`);
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    } catch (e) {
+        console.log(`${e}`);
+    }
+}
+
 async function exportCards() {
     try {
-        const cards = JSON.parse(sessionStorage.getItem('cartes'));
-        const data = yaml.dump(cards);
+        const parsedData = JSON.parse(sessionStorage.getItem('cartes'));
+        const data = yaml.dump(parsedData);
         const blob = new Blob([data], { type: 'text/yaml' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -99,19 +140,19 @@ function generateCards() {
     
     CARDS.forEach(c => {
         const card = document.createElement('div');
-        card.className = `carte-item carte-${c.category}`;
+        card.className = `carte-item carte-${c.categorie}`;
         card.id = `c-${c.id}`;
         card.setAttribute('draggable', 'true');
         card.setAttribute('ondragstart', 'drag(event)');
-        card.dataset.category = c.category;
-        card.dataset.text = c.text;
+        card.dataset.category = c.categorie;
+        card.dataset.text = c.texte;
         card.dataset.tileId = `tile-${c.id}`;
-        card.dataset.minLevel = c.minLevel !== null ? c.minLevel : 0;
+        card.dataset.minLevel = c.niveauMin !== null ? c.niveauMin : 0;
         
         // contenu texte
         const textSpan = document.createElement('span');
         textSpan.className = 'carte-text';
-        textSpan.textContent = c.text;
+        textSpan.textContent = c.texte;
         
         // conteneur des actions
         const actionsDiv = document.createElement('div');
@@ -294,7 +335,7 @@ function generateSummaryTable() {
                 <div class="synthese-card-wrapper">`;
             
             cards.forEach(card => {
-                htmlTable += `<div class="synthese-card ${card.category}">${card.text}</div>`;
+                htmlTable += `<div class="synthese-card ${card.categorie}">${card.texte}</div>`;
             });
             
             htmlTable += `</div></td>`;
@@ -654,7 +695,7 @@ function deleteCard(cardId) {
     
     // on reset les compteurs et on régénére les cartes
     TILE_COUNTS = Object.fromEntries(
-        CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
+        CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length])
     );
     
     generateCards();
@@ -669,8 +710,8 @@ function makeCardEditable(cardId) {
     const cardData = CARDS.find(c => c.id === cardId);
     if (!cardData) return;
     
-    const originalText = cardData.text;
-    const originalMinLevel = cardData.minLevel !== null ? cardData.minLevel : '';
+    const originalText = cardData.texte;
+    const originalMinLevel = cardData.niveauMin !== null ? cardData.niveauMin : 0;
     const isNewCard = originalText.startsWith('Nouvelle carte ');
     
     // on masque les éléments existants
@@ -679,7 +720,7 @@ function makeCardEditable(cardId) {
     // on crée un conteneur d'édition
     const editContainer = document.createElement('div');
     editContainer.id = `edit-${cardId}`;
-    editContainer.className = `card-edit-container carte-item ${cardData.category}`;
+    editContainer.className = `card-edit-container carte-item ${cardData.categorie}`;
     editContainer.style.width = cardElement.offsetWidth + 'px';
     
     const input = document.createElement('input');
@@ -757,8 +798,8 @@ function makeCardEditable(cardId) {
     function saveEdit() {
         const newText = input.value.trim();
         if (newText.length > 0) {
-            cardData.text = newText;
-            cardData.minLevel = minLevelSelect.value === '' ? null : parseInt(minLevelSelect.value);
+            cardData.texte = newText;
+            cardData.niveauMin = minLevelSelect.value === '' ? null : parseInt(minLevelSelect.value);
             sessionStorage.setItem('cartes', JSON.stringify(CARDS));
         }
         editContainer.remove();
@@ -782,7 +823,7 @@ function makeCardEditable(cardId) {
                 
                 // resetter les compteurs
                 TILE_COUNTS = Object.fromEntries(
-                    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
+                    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length])
                 );
                 
                 generateCards();
@@ -849,7 +890,7 @@ async function init() {
     CARDS = JSON.parse(sessionStorage.getItem('cartes'));
 
     TILE_COUNTS = Object.fromEntries(
-        CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.category === cat.id).length])
+        CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length])
     );
 
     stairs = Object.fromEntries(
@@ -860,6 +901,7 @@ async function init() {
     setupDragAndDrop();
     
     // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
+    document.getElementById('btn-import-cards').addEventListener('click', importCards);
     document.getElementById('btn-export-cards').addEventListener('click', exportCards);
     document.getElementById('btn-reset').addEventListener('click', reset);
     document.getElementById('btn-edit-mode').addEventListener('click', toggleEditMode);
