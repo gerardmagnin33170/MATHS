@@ -147,19 +147,34 @@ function createStairs(category) {
     container.innerHTML = ''; 
     
     const numSteps = LEVELS.length; 
-    const paddingValue = 5;
-    const totalPadding = 5 * paddingValue;
-    const containerWidth = container.offsetWidth - totalPadding; 
-    const containerHeight = container.offsetHeight - totalPadding; 
-    const stepWidth = (containerWidth * 0.98) / numSteps; 
+    const containerWidth = container.offsetWidth; 
+    const containerHeight = container.offsetHeight; 
+    const stepSpacing = 2;
+    
+    // Marges horizontales minimales
+    const minHorizontalMargin = 20;
+    
+    // Calculer la largeur disponible pour les marches
+    const availableWidth = containerWidth - (2 * minHorizontalMargin);
+    
+    // Calculer la largeur optimale par marche
+    const totalSpacingWidth = (numSteps - 1) * stepSpacing;
+    const stepWidth = (availableWidth - totalSpacingWidth) / numSteps;
+    
+    // Calculer la largeur totale réellement utilisée
+    const totalRequiredWidth = (numSteps * stepWidth) + totalSpacingWidth;
+    
+    // Centrer horizontalement
+    const horizontalMargin = (containerWidth - totalRequiredWidth) / 2;
     
     stairs[category].steps = [];
     
     const totalCategoryTiles = TILE_COUNTS[category];
-    const requiredHeightForOffset = ((totalCategoryTiles / 2) * TILE_HEIGHT_ESTIMATE) + 50;
+    const requiredHeightForOffset = ((totalCategoryTiles / 2) * TILE_HEIGHT_ESTIMATE) + 10;
     const heightOffset = requiredHeightForOffset; 
-    const baseHeightAvailableForProgression = containerHeight - heightOffset;
-    const stepSpacing = 2;
+    const topMargin = 5; // marge haute minimale
+    const bottomMargin = 10; // marge basse minimale
+    const baseHeightAvailableForProgression = containerHeight - heightOffset - topMargin - bottomMargin;
     
     for (let i = 0; i < numSteps; i++) {
         const step = document.createElement('div');
@@ -172,13 +187,12 @@ function createStairs(category) {
         
         const progression = .9 * Math.pow(((i + 1) / numSteps), 1.75);
         const minStepHeight = (progression * baseHeightAvailableForProgression) + heightOffset;
-        const left = i * stepWidth + (i * stepSpacing);
-        // const top = containerHeight - minStepHeight + paddingValue;
-        const top = containerHeight - minStepHeight - 50;
+        const left = horizontalMargin + (i * stepWidth) + (i * stepSpacing);
+        const top = containerHeight - minStepHeight - bottomMargin;
         
-        step.style.left = left + paddingValue + 'px'; 
+        step.style.left = left + 'px'; 
         step.style.top = top + 'px';
-        step.style.width = (stepWidth - stepSpacing) + 'px';
+        step.style.width = stepWidth + 'px';
         step.style.minHeight = minStepHeight + 'px'; 
         
         const label = document.createElement('div');
@@ -191,7 +205,7 @@ function createStairs(category) {
         const newStepObj = {
             element: step,
             index: i,
-            left: left + paddingValue, 
+            left: left, 
             top: top, 
             width: stepWidth,
             minHeight: minStepHeight,
