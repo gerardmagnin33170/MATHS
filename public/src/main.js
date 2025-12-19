@@ -335,7 +335,7 @@ function generateSummaryTable() {
                 <div class="synthese-card-wrapper">`;
             
             cards.forEach(card => {
-                htmlTable += `<div class="synthese-card ${card.categorie}">${card.texte}</div>`;
+                htmlTable += `<div class="synthese-card ${card.category}">${card.text}</div>`;
             });
             
             htmlTable += `</div></td>`;
