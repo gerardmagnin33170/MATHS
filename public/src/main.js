@@ -896,8 +896,8 @@ async function init() {
     setupDragAndDrop();
     
     // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
-    document.getElementById('btn-import-cards').addEventListener('click', importCards);
-    document.getElementById('btn-export-cards').addEventListener('click', exportCards);
+    // document.getElementById('btn-import-cards').addEventListener('click', importCards);
+    // document.getElementById('btn-export-cards').addEventListener('click', exportCards);
     document.getElementById('btn-reset').addEventListener('click', reset);
     document.getElementById('btn-edit-mode').addEventListener('click', toggleEditMode);
     document.getElementById('btn-lock-mode').addEventListener('click', lockEditMode);
