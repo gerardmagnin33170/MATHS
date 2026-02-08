@@ -1,7 +1,14 @@
-- Sixième
-- Cinquième
-- Quatrième
-- Troisième
-- Seconde
-- Première
-- Terminale
+- classe: Sixième
+  structure: Collège
+- classe: Cinquième
+  structure: Collège
+- classe: Quatrième
+  structure: Collège
+- classe: Troisième
+  structure: Collège
+- classe: Seconde
+  structure: Lycée
+- classe: Première
+  structure: Lycée
+- classe: Terminale
+  structure: Lycée

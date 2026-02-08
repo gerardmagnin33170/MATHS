@@ -14,6 +14,10 @@ let LEVELS, CATEGORIES, CARDS, TILE_COUNTS, stairs;
 let currentTab = "savoir";
 let editMode = true; // mode édition des cartes activé par défaut
 const droppedTiles = {};
+const levelFilters = {
+  college: true,
+  lycee: true,
+};
 
 // =============================================================================
 // CLASSES DE DONNÉES
@@ -37,6 +41,11 @@ function Category(id, title) {
   this.class = `print-col-${id}`;
 }
 
+function Level(structure, niveau) {
+  this.structure = structure;
+  this.niveau = niveau;
+}
+
 // =============================================================================
 // CHARGEMENT DES DONNÉES
 // =============================================================================
@@ -46,8 +55,12 @@ async function loadLevels() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const content = await response.text();
     const data = yaml.load(content);
-    // console.log('Niveaux chargés depuis YAML:', data);
-    sessionStorage.setItem("niveaux", JSON.stringify(data));
+    // console.log("Données brutes chargées depuis YAML:", data);
+    const levels = data.map(
+      (item) => new Level(item.structure || "", item.classe || ""),
+    );
+    console.log("Niveaux chargés depuis YAML:", levels);
+    sessionStorage.setItem("niveaux", JSON.stringify(levels));
   } catch (e) {
     console.log(`${e}`);
   }
@@ -230,13 +243,65 @@ function generateCards() {
   });
 }
 
+function normalizeStructure(value) {
+  return (value || "")
+    .toString()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "");
+}
+
+function isLevelVisible(level) {
+  const normalized = normalizeStructure(level?.structure);
+  if (!normalized) return true;
+  if (normalized.includes("college")) return levelFilters.college;
+  if (normalized.includes("lycee")) return levelFilters.lycee;
+  return true;
+}
+
+function getVisibleLevels() {
+  return LEVELS.map((level, index) => ({ level, index })).filter(({ level }) =>
+    isLevelVisible(level),
+  );
+}
+
+function applyLevelFilters() {
+  if (currentTab !== "synthese") {
+    createStairs(currentTab);
+  }
+}
+
+function setupLevelFilters() {
+  const collegeCheckbox = document.getElementById("filter-college");
+  const lyceeCheckbox = document.getElementById("filter-lycee");
+  if (!collegeCheckbox || !lyceeCheckbox) return;
+
+  levelFilters.college = collegeCheckbox.checked;
+  levelFilters.lycee = lyceeCheckbox.checked;
+
+  const onChange = () => {
+    levelFilters.college = collegeCheckbox.checked;
+    levelFilters.lycee = lyceeCheckbox.checked;
+    applyLevelFilters();
+  };
+
+  collegeCheckbox.addEventListener("change", onChange);
+  lyceeCheckbox.addEventListener("change", onChange);
+}
+
 function createStairs(category) {
   const container = stairs[category].container;
   if (!container) return;
 
   container.innerHTML = "";
 
-  const numSteps = LEVELS.length;
+  const visibleLevels = getVisibleLevels();
+  const numSteps = visibleLevels.length;
+  if (numSteps === 0) {
+    stairs[category].steps = [];
+    updateStairAlerts(category);
+    return;
+  }
   const containerWidth = container.offsetWidth;
   const containerHeight = container.offsetHeight;
   const stepSpacing = 2;
@@ -269,11 +334,20 @@ function createStairs(category) {
     containerHeight - heightOffset - topMargin - bottomMargin;
 
   for (let i = 0; i < numSteps; i++) {
+    const levelIndex = visibleLevels[i].index;
+    const levelData = visibleLevels[i].level;
     const step = document.createElement("div");
     step.className = "stair-step";
-    step.dataset.step = i;
+    step.dataset.step = levelIndex;
     step.dataset.category = category;
-    step.dataset.level = LEVELS[i];
+    // console.log(
+    //   "Assignation du dataset.level pour la marche",
+    //   i,
+    //   ":",
+    //   LEVELS[i].niveau,
+    // );
+    step.dataset.level = levelData.niveau;
+    step.dataset.struct = levelData.structure;
     step.setAttribute("ondragover", "allowDrop(event)");
     step.setAttribute("ondrop", "dropOnStep(event)");
 
@@ -290,7 +364,7 @@ function createStairs(category) {
 
     const label = document.createElement("div");
     label.className = "step-label";
-    label.textContent = LEVELS[i];
+    label.textContent = levelData.niveau;
     step.appendChild(label);
 
     container.appendChild(step);
@@ -311,7 +385,7 @@ function createStairs(category) {
       const tileStepIndex = parseInt(tile.dataset.stepIndex);
       const tileCategory = tile.dataset.category;
 
-      if (tileCategory === category && tileStepIndex === i) {
+      if (tileCategory === category && tileStepIndex === levelIndex) {
         step.appendChild(tile);
         newStepObj.tiles.push({ id: tile.id, element: tile });
         tile.setAttribute("draggable", "true");
@@ -334,16 +408,18 @@ function generateSummaryTable() {
 
   const tableData = {};
   LEVELS.forEach((level) => {
-    tableData[level] = { savoir: [], enjeux: [], apprendre: [] };
+    const levelKey = level?.classe || level?.niveau || level;
+    tableData[levelKey] = { savoir: [], enjeux: [], apprendre: [] };
   });
 
   Object.values(droppedTiles).forEach((tile) => {
     const category = tile.dataset.category;
     const stepIndex = parseInt(tile.dataset.stepIndex);
     const level = LEVELS[stepIndex];
+    const levelKey = level?.classe || level?.niveau || level;
 
-    if (level) {
-      tableData[level][category].push({
+    if (levelKey) {
+      tableData[levelKey][category].push({
         text: tile.dataset.text,
         category: category,
       });
@@ -363,11 +439,12 @@ function generateSummaryTable() {
             <tbody>`;
 
   LEVELS.forEach((level) => {
+    const levelKey = level?.classe || level?.niveau || level;
     htmlTable += `<tr>
-            <td class="synthese-col-niveau">${level}</td>`;
+            <td class="synthese-col-niveau">${levelKey}</td>`;
 
     CATEGORIES.forEach((cat) => {
-      const cards = tableData[level][cat.id];
+      const cards = tableData[levelKey][cat.id];
       htmlTable += `<td class="synthese-cell-${cat.id}">
                 <div class="synthese-card-wrapper">`;
 
@@ -604,16 +681,19 @@ function switchTab(tabName) {
   const bankElement = document.getElementById("zone-vignettes-wrapper");
   const tabsContainerElement = document.querySelector(".tabs-container");
   const printButton = document.getElementById("btn-print-table");
+  const levelsFilters = document.querySelector(".tabs-levels");
 
   if (tabName === "synthese") {
     generateSummaryTable();
     bankElement.classList.add("hidden");
     tabsContainerElement.classList.add("full-width");
     printButton.classList.remove("hidden");
+    if (levelsFilters) levelsFilters.classList.add("hidden");
   } else {
     bankElement.classList.remove("hidden");
     tabsContainerElement.classList.remove("full-width");
     printButton.classList.add("hidden");
+    if (levelsFilters) levelsFilters.classList.remove("hidden");
     createStairs(tabName);
   }
   filterBank(tabName);
@@ -954,6 +1034,7 @@ async function init() {
 
   generateCards();
   setupDragAndDrop();
+  setupLevelFilters();
 
   // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
   document
