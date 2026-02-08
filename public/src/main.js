@@ -841,7 +841,7 @@ function switchTab(tabName) {
     .forEach((pane) => pane.classList.remove("active"));
   document.getElementById(`tab-${tabName}`).classList.add("active");
 
-  const bankElement = document.getElementById("zone-vignettes-wrapper");
+  const bankElement = document.getElementById("zone-vignettes");
   const tabsContainerElement = document.querySelector(".tabs-container");
   const printButton = document.getElementById("btn-print-table");
   const levelsFilters = document.querySelector(".tabs-levels");

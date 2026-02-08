@@ -176,6 +176,18 @@ main {
   align-items: center;
 }
 
+#zone-banque-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0 5px;
+}
+
+#zone-banque-actions .btn-import-cards,
+#zone-banque-actions .btn-export-cards {
+  width: 100%;
+}
+
 #zone-banque {
   min-height: 120px;
   display: flex;
