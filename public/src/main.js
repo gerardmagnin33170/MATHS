@@ -75,18 +75,17 @@ async function loadCards() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const content = await response.text();
     const data = Papa.parse(content, { encoding: "UTF-8", header: true }).data;
-    // console.log("Cartes chargées depuis CSV:", data);
-    // const cards = data.map(
-    //   (item) =>
-    //     new Card(
-    //       item.categorie || "",
-    //       item.texte || "",
-    //       item.niveauMin,
-    //       item.id,
-    //     ),
-    // );
-    // console.log("Cartes chargées depuis YAML:", cards);
-    sessionStorage.setItem("cartes", JSON.stringify(data));
+    const cards = data.map(
+      (item) =>
+        new Card(
+          item.categorie || "",
+          item.texte || "",
+          item.niveauMin || 0,
+          item.id,
+        ),
+    );
+    // console.log("Cartes chargées depuis CSV:", cards);
+    sessionStorage.setItem("cartes", JSON.stringify(cards));
   } catch (e) {
     console.log(`${e}`);
   }
@@ -114,19 +113,19 @@ async function importCards() {
           encoding: "UTF-8",
           header: true,
         }).data;
-        // const cards = data.map(
-        //   (item) =>
-        //     new Card(
-        //       item.categorie || "",
-        //       item.texte || "",
-        //       item.niveauMin,
-        //       item.id,
-        //     ),
-        // );
-        // console.log("Cartes chargées depuis YAML:", cards);
-        sessionStorage.setItem("cartes", JSON.stringify(data));
+        const cards = data.map(
+          (item) =>
+            new Card(
+              item.categorie || "",
+              item.texte || "",
+              item.niveauMin || 0,
+              item.id,
+            ),
+        );
+        // console.log("Cartes chargées depuis CSV:", cards);
+        sessionStorage.setItem("cartes", JSON.stringify(cards));
         // une fois le sessionStorage à jour, il faut mettre à jour la banque de cartes
-        CARDS = data;
+        CARDS = cards;
         TILE_COUNTS = Object.fromEntries(
           CATEGORIES.map((cat) => [
             cat.id,
@@ -181,7 +180,8 @@ function generateCards() {
     card.dataset.category = c.categorie;
     card.dataset.text = c.texte;
     card.dataset.tileId = `tile-${c.id}`;
-    card.dataset.minLevel = c.niveauMin !== null ? c.niveauMin : 0;
+    card.dataset.minLevel =
+      c.niveauMin !== null && c.niveauMin !== "" ? c.niveauMin : 0;
 
     // contenu texte
     const textSpan = document.createElement("span");
@@ -753,7 +753,10 @@ function makeCardEditable(cardId) {
   if (!cardData) return;
 
   const originalText = cardData.texte;
-  const originalMinLevel = cardData.niveauMin !== null ? cardData.niveauMin : 0;
+  const originalMinLevel =
+    cardData.niveauMin !== null && cardData.niveauMin !== ""
+      ? cardData.niveauMin
+      : 0;
   const isNewCard = originalText.startsWith("Nouvelle carte ");
 
   // on masque les éléments existants

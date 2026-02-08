@@ -1,7 +1,7 @@
 id,categorie,texte,niveauMin
-0,"savoir","Comprendre ce qu'est un algorithme",
+0,"savoir","Comprendre ce qu'est un algorithme",0
 1,"savoir","Comprendre ce qu'est un token",0
-2,"savoir","Estimer le coût environnemental et social des usages des IA",
+2,"savoir","Estimer le coût environnemental et social des usages des IA",0
 3,"savoir","Comprendre les biais des réponses générées par les IA",0
 4,"savoir","Comprendre l'approche statistique des réponses",0
 5,"savoir","Comprendre l'entrainement des IA génératives",0

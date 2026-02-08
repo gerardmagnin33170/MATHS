@@ -1,822 +1,910 @@
 :root {
-    --couleur-fond: #f4f6f8;
-    --couleur-texte: #2c3e50;
-    --police-principale: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    
-    /* Couleurs des catégories */
-    --coul-savoir: #f1c40f;   /* f39c12*/
-    --coul-enjeux: #3498db;   /* 2980b9 */
-    --coul-apprendre: #2ecc71; /* 27ae60 */   
+  --couleur-fond: #f4f6f8;
+  --couleur-texte: #2c3e50;
+  --police-principale:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
 
-    /* Couleurs pour les cartes et bordures */
-    --coul-bord-savoir: hsl(from var(--coul-savoir) h s calc(l - 2)); /* Orange foncé */
-    --coul-bord-enjeux: hsl(from var(--coul-enjeux) h s calc(l - 5)); /* Bleu foncé */
-    --coul-bord-apprendre: hsl(from var(--coul-apprendre) h s calc(l - 5)); /* Vert foncé */
-    
-    /* Couleurs pour le tableau d'impression / synthèse */
-    --coul-fond-tableau-savoir: hsl(from var(--coul-savoir) h s calc(l + 45));
-    --coul-fond-tableau-enjeux: hsl(from var(--coul-enjeux) h s calc(l + 45));
-    --coul-fond-tableau-apprendre: hsl(from var(--coul-apprendre) h s calc(l + 45));
-    --coul-fond-tableau-niveau: #34495e;
+  /* Couleurs des catégories */
+  --coul-savoir: #f1c40f; /* f39c12*/
+  --coul-enjeux: #3498db; /* 2980b9 */
+  --coul-apprendre: #2ecc71; /* 27ae60 */
+
+  /* Couleurs pour les cartes et bordures */
+  --coul-bord-savoir: hsl(
+    from var(--coul-savoir) h s calc(l - 2)
+  ); /* Orange foncé */
+  --coul-bord-enjeux: hsl(
+    from var(--coul-enjeux) h s calc(l - 5)
+  ); /* Bleu foncé */
+  --coul-bord-apprendre: hsl(
+    from var(--coul-apprendre) h s calc(l - 5)
+  ); /* Vert foncé */
+
+  /* Couleurs pour le tableau d'impression / synthèse */
+  --coul-fond-tableau-savoir: hsl(from var(--coul-savoir) h s calc(l + 45));
+  --coul-fond-tableau-enjeux: hsl(from var(--coul-enjeux) h s calc(l + 45));
+  --coul-fond-tableau-apprendre: hsl(
+    from var(--coul-apprendre) h s calc(l + 45)
+  );
+  --coul-fond-tableau-niveau: #34495e;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-    font-family: var(--police-principale);
-    background-color: var(--couleur-fond);
-    color: var(--couleur-texte);
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+  font-family: var(--police-principale);
+  background-color: var(--couleur-fond);
+  color: var(--couleur-texte);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 header {
-    background-color: #fff;
-    padding: 0.8rem 2rem;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    flex-shrink: 0;
+  background-color: #fff;
+  padding: 0.8rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
 }
 
-h1 { font-size: 1.5rem; color: #2c3e50; margin-bottom: 0.3rem; }
-.sous-titre { font-size: 0.95rem; color: #7f8c8d; font-weight: 400; }
+h1 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.3rem;
+}
+.sous-titre {
+  font-size: 0.95rem;
+  color: #7f8c8d;
+  font-weight: 400;
+}
 
 .barre-outils {
-    background: #fff;
-    padding: 10px 2rem;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #eee;
-    flex-shrink: 0;
+  background: #fff;
+  padding: 10px 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
 }
 
 .barre-outils .btn-print {
-    border-color: #3498db;
-    color: #3498db;
-    background: #fff;
-    font-weight: bold;
-    margin-left: 20px;
+  border-color: #3498db;
+  color: #3498db;
+  background: #fff;
+  font-weight: bold;
+  margin-left: 20px;
 }
-.barre-outils .btn-print:hover { background: #3498db; color: #fff; }
+.barre-outils .btn-print:hover {
+  background: #3498db;
+  color: #fff;
+}
 
 .edit-mode-controls {
-    display: flex;
-    gap: 10px;
-    margin-left: auto;
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
 }
 
 .btn-edit-mode,
 .btn-lock-mode {
-    background-color: #7f8c8d;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    font-weight: 500;
+  background-color: #7f8c8d;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  font-weight: 500;
 }
 
 .btn-edit-mode:hover,
 .btn-lock-mode:hover {
-    background-color: #5a6c7d;
+  background-color: #5a6c7d;
 }
 
 button {
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    background: #f8f9fa;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    transition: all 0.2s;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
 }
 
-button:hover { background: #e2e6ea; }
+button:hover {
+  background: #e2e6ea;
+}
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 main {
-    flex: 1;
-    padding: 1rem;
-    max-width: 1920px;
-    margin: 0 auto;
-    width: 100%;
-    display: flex;
-    gap: 15px;
-    overflow: hidden;
-    min-height: 0;
+  flex: 1;
+  padding: 1rem;
+  max-width: 1920px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  gap: 15px;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* --- ZONE BANQUE (Colonne Gauche) --- */
 .zone-banque {
-    background: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    border: 1px solid #e0e0e0;
-    
-    width: 550px; 
-    min-width: 500px;
-    height: 100%;
-    overflow-y: auto;
-    flex-shrink: 0;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+
+  width: 550px;
+  min-width: 500px;
+  height: 100%;
+  overflow-y: auto;
+  flex-shrink: 0;
 }
 
 .titre-section {
-    font-weight: bold;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #zone-banque {
-    min-height: 120px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border: 2px dashed #ccc;
-    border-radius: 6px;
+  min-height: 120px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 2px dashed #ccc;
+  border-radius: 6px;
 }
 
 /* Cartes dans la banque sur 2 colonnes */
 #zone-banque .carte-item {
-    flex: 0 0 calc(50% - 5px); /* 50% moins la moitié du gap */
-    box-sizing: border-box;
+  flex: 0 0 calc(50% - 5px); /* 50% moins la moitié du gap */
+  box-sizing: border-box;
 }
 
 #zone-banque.drop-target {
-    background: #e8f5e9;
-    border-color: #4CAF50;
+  background: #e8f5e9;
+  border-color: #4caf50;
 }
 
 .banque-actions {
-    display: flex;
-    justify-content: center;
-    padding: 10px 15px;
-    gap: 10px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 15px;
+  gap: 10px;
 }
 
 .btn-new-card {
-    padding: 10px 18px;
-    background-color: var(--coul-bord-savoir);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.95rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-    display: block;
+  padding: 10px 18px;
+  background-color: var(--coul-bord-savoir);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  display: block;
 }
 
 .btn-new-card:hover {
-    background-color: hsl(from var(--coul-bord-savoir) h s calc(l - 5));
+  background-color: hsl(from var(--coul-bord-savoir) h s calc(l - 5));
 }
 
 .btn-new-card:active {
-    transform: scale(0.98);
+  transform: scale(0.98);
 }
 
 /* --- ÉDITION DE CARTES --- */
 .carte-item.card-editing {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    min-width: 250px;
-    background-color: #fff9e6;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  min-width: 250px;
+  background-color: #fff9e6;
 }
 
 .card-edit-input {
-    padding: 8px 10px;
-    border: 2px solid #f1c40f;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    margin-bottom: 6px;
-    font-family: inherit;
+  padding: 8px 10px;
+  border: 2px solid #f1c40f;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  font-family: inherit;
 }
 
 .card-edit-input:focus {
-    outline: none;
-    border-color: #e6b800;
-    box-shadow: 0 0 4px rgba(241, 196, 15, 0.5);
+  outline: none;
+  border-color: #e6b800;
+  box-shadow: 0 0 4px rgba(241, 196, 15, 0.5);
 }
 
 /* Couleurs d'input selon la catégorie */
 .card-edit-container.savoir .card-edit-input {
-    border-color: var(--coul-bord-savoir);
+  border-color: var(--coul-bord-savoir);
 }
 
 .card-edit-container.savoir .card-edit-input:focus {
-    border-color: hsl(47.9, 85.5%, 38.9%);
-    box-shadow: 0 0 4px rgba(241, 196, 15, 0.4);
+  border-color: hsl(47.9, 85.5%, 38.9%);
+  box-shadow: 0 0 4px rgba(241, 196, 15, 0.4);
 }
 
 .card-edit-container.enjeux .card-edit-input {
-    border-color: var(--coul-bord-enjeux);
+  border-color: var(--coul-bord-enjeux);
 }
 
 .card-edit-container.enjeux .card-edit-input:focus {
-    border-color: hsl(204, 70%, 43%);
-    box-shadow: 0 0 4px rgba(52, 152, 219, 0.4);
+  border-color: hsl(204, 70%, 43%);
+  box-shadow: 0 0 4px rgba(52, 152, 219, 0.4);
 }
 
 .card-edit-container.apprendre .card-edit-input {
-    border-color: var(--coul-bord-apprendre);
+  border-color: var(--coul-bord-apprendre);
 }
 
 .card-edit-container.apprendre .card-edit-input:focus {
-    border-color: hsl(141, 71%, 38%);
-    box-shadow: 0 0 4px rgba(46, 204, 113, 0.4);
+  border-color: hsl(141, 71%, 38%);
+  box-shadow: 0 0 4px rgba(46, 204, 113, 0.4);
 }
 
 .card-edit-buttons {
-    display: flex;
-    gap: 6px;
-    justify-content: flex-end;
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
 }
 
 .card-edit-btn-save,
 .card-edit-btn-cancel {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: bold;
-    transition: background-color 0.2s;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
 }
 
 .card-edit-btn-save {
-    background-color: #4CAF50;
-    color: white;
+  background-color: #4caf50;
+  color: white;
 }
 
 .card-edit-btn-save:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 .card-edit-btn-cancel {
-    background-color: #f44336;
-    color: white;
+  background-color: #f44336;
+  color: white;
 }
 
 .card-edit-btn-cancel:hover {
-    background-color: #da190b;
+  background-color: #da190b;
 }
 
 /* --- CARTES AVEC ACTIONS --- */
 .carte-item {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
 }
 
 .carte-text {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    word-break: break-word;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
 }
 
 .carte-actions {
-    display: none;
-    flex-direction: row;
-    gap: 4px;
-    margin-top: 6px;
+  display: none;
+  flex-direction: row;
+  gap: 4px;
+  margin-top: 6px;
 }
 
 .carte-item:hover .carte-actions {
-    display: flex;
+  display: flex;
 }
 
 .carte-action-btn {
-    flex: 1;
-    padding: 4px 6px;
-    border: none;
-    background-color: transparent;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: background-color 0.2s;
+  flex: 1;
+  padding: 4px 6px;
+  border: none;
+  background-color: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
 }
 
 .carte-savoir .carte-edit-btn {
-    color: var(--coul-savoir);
+  color: var(--coul-savoir);
 }
 
 .carte-enjeux .carte-edit-btn {
-    color: var(--coul-enjeux);
+  color: var(--coul-enjeux);
 }
 
 .carte-apprendre .carte-edit-btn {
-    color: var(--coul-apprendre);
+  color: var(--coul-apprendre);
 }
 
 .carte-savoir .carte-edit-btn:hover {
-    background-color: rgba(241, 196, 15, 0.1);
+  background-color: rgba(241, 196, 15, 0.1);
 }
 
 .carte-enjeux .carte-edit-btn:hover {
-    background-color: rgba(52, 152, 219, 0.1);
+  background-color: rgba(52, 152, 219, 0.1);
 }
 
 .carte-apprendre .carte-edit-btn:hover {
-    background-color: rgba(46, 204, 113, 0.1);
+  background-color: rgba(46, 204, 113, 0.1);
 }
 
 .carte-delete-btn {
-    color: #e74c3c;
+  color: #e74c3c;
 }
 
 .carte-delete-btn:hover {
-    background-color: rgba(231, 76, 60, 0.1);
+  background-color: rgba(231, 76, 60, 0.1);
 }
 
 /* --- CONTENEUR D'ÉDITION DE CARTE --- */
 .card-edit-container {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 8px;
-    background-color: #fff9e6 !important;
-    min-width: 250px;
-    border-left: 4px solid var(--coul-bord-savoir);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background-color: #fff9e6 !important;
+  min-width: 250px;
+  border-left: 4px solid var(--coul-bord-savoir);
 }
 
 .card-edit-container.savoir {
-    background-color: hsl(47.9, 100%, 95%) !important;
-    border-left-color: var(--coul-bord-savoir);
+  background-color: hsl(47.9, 100%, 95%) !important;
+  border-left-color: var(--coul-bord-savoir);
 }
 
 .card-edit-container.enjeux {
-    background-color: hsl(204, 100%, 95%) !important;
-    border-left-color: var(--coul-bord-enjeux);
+  background-color: hsl(204, 100%, 95%) !important;
+  border-left-color: var(--coul-bord-enjeux);
 }
 
 .card-edit-container.apprendre {
-    background-color: hsl(141, 100%, 95%) !important;
-    border-left-color: var(--coul-bord-apprendre);
+  background-color: hsl(141, 100%, 95%) !important;
+  border-left-color: var(--coul-bord-apprendre);
 }
 
 /* --- CASE À COCHER D'ÉDITION --- */
 .card-edit-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-    font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 0.9rem;
 }
 
 .card-edit-checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }
 
 .card-edit-checkbox label {
-    cursor: pointer;
-    user-select: none;
+  cursor: pointer;
+  user-select: none;
 }
 
 /* --- SELECT NIVEAU MINIMUM D'ÉDITION --- */
 .card-edit-minlevel {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 8px 0;
-    font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0;
+  font-size: 0.9rem;
 }
 
 .card-edit-minlevel label {
-    font-weight: 500;
-    color: #333;
+  font-weight: 500;
+  color: #333;
 }
 
 .card-edit-minlevel-select {
-    padding: 6px 8px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-size: 0.9rem;
-    font-family: inherit;
-    cursor: pointer;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 /* --- ALERTE D'ESCALIER --- */
 .stair-alert {
-    position: fixed;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: #fff3cd;
-    border: 2px solid #ff6b6b;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    z-index: 1000;
-    min-width: 120px;
-    text-align: center;
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #fff3cd;
+  border: 2px solid #ff6b6b;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1000;
+  min-width: 120px;
+  text-align: center;
 }
 
 .stair-alert .alert-icon {
-    font-size: 32px;
+  font-size: 32px;
 }
 
 .stair-alert .alert-text {
-    font-weight: bold;
-    color: #d9534f;
-    font-size: 0.9rem;
+  font-weight: bold;
+  color: #d9534f;
+  font-size: 0.9rem;
 }
 
 /* --- CONTENEUR DES ESCALIERS (Colonne Droite) --- */
 .tabs-container {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    overflow: hidden;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* --- CARTES ET ÉTIQUETTES --- */
 .carte-item {
-    padding: 10px 14px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: grab;
-    font-size: 0.9rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    max-width: 100%; 
-    border-left-width: 4px;
-    user-select: none;
-    transition: transform 0.2s, box-shadow 0.2s;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: grab;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  border-left-width: 4px;
+  user-select: none;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .carte-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.carte-item:active { cursor: grabbing; }
-.carte-item.hidden { display: none; }
+.carte-item:active {
+  cursor: grabbing;
+}
+.carte-item.hidden {
+  display: none;
+}
 
-.carte-savoir { border-left-color: var(--coul-bord-savoir); }
+.carte-savoir {
+  border-left-color: var(--coul-bord-savoir);
+}
 .carte-savoir[data-min-level="0"] {
-    border-left-color: color-mix(in hsl,
-        hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
-        white 5%);
+  border-left-color: color-mix(
+    in hsl,
+    hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
+    white 5%
+  );
 }
-.carte-enjeux { border-left-color: var(--coul-bord-enjeux); }
+.carte-savoir[data-min-level="1"] {
+  border-left-color: color-mix(
+    in hsl,
+    hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
+    white 5%
+  );
+}
+.carte-enjeux {
+  border-left-color: var(--coul-bord-enjeux);
+}
 .carte-enjeux[data-min-level="0"] {
-    border-left-color: color-mix(in hsl,
-        hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
-        white 5%);
+  border-left-color: color-mix(
+    in hsl,
+    hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
+    white 5%
+  );
 }
-.carte-apprendre { border-left-color: var(--coul-bord-apprendre); }
+.carte-apprendre {
+  border-left-color: var(--coul-bord-apprendre);
+}
 .carte-apprendre[data-min-level="0"] {
-    border-left-color: color-mix(in hsl,
-        hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
-        white 5%);
+  border-left-color: color-mix(
+    in hsl,
+    hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
+    white 5%
+  );
 }
 
 /* --- STRUCTURE À ONGLETS --- */
 .tabs-header {
-    display: flex;
-    background: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
-    flex-shrink: 0;
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  flex-shrink: 0;
 }
 
 .tab-button {
-    flex: 1;
-    padding: 10px 8px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 0.95rem; /* Rétabli 0.95rem pour que les 4 onglets tiennent */
-    font-weight: 600;
-    transition: all 0.3s;
-    border-bottom: 3px solid transparent;
+  flex: 1;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.95rem; /* Rétabli 0.95rem pour que les 4 onglets tiennent */
+  font-weight: 600;
+  transition: all 0.3s;
+  border-bottom: 3px solid transparent;
 }
 
 .tab-button.active {
-    background: #fff;
+  background: #fff;
 }
 
 .tab-button.savoir.active {
-    color: #7d6608;
-    border-bottom-color: var(--coul-bord-savoir);
+  color: #7d6608;
+  border-bottom-color: var(--coul-bord-savoir);
 }
-    .tab-button.enjeux.active {
-    color: #1a5490;
-    border-bottom-color: var(--coul-bord-enjeux);
+.tab-button.enjeux.active {
+  color: #1a5490;
+  border-bottom-color: var(--coul-bord-enjeux);
 }
-    .tab-button.apprendre.active {
-    color: #1a7a4e;
-    border-bottom-color: var(--coul-bord-apprendre);
+.tab-button.apprendre.active {
+  color: #1a7a4e;
+  border-bottom-color: var(--coul-bord-apprendre);
 }
-    .tab-button.synthese.active {
-    color: var(--couleur-texte);
-    border-bottom-color: #7f8c8d;
+.tab-button.synthese.active {
+  color: var(--couleur-texte);
+  border-bottom-color: #7f8c8d;
 }
-
 
 .tabs-content {
-    padding: 0px 10px 10px 10px; /* pas de padding en haut */
-    flex: 1;
-    overflow: hidden;
-    min-height: 0;
+  padding: 0px 10px 10px 10px; /* pas de padding en haut */
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
 }
 
 .tab-pane {
-    display: none;
-    height: 100%;
+  display: none;
+  height: 100%;
 }
 
 .tab-pane.active {
-    display: block;
-    height: 100%;
+  display: block;
+  height: 100%;
 }
 
 /* --- ESCALIER VISUEL --- */
 .stair-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0px 10px 10px 10px; /* pas de padding en haut */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0px 10px 10px 10px; /* pas de padding en haut */
 }
 
 .stair-step {
-    position: absolute;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    
-    height: auto !important; 
-    min-height: 50px; 
-    
-    display: flex;
-    flex-direction: column; 
-    align-items: flex-start;
-    justify-content: flex-start; 
-    overflow-y: auto; 
-    padding-top: 40px; 
-    padding-bottom: 10px; 
-    gap: 5px;
+  position: absolute;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  height: auto !important;
+  min-height: 50px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y: auto;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  gap: 5px;
 }
 
 .tab-pane.savoir .stair-step {
-    background: linear-gradient(135deg,
-        hsl(from var(--coul-savoir) h s calc(l + 20)) 0%,
-        hsl(from var(--coul-savoir) h s calc(l - 5)) 100%);
+  background: linear-gradient(
+    135deg,
+    hsl(from var(--coul-savoir) h s calc(l + 20)) 0%,
+    hsl(from var(--coul-savoir) h s calc(l - 5)) 100%
+  );
 }
 
-.tab-pane.savoir .stair-step[data-level="Sixième"], 
+.tab-pane.savoir .stair-step[data-level="Sixième"],
 .tab-pane.savoir .stair-step[data-level="Cinquième"] {
-    background: color-mix(in hsl,
-        hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
-        white 5%);
-    /* background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); */
+  background: color-mix(
+    in hsl,
+    hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
+    white 5%
+  );
+  /* background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); */
 }
 
 .tab-pane.enjeux .stair-step {
-    background: linear-gradient(135deg,
-        hsl(from var(--coul-enjeux) h s calc(l + 20)) 0%,
-        hsl(from var(--coul-enjeux) h s calc(l - 5)) 100%);
-    /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 10%); */
+  background: linear-gradient(
+    135deg,
+    hsl(from var(--coul-enjeux) h s calc(l + 20)) 0%,
+    hsl(from var(--coul-enjeux) h s calc(l - 5)) 100%
+  );
+  /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 10%); */
 }
 
-.tab-pane.enjeux .stair-step[data-level="Sixième"], 
+.tab-pane.enjeux .stair-step[data-level="Sixième"],
 .tab-pane.enjeux .stair-step[data-level="Cinquième"] {
-    background: color-mix(in hsl,
-        hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
-        white 5%);
-    /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); */
+  background: color-mix(
+    in hsl,
+    hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
+    white 5%
+  );
+  /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); */
 }
 
 .tab-pane.apprendre .stair-step {
-    background: linear-gradient(135deg,
-        hsl(from var(--coul-apprendre) h s calc(l + 20)) 0%,
-        hsl(from var(--coul-apprendre) h s calc(l - 5)) 100%);
-    /* background: linear-gradient(135deg, #55efc4 0%, #00b894 10%); */
+  background: linear-gradient(
+    135deg,
+    hsl(from var(--coul-apprendre) h s calc(l + 20)) 0%,
+    hsl(from var(--coul-apprendre) h s calc(l - 5)) 100%
+  );
+  /* background: linear-gradient(135deg, #55efc4 0%, #00b894 10%); */
 }
 
-.tab-pane.apprendre .stair-step[data-level="Sixième"], 
+.tab-pane.apprendre .stair-step[data-level="Sixième"],
 .tab-pane.apprendre .stair-step[data-level="Cinquième"] {
-    background: color-mix(in hsl,
-        hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
-        white 5%);
-    /* background: linear-gradient(135deg, #55efc4 0%, #00b894 100%); */
+  background: color-mix(
+    in hsl,
+    hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
+    white 5%
+  );
+  /* background: linear-gradient(135deg, #55efc4 0%, #00b894 100%); */
 }
 
 .stair-step.drop-target {
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
-    transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.6);
+  transform: scale(1.02);
 }
 
 .step-label {
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    pointer-events: none;
-    position: absolute; 
-    top: 5px;
-    left: 5px;
-    padding: 5px 10px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 5px 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 /* --- CARTES DÉPOSÉES (Tiles) --- */
 .dropped-tile {
-    position: static; 
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 500;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-    cursor: grab; 
-    transition: all 0.3s ease;
-    z-index: 10;
-    user-select: none;
-    background: #fff;
-    border-left-width: 4px;
-    border-left-style: solid;
-    width: 100%; 
-    min-height: 40px;
+  position: static;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  transition: all 0.3s ease;
+  z-index: 10;
+  user-select: none;
+  background: #fff;
+  border-left-width: 4px;
+  border-left-style: solid;
+  width: 100%;
+  min-height: 40px;
 }
 
 /* Styles pour le Drag & Drop Natif */
 .carte-item[draggable="true"]:active,
 .dropped-tile[draggable="true"]:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 .carte-item.drag-source,
 .dropped-tile.drag-source {
-    opacity: 0.5;
-    border: 2px dashed #000;
+  opacity: 0.5;
+  border: 2px dashed #000;
 }
 
 /* --- ALERTE SUR LES TUILES MAL PLACÉES --- */
 .dropped-tile.tile-alert {
-    background-color: #fff3cd !important;
-    border: 2px solid #ff6b6b !important;
-    box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+  background-color: #fff3cd !important;
+  border: 2px solid #ff6b6b !important;
+  box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
 }
 
 .dropped-tile.tile-alert::before {
-    content: '⚠️ ';
-    font-weight: bold;
+  content: "⚠️ ";
+  font-weight: bold;
 }
 
-.dropped-tile.savoir { border-left-color: var(--coul-bord-savoir); }
-.dropped-tile.enjeux { border-left-color: var(--coul-bord-enjeux); }
-.dropped-tile.apprendre { border-left-color: var(--coul-bord-apprendre); }
+.dropped-tile.savoir {
+  border-left-color: var(--coul-bord-savoir);
+}
+.dropped-tile.enjeux {
+  border-left-color: var(--coul-bord-enjeux);
+}
+.dropped-tile.apprendre {
+  border-left-color: var(--coul-bord-apprendre);
+}
 
 /* --- Styles du Tableau de Synthèse (Écran) --- */
 #tableau-synthese {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    font-size: 0.9rem;
-    margin-top: 10px;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.9rem;
+  margin-top: 10px;
 }
-#tableau-synthese th, #tableau-synthese td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    vertical-align: top;
-    text-align: left;
+#tableau-synthese th,
+#tableau-synthese td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  vertical-align: top;
+  text-align: left;
 }
 #tableau-synthese th {
-    background-color: #f8f8f8;
-    text-align: center;
+  background-color: #f8f8f8;
+  text-align: center;
 }
 .synthese-col-niveau {
-    background-color: var(--coul-fond-tableau-niveau);
-    color: #fff;
-    font-weight: bold;
-    text-align: center !important;
-    width: 120px;
+  background-color: var(--coul-fond-tableau-niveau);
+  color: #fff;
+  font-weight: bold;
+  text-align: center !important;
+  width: 120px;
 }
-.synthese-cell-savoir { background-color: var(--coul-fond-tableau-savoir); }
-.synthese-cell-enjeux { background-color: var(--coul-fond-tableau-enjeux); }
-.synthese-cell-apprendre { background-color: var(--coul-fond-tableau-apprendre); }
+.synthese-cell-savoir {
+  background-color: var(--coul-fond-tableau-savoir);
+}
+.synthese-cell-enjeux {
+  background-color: var(--coul-fond-tableau-enjeux);
+}
+.synthese-cell-apprendre {
+  background-color: var(--coul-fond-tableau-apprendre);
+}
 
 .synthese-card-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 .synthese-card {
-    display: inline-block;
-    padding: 4px 8px;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    background: #fff;
-    line-height: 1.2;
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: #fff;
+  line-height: 1.2;
 }
-.synthese-card.savoir { border-left: 4px solid var(--coul-bord-savoir); }
-.synthese-card.enjeux { border-left: 4px solid var(--coul-bord-enjeux); }
-.synthese-card.apprendre { border-left: 4px solid var(--coul-bord-apprendre); }
-
+.synthese-card.savoir {
+  border-left: 4px solid var(--coul-bord-savoir);
+}
+.synthese-card.enjeux {
+  border-left: 4px solid var(--coul-bord-enjeux);
+}
+.synthese-card.apprendre {
+  border-left: 4px solid var(--coul-bord-apprendre);
+}
 
 footer {
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    margin-top: auto;
-    font-size: 0.85rem;
-    flex-shrink: 0;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  margin-top: auto;
+  font-size: 0.85rem;
+  flex-shrink: 0;
 }
 
 /* --- STYLE D'IMPRESSION (A3 PAYSAGE - TABLEAU) --- */
 @media print {
-    @page {
-        size: A3 landscape;
-        margin: 1cm;
-    }
-    
-    body { 
-        background: white;
-        -webkit-print-color-adjust: exact !important; 
-        print-color-adjust: exact !important; 
-        display: block; /* S'assurer que le corps est visible */
-    }
-    
-    /* 1. Masquer l'interface principale */
-    body > *:not(#tableau-impression) {
-        display: none !important;
-    }
-    
-    /* 2. Afficher le conteneur d'impression pleine page */
-    #tableau-impression { 
-        display: block !important; 
-        position: relative;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 0; /* Gérer les marges via @page */
-    }
-    
-    /* 3. Styles du tableau injecté (Quadrillage complet & Tailles A3) */
-    #tableau-impression h1 {
-        font-size: 24px;
-        margin-bottom: 20px;
-        font-weight: bold;
-        font-family: var(--police-principale);
-        text-align: center;
-    }
-    
-    #tableau-impression table { 
-        width: 100%; 
-        border-collapse: collapse; 
-    }
-    
-    /* Correction: Appliquer la bordure complète à toutes les cellules */
-    #tableau-impression th, #tableau-impression td { 
-        border: 1px solid #aaa !important; /* Bordure d'origine pour toutes les cellules */
-        padding: 5px; /* Padding d'origine */
-        font-size: 10pt; /* Taille de police d'origine */
-        vertical-align: top; 
-        line-height: 1.2;
-    }
-    
-    /* Styles des vignettes */
-    .print-card {
-        font-size: 9pt; /* Taille de police d'origine pour les cartes */
-        padding: 4px 8px;
-        border: 1px solid #aaa;
-        line-height: 1.2;
-        background: #fff;
-        border-left-width: 4px;
-    }
+  @page {
+    size: A3 landscape;
+    margin: 1cm;
+  }
 
-    /* Conserver les couleurs de fond */
-    .print-col-niveau {
-        background-color: var(--coul-fond-tableau-niveau) !important;
-        color: #fff !important;
-        font-weight: bold;
-        text-align: center;
-    }
-    .print-col-savoir { background-color: var(--coul-fond-tableau-savoir) !important; }
-    .print-col-enjeux { background-color: var(--coul-fond-tableau-enjeux) !important; }
-    .print-col-apprendre { background-color: var(--coul-fond-tableau-apprendre) !important; }
+  body {
+    background: white;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: block; /* S'assurer que le corps est visible */
+  }
+
+  /* 1. Masquer l'interface principale */
+  body > *:not(#tableau-impression) {
+    display: none !important;
+  }
+
+  /* 2. Afficher le conteneur d'impression pleine page */
+  #tableau-impression {
+    display: block !important;
+    position: relative;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0; /* Gérer les marges via @page */
+  }
+
+  /* 3. Styles du tableau injecté (Quadrillage complet & Tailles A3) */
+  #tableau-impression h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-family: var(--police-principale);
+    text-align: center;
+  }
+
+  #tableau-impression table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Correction: Appliquer la bordure complète à toutes les cellules */
+  #tableau-impression th,
+  #tableau-impression td {
+    border: 1px solid #aaa !important; /* Bordure d'origine pour toutes les cellules */
+    padding: 5px; /* Padding d'origine */
+    font-size: 10pt; /* Taille de police d'origine */
+    vertical-align: top;
+    line-height: 1.2;
+  }
+
+  /* Styles des vignettes */
+  .print-card {
+    font-size: 9pt; /* Taille de police d'origine pour les cartes */
+    padding: 4px 8px;
+    border: 1px solid #aaa;
+    line-height: 1.2;
+    background: #fff;
+    border-left-width: 4px;
+  }
+
+  /* Conserver les couleurs de fond */
+  .print-col-niveau {
+    background-color: var(--coul-fond-tableau-niveau) !important;
+    color: #fff !important;
+    font-weight: bold;
+    text-align: center;
+  }
+  .print-col-savoir {
+    background-color: var(--coul-fond-tableau-savoir) !important;
+  }
+  .print-col-enjeux {
+    background-color: var(--coul-fond-tableau-enjeux) !important;
+  }
+  .print-col-apprendre {
+    background-color: var(--coul-fond-tableau-apprendre) !important;
+  }
 }
