@@ -1,7 +1,7 @@
 id,categorie,texte,niveauMin
-0,"savoir","Comprendre ce qu'est un algorithme",0
+0,"savoir","Comprendre ce qu'est un algorithme",
 1,"savoir","Comprendre ce qu'est un token",0
-2,"savoir","Estimer le coût environnemental et social des usages des IA",0
+2,"savoir","Estimer le coût environnemental et social des usages des IA",
 3,"savoir","Comprendre les biais des réponses générées par les IA",0
 4,"savoir","Comprendre l'approche statistique des réponses",0
 5,"savoir","Comprendre l'entrainement des IA génératives",0
@@ -18,7 +18,7 @@ id,categorie,texte,niveauMin
 16,"enjeux","Comprendre le financement des IA et l'intérêt des IA souveraines",0
 17,"enjeux","Sensibiliser à des usages démocratiques et égalitaires des IA",0
 18,"enjeux","Interroger ce que signifie apprendre au regard du rapport à la connaissance qu'impliquent les IA",0
-19,"apprendre","Renforcer l'accessibilité linguistique tout en veillant à la progressivité et à la complexification du langage",0
+19,"apprendre","Confronter un texte original à un texte rendu accessible par une IA, pour prendre conscience de la richesse et de la complexité de la langue.",0
 20,"apprendre","Utiliser les IA pour aider à mémoriser",0
 21,"apprendre","Confronter production personnelle à IA pour exercer son esprit critique",0
 22,"apprendre","S'entraîner à l'oral en interaction, en autonomie, en complément d'autres échanges",0

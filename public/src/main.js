@@ -1,4 +1,5 @@
 import yaml from "js-yaml";
+import Papa from "papaparse";
 
 // =============================================================================
 // CONSTANTES
@@ -70,21 +71,22 @@ async function loadCategories() {
 
 async function loadCards() {
   try {
-    const response = await fetch("./data/cartes.yaml");
+    const response = await fetch("./data/cartes.csv");
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const content = await response.text();
-    const data = yaml.load(content);
-    const cards = data.map(
-      (item) =>
-        new Card(
-          item.categorie || "",
-          item.texte || "",
-          item.niveauMin,
-          item.id,
-        ),
-    );
-    // console.log('Cartes chargées depuis YAML:', cards);
-    sessionStorage.setItem("cartes", JSON.stringify(cards));
+    const data = Papa.parse(content, { encoding: "UTF-8", header: true }).data;
+    // console.log("Cartes chargées depuis CSV:", data);
+    // const cards = data.map(
+    //   (item) =>
+    //     new Card(
+    //       item.categorie || "",
+    //       item.texte || "",
+    //       item.niveauMin,
+    //       item.id,
+    //     ),
+    // );
+    // console.log("Cartes chargées depuis YAML:", cards);
+    sessionStorage.setItem("cartes", JSON.stringify(data));
   } catch (e) {
     console.log(`${e}`);
   }
@@ -98,29 +100,33 @@ async function importCards() {
       const file = event.target.files[0];
       if (!file) return;
 
-      const ext = file.name.split(".").pop().toLowerCase();
-      if (!["yaml", "yml"].includes(ext)) {
-        console.error(`Invalid file type ${ext}. Please upload a YAML file.`);
+      if (file.type !== "text/csv") {
+        console.error(
+          `Invalid file type ${file.type}. Please upload a CSV file.`,
+        );
         return;
       }
 
       const reader = new FileReader();
       reader.onload = () => {
         const content = reader.result;
-        const data = yaml.load(content);
-        const cards = data.map(
-          (item) =>
-            new Card(
-              item.categorie || "",
-              item.texte || "",
-              item.niveauMin,
-              item.id,
-            ),
-        );
-        // console.log('Cartes chargées depuis YAML:', cards);
-        sessionStorage.setItem("cartes", JSON.stringify(cards));
+        const data = Papa.parse(content, {
+          encoding: "UTF-8",
+          header: true,
+        }).data;
+        // const cards = data.map(
+        //   (item) =>
+        //     new Card(
+        //       item.categorie || "",
+        //       item.texte || "",
+        //       item.niveauMin,
+        //       item.id,
+        //     ),
+        // );
+        // console.log("Cartes chargées depuis YAML:", cards);
+        sessionStorage.setItem("cartes", JSON.stringify(data));
         // une fois le sessionStorage à jour, il faut mettre à jour la banque de cartes
-        CARDS = cards;
+        CARDS = data;
         TILE_COUNTS = Object.fromEntries(
           CATEGORIES.map((cat) => [
             cat.id,
@@ -146,12 +152,13 @@ async function importCards() {
 async function exportCards() {
   try {
     const parsedData = JSON.parse(sessionStorage.getItem("cartes"));
-    const data = yaml.dump(parsedData);
-    const blob = new Blob([data], { type: "text/yaml" });
+    const data = Papa.unparse(parsedData);
+    console.log("Données à exporter:", data);
+    const blob = new Blob([data], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "cartes.yaml";
+    a.download = "cartes.csv";
     a.click();
   } catch (e) {
     console.log(`${e}`);
@@ -946,7 +953,9 @@ async function init() {
   setupDragAndDrop();
 
   // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
-  // document.getElementById('btn-import-cards').addEventListener('click', importCards);
+  document
+    .getElementById("btn-import-cards")
+    .addEventListener("click", importCards);
   document
     .getElementById("btn-export-cards")
     .addEventListener("click", exportCards);
