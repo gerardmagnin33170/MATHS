@@ -178,6 +178,169 @@ async function exportCards() {
 }
 
 // =============================================================================
+// SAUVEGARDE ET RESTAURATION DE L'ÉTAT
+// =============================================================================
+function saveState() {
+  try {
+    // Préparer les données des cartes déposées
+    const droppedTilesData = Object.keys(droppedTiles).map((tileId) => {
+      const tile = droppedTiles[tileId];
+      return {
+        tileId: tileId,
+        cardId: tileId.split("-")[1],
+        stepIndex: parseInt(tile.dataset.stepIndex),
+        category: tile.dataset.category,
+        text: tile.dataset.text,
+        minLevel: tile.dataset.minLevel || "",
+      };
+    });
+
+    // Construire l'objet état
+    const state = {
+      version: "1.0",
+      timestamp: new Date().toISOString(),
+      cards: CARDS,
+      droppedTiles: droppedTilesData,
+    };
+
+    // Créer le fichier JSON à télécharger
+    const dataStr = JSON.stringify(state, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    const filename = `progression-ia-state-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    console.log("État sauvegardé:", state);
+  } catch (e) {
+    console.error("Erreur lors de la sauvegarde de l'état:", e);
+    alert(
+      "Erreur lors de la sauvegarde de l'état. Consultez la console pour plus de détails.",
+    );
+  }
+}
+
+function loadState() {
+  try {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const state = JSON.parse(reader.result);
+
+          // Validation basique
+          if (!state.version || !state.cards || !state.droppedTiles) {
+            throw new Error("Format de fichier invalide");
+          }
+
+          // Restaurer les cartes
+          CARDS = state.cards.map(
+            (c) => new Card(c.categorie, c.texte, c.niveauMin, c.id),
+          );
+          sessionStorage.setItem("cartes", JSON.stringify(CARDS));
+
+          // Recalculer les compteurs
+          TILE_COUNTS = Object.fromEntries(
+            CATEGORIES.map((cat) => [
+              cat.id,
+              CARDS.filter((c) => c.categorie === cat.id).length,
+            ]),
+          );
+
+          // Réinitialiser les tuiles déposées
+          Object.values(droppedTiles).forEach((tile) => tile.remove());
+          Object.keys(droppedTiles).forEach((key) => delete droppedTiles[key]);
+
+          // Régénérer les cartes dans la banque
+          generateCards();
+          filterBank(currentTab);
+
+          // Recréer les escaliers pour la catégorie actuelle
+          if (currentTab !== "synthese") {
+            createStairs(currentTab);
+          }
+
+          // Restaurer les cartes déposées
+          state.droppedTiles.forEach((tileData) => {
+            const originalCard = document.getElementById(
+              `c-${tileData.cardId}`,
+            );
+            if (originalCard && stairs[tileData.category]) {
+              // Masquer la carte originale
+              originalCard.classList.add("hidden");
+
+              // Créer la tuile déposée
+              const step = stairs[tileData.category].steps.find(
+                (s) => s.index === tileData.stepIndex,
+              );
+
+              if (step) {
+                const tile = document.createElement("div");
+                tile.className = `dropped-tile ${tileData.category}`;
+                tile.id = tileData.tileId;
+                tile.textContent = tileData.text;
+                tile.setAttribute("draggable", "true");
+                tile.setAttribute("ondragstart", "drag(event)");
+                tile.dataset.tileId = tileData.tileId;
+                tile.dataset.stepIndex = tileData.stepIndex;
+                tile.dataset.category = tileData.category;
+                tile.dataset.text = tileData.text;
+                tile.dataset.minLevel = tileData.minLevel;
+
+                step.element.appendChild(tile);
+                tile.style.position = "static";
+
+                step.tiles.push({ id: tileData.tileId, element: tile });
+                droppedTiles[tileData.tileId] = tile;
+
+                // Vérifier les alertes
+                checkTileAlert(
+                  tileData.category,
+                  tileData.stepIndex,
+                  tileData.tileId,
+                );
+              }
+            }
+          });
+
+          // Mettre à jour l'affichage
+          if (currentTab !== "synthese") {
+            updateStairAlerts(currentTab);
+          } else {
+            generateSummaryTable();
+          }
+
+          console.log("État restauré:", state);
+          alert("État chargé avec succès !");
+        } catch (e) {
+          console.error("Erreur lors du chargement de l'état:", e);
+          alert(
+            "Erreur lors du chargement de l'état. Vérifiez que le fichier est valide.",
+          );
+        }
+      };
+      reader.onerror = () => {
+        console.error("Erreur lors de la lecture du fichier:", reader.error);
+        alert("Erreur lors de la lecture du fichier.");
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  } catch (e) {
+    console.error("Erreur lors de l'ouverture du fichier:", e);
+  }
+}
+
+// =============================================================================
 // GÉNÉRATION DU DOM
 // =============================================================================
 function generateCards() {
@@ -1045,6 +1208,12 @@ async function init() {
     .addEventListener("click", exportCards);
   document.getElementById("btn-reset").addEventListener("click", reset);
   document
+    .getElementById("btn-save-state")
+    .addEventListener("click", saveState);
+  document
+    .getElementById("btn-load-state")
+    .addEventListener("click", loadState);
+  document
     .getElementById("btn-edit-mode")
     .addEventListener("click", toggleEditMode);
   document
@@ -1083,6 +1252,8 @@ window.printTable = printTable;
 window.toggleEditMode = toggleEditMode;
 window.lockEditMode = lockEditMode;
 window.exportCards = exportCards;
+window.saveState = saveState;
+window.loadState = loadState;
 
 // =============================================================================
 // DÉMARRAGE

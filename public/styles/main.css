@@ -89,6 +89,20 @@ h1 {
   color: #fff;
 }
 
+.btn-save-state,
+.btn-load-state {
+  border-color: #27ae60;
+  color: #27ae60;
+  background: #fff;
+  font-weight: 500;
+}
+
+.btn-save-state:hover,
+.btn-load-state:hover {
+  background: #27ae60;
+  color: #fff;
+}
+
 .edit-mode-controls {
   display: flex;
   gap: 10px;
