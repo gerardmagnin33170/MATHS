@@ -881,10 +881,18 @@ function filterBank(category) {
   const cards = document.querySelectorAll("#zone-banque .carte-item");
   cards.forEach((card) => {
     const cardCategory = card.dataset.category;
+    const tileId = card.dataset.tileId;
+
+    // Vérifier si la carte a déjà été déposée sur une marche
+    const isDropped = droppedTiles[tileId] !== undefined;
+
     if (category === "synthese") {
       card.classList.add("hidden");
     } else if (cardCategory === category) {
-      card.classList.remove("hidden");
+      // Ne rendre visible que si la carte n'est pas déjà déposée
+      if (!isDropped) {
+        card.classList.remove("hidden");
+      }
     } else {
       card.classList.add("hidden");
     }
