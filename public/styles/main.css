@@ -535,10 +535,24 @@ main {
     white 5%
   );
 }
+.carte-enjeux[data-min-level="1"] {
+  border-left-color: color-mix(
+    in hsl,
+    hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
+    white 5%
+  );
+}
 .carte-apprendre {
   border-left-color: var(--coul-bord-apprendre);
 }
 .carte-apprendre[data-min-level="0"] {
+  border-left-color: color-mix(
+    in hsl,
+    hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
+    white 5%
+  );
+}
+.carte-apprendre[data-min-level="1"] {
   border-left-color: color-mix(
     in hsl,
     hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
