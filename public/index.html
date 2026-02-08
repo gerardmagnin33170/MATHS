@@ -1,81 +1,145 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg" />
     <title>Progression IA - Les compétences IA dans le secondaire</title>
-    <link rel="stylesheet" href="styles/main.css">
-</head>
-<body>
-
+    <link
+      rel="stylesheet"
+      href="styles/main.css" />
+  </head>
+  <body>
     <header>
-        <h1>Progression IA - Élèves</h1>
-        <div class="sous-titre">Outil d'explicitation d'une progression des compétences IA dans le secondaire</div>
+      <h1>Progression IA - Élèves</h1>
+      <div class="sous-titre">
+        Outil d'explicitation d'une progression des compétences IA dans le
+        secondaire
+      </div>
     </header>
 
     <div class="barre-outils">
-        <!-- <button id="btn-import-cards" class="btn-import-cards">Importer un fichier de cartes</button>
-        <button id="btn-export-cards" class="btn-export-cards">Exporter les cartes</button> -->
-        <button id="btn-reset" class="btn-reset">Réinitialiser tout</button>
-        <button id="btn-print-table" class="btn-print hidden">🖨️ Imprimer en Tableau</button>
-        <div class="edit-mode-controls">
-            <button id="btn-edit-mode" class="btn-edit-mode hidden">✏️ Mode édition</button>
-            <button id="btn-lock-mode" class="btn-lock-mode">🔒 Verrouiller</button>
-        </div>
+      <!-- <button id="btn-import-cards" class="btn-import-cards">Importer un fichier de cartes</button> -->
+      <button
+        id="btn-export-cards"
+        class="btn-export-cards">
+        Exporter les cartes
+      </button>
+      <button
+        id="btn-reset"
+        class="btn-reset">
+        Réinitialiser tout
+      </button>
+      <button
+        id="btn-print-table"
+        class="btn-print hidden">
+        🖨️ Imprimer en Tableau
+      </button>
+      <div class="edit-mode-controls">
+        <button
+          id="btn-edit-mode"
+          class="btn-edit-mode hidden">
+          ✏️ Mode édition
+        </button>
+        <button
+          id="btn-lock-mode"
+          class="btn-lock-mode">
+          🔒 Verrouiller
+        </button>
+      </div>
     </div>
 
     <main>
-        <div id="zone-vignettes-wrapper" class="zone-banque">
-            <div class="titre-section">
-                <span>Banque de compétences à répartir</span>
-            </div>
-            <div class="banque-actions">
-                <button id="btn-new-card" class="btn-new-card">➕ Créer une carte vierge</button>
-            </div>
-            <div id="zone-banque" ondragover="allowDrop(event)" ondrop="dropOnBank(event)"></div>
+      <div
+        id="zone-vignettes-wrapper"
+        class="zone-banque">
+        <div class="titre-section">
+          <span>Banque de compétences à répartir</span>
+        </div>
+        <div class="banque-actions">
+          <button
+            id="btn-new-card"
+            class="btn-new-card">
+            ➕ Créer une carte vierge
+          </button>
+        </div>
+        <div
+          id="zone-banque"
+          ondragover="allowDrop(event)"
+          ondrop="dropOnBank(event)"></div>
+      </div>
+
+      <div class="tabs-container">
+        <div class="tabs-header">
+          <button
+            id="btn-savoir"
+            class="tab-button savoir active">
+            💡 Savoir comment fonctionnent les IA
+          </button>
+          <button
+            id="btn-enjeux"
+            class="tab-button enjeux">
+            🛡️ Identifier les enjeux des IA
+          </button>
+          <button
+            id="btn-apprendre"
+            class="tab-button apprendre">
+            🚀 Apprendre avec les IA
+          </button>
+          <button
+            id="btn-synthese"
+            class="tab-button synthese">
+            📋 Synthèse (Tableau)
+          </button>
         </div>
 
-        <div class="tabs-container">
-            <div class="tabs-header">
-                <button id="btn-savoir" class="tab-button savoir active">
-                    💡 Savoir comment fonctionnent les IA
-                </button>
-                <button id="btn-enjeux" class="tab-button enjeux">
-                    🛡️ Identifier les enjeux des IA
-                </button>
-                <button id="btn-apprendre" class="tab-button apprendre">
-                    🚀 Apprendre avec les IA
-                </button>
-                 <button id="btn-synthese" class="tab-button synthese">
-                    📋 Synthèse (Tableau)
-                </button>
-            </div>
+        <div class="tabs-content">
+          <div
+            id="tab-savoir"
+            class="tab-pane savoir active">
+            <div
+              class="stair-container"
+              id="stair-savoir"></div>
+          </div>
 
-            <div class="tabs-content">
-                <div id="tab-savoir" class="tab-pane savoir active">
-                    <div class="stair-container" id="stair-savoir"></div>
-                </div>
+          <div
+            id="tab-enjeux"
+            class="tab-pane enjeux">
+            <div
+              class="stair-container"
+              id="stair-enjeux"></div>
+          </div>
 
-                <div id="tab-enjeux" class="tab-pane enjeux">
-                    <div class="stair-container" id="stair-enjeux"></div>
-                </div>
-
-                <div id="tab-apprendre" class="tab-pane apprendre">
-                    <div class="stair-container" id="stair-apprendre"></div>
-                </div>
-                 <div id="tab-synthese" class="tab-pane synthese">
-                    </div>
-            </div>
+          <div
+            id="tab-apprendre"
+            class="tab-pane apprendre">
+            <div
+              class="stair-container"
+              id="stair-apprendre"></div>
+          </div>
+          <div
+            id="tab-synthese"
+            class="tab-pane synthese"></div>
         </div>
+      </div>
     </main>
 
     <footer>
-        <p>Auteur : Jean-François Lance | Licence : <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3</a></p>
+      <p>
+        Auteur : Jean-François Lance | Licence :
+        <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3</a>
+      </p>
     </footer>
 
     <div id="tableau-impression"></div>
 
-    <script type="module" src="src/main.js"></script>
-</body>
+    <script
+      type="module"
+      src="src/main.js"></script>
+  </body>
 </html>
