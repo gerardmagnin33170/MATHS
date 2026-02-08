@@ -2,13 +2,13 @@
 
 Application web interactive pour visualiser et planifier la progression des compétences en intelligence artificielle à travers 7 niveaux scolaires (6ème à Terminale). Les enseignants organisent des cartes-compétences dans 3 catégories sur un escalier visuel représentant la progression académique.
 
-## 🎯 Prérequis
+## Prérequis
 
 - Node.js 16+ (pour npm)
 - Navigateur moderne avec support ES6 modules (Chrome, Firefox, Safari, Edge)
 - Aucune base de données ou serveur backend requis
 
-## 📦 Installation
+## Installation
 
 1. Cloner le repository :
 
@@ -29,7 +29,7 @@ Cela installe :
 - **js-yaml** : parseur YAML pour charger les données des niveaux et catégories
 - **PapaParse** : parseur CSV pour charger les cartes-compétences depuis un fichier CSV
 
-## 🚀 Développement
+## Développement
 
 Démarrer le serveur de développement avec rechargement à chaud :
 
@@ -39,7 +39,7 @@ npm run dev
 
 L'application s'ouvre à `http://localhost:5173`. Modifiez les fichiers dans `public/` et le navigateur se réactualise automatiquement.
 
-## 🏗️ Build pour la production
+## Build pour la production
 
 Créer une version optimisée :
 
@@ -49,7 +49,7 @@ npm run build
 
 Déployer le dossier `build/` sur un hébergement statique (GitHub Pages, Netlify, Forge, etc).
 
-## 👁️ Preview de la version build
+## Preview de la version build
 
 Vérifier le rendu production localement avant déploiement :
 
@@ -59,7 +59,7 @@ npm run preview
 
 Affiche un aperçu local du dossier `build/` avec la même configuration que la production.
 
-## 📂 Structure du projet
+## Structure du projet
 
 ```
 public/
@@ -77,9 +77,9 @@ public/
 
 Les sources de données (niveaux, catégories) sont des fichiers YAML chargés dynamiquement. Les cartes sont chargées depuis un fichier CSV. Modifiez-les pour changer le contenu sans éditer le code.
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-### 🎴 Gestion des cartes
+### Gestion des cartes
 
 - **Banque** : Organisée par catégorie (Savoir / Enjeux / Apprendre)
 - **Créer** : Cliquez sur "➕ Créer une carte vierge" en mode édition
@@ -87,13 +87,13 @@ Les sources de données (niveaux, catégories) sont des fichiers YAML chargés d
 - **Supprimer** : Utilisez le bouton supprimer (quand le mode édition est actif)
 - **Glisser-déposer** : Placez les cartes sur l'escalier. Les cartes ne s'adaptent qu'à l'escalier de leur catégorie.
 
-### 🔐 Mode édition
+### Mode édition
 
 - **Par défaut** : Verrouillé (boutons masqués, cartes en lecture seule)
 - Cliquez sur "✏️ Mode édition" pour déverrouiller (les boutons d'action apparaissent)
 - Cliquez sur "🔒 Verrouiller" pour verrouiller (annule les éditions en attente, masque les boutons)
 
-### 📊 Restrictions de niveau
+### Restrictions de niveau
 
 Les cartes peuvent avoir une propriété `niveauMin` (0-6) alertant lors du placement en dessous de ce niveau :
 
@@ -111,17 +111,17 @@ categorie,texte,niveauMin,id
 savoir,"Concept avancé",3,15
 ```
 
-### 📈 Vue de synthèse
+### Vue de synthèse
 
 Cliquez sur l'onglet "Synthèse" pour voir un résumé croisé de toutes les cartes placées par niveau et catégorie. Mise en page imprimable pour les documents et les rapports.
 
-### 💾 Import / Export de cartes
+### Import / Export de cartes
 
 - **Exporter** : Téléchargez les cartes actuelles en format CSV via le bouton "Exporter les cartes"
 - **Importer** : Chargez un fichier CSV via le bouton "Importer un fichier de cartes"
 - **Réinitialiser** : Effacez toutes les cartes placées et revenir à l'état initial
 
-## 🎨 Système de couleurs
+## Système de couleurs
 
 Les catégories utilisent des couleurs cohérentes partout :
 
@@ -131,7 +131,7 @@ Les catégories utilisent des couleurs cohérentes partout :
 
 Les boutons d'édition reflètent la couleur de la catégorie de l'onglet actuel. Les entrées d'édition affichent des bordures colorées par catégorie.
 
-## ⚙️ Personnalisation
+## Personnalisation
 
 ### Ajouter une nouvelle carte
 
@@ -165,7 +165,7 @@ Requiert des modifications aux fichiers YAML, structure HTML et CSS :
    - `--coul-{categoryid}` : couleur principale
    - `--coul-bord-{categoryid}` : couleur de bordure
 
-## 🧪 Tests et débogage
+## Tests et débogage
 
 ### Vérifier les erreurs console
 
@@ -183,14 +183,14 @@ Les règles CSS `@media print` masquent la barre d'outils et les escaliers, affi
 
 Utilisez F12 DevTools → **Toggle device toolbar** pour tester sur différentes résolutions d'écran (mobile, tablette, desktop).
 
-## ⚠️ Comportements connus
+## Comportements connus
 
 - Les cartes placées sur un escalier sont stockées en mémoire de session du navigateur (perdues au rafraîchissement de la page)
 - L'état du mode édition n'est pas sauvegardé ; revient à l'état verrouillé au rechargement de la page
 - La hauteur de l'escalier s'ajuste de manière réactive ; utilise une formule d'échelle quadratique pour la progression visuelle
 - Les alertes de restrictions de niveau disparaissent automatiquement après 5 secondes
 
-## 📝 Notes de développement
+## Notes de développement
 
 ### Architecture technique
 
@@ -230,7 +230,7 @@ Utilise les événements HTML5 natifs (`dragstart`, `dragover`, `drop`) avec val
 - Fonctions `toggleEditMode()` et `lockEditMode()` pour basculer l'état
 - Boutons d'action affichés/masqués en fonction de `editMode`
 
-## 📚 Ressources et références
+## Ressources et références
 
 - [Vite Documentation](https://vitejs.dev/)
 - [js-yaml Documentation](https://github.com/nodeca/js-yaml)
@@ -238,11 +238,11 @@ Utilise les événements HTML5 natifs (`dragstart`, `dragover`, `drop`) avec val
 - [HTML5 Drag and Drop API](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API)
 - [ES6 Modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence **GNU General Public License v3.0**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
-## 👥 Contribution
+## Contribution
 
 Les contributions sont bienvenues. Pour toute question ou suggestion, veuillez ouvrir une **issue** ou un **merge request** sur le dépôt Forge.
 
