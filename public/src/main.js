@@ -344,7 +344,7 @@ function loadState() {
 // GÉNÉRATION DU DOM
 // =============================================================================
 function generateCards() {
-  const cardBank = document.getElementById("zone-banque");
+  const cardBank = document.getElementById("zone-banque-vignettes");
   cardBank.innerHTML = "";
 
   CARDS.forEach((c) => {
@@ -638,9 +638,11 @@ function setupDragAndDrop() {
 
   document.addEventListener("dragend", function (e) {
     e.target.classList.remove("drag-source");
-    document.querySelectorAll(".stair-step, #zone-banque").forEach((el) => {
-      el.classList.remove("drop-target");
-    });
+    document
+      .querySelectorAll(".stair-step, #zone-banque-vignettes")
+      .forEach((el) => {
+        el.classList.remove("drop-target");
+      });
   });
 }
 
@@ -650,10 +652,10 @@ function drag(ev) {
 
 function allowDrop(ev) {
   ev.preventDefault();
-  const target = ev.target.closest(".stair-step, #zone-banque");
+  const target = ev.target.closest(".stair-step, #zone-banque-vignettes");
   if (target) {
     document
-      .querySelectorAll(".stair-step, #zone-banque")
+      .querySelectorAll(".stair-step, #zone-banque-vignettes")
       .forEach((el) => el.classList.remove("drop-target"));
     target.classList.add("drop-target");
   }
@@ -687,7 +689,7 @@ function dropOnBank(ev) {
   ev.preventDefault();
   const id = ev.dataTransfer.getData("text/id");
   const draggedElement = document.getElementById(id);
-  const targetBank = ev.target.closest("#zone-banque");
+  const targetBank = ev.target.closest("#zone-banque-vignettes");
 
   if (!targetBank || !draggedElement.classList.contains("dropped-tile")) return;
 
@@ -878,7 +880,7 @@ function updateNewCardButtonColor(category) {
 }
 
 function filterBank(category) {
-  const cards = document.querySelectorAll("#zone-banque .carte-item");
+  const cards = document.querySelectorAll("#zone-banque-vignettes .carte-item");
   cards.forEach((card) => {
     const cardCategory = card.dataset.category;
     const tileId = card.dataset.tileId;

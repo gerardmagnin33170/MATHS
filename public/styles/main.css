@@ -188,7 +188,7 @@ main {
   width: 100%;
 }
 
-#zone-banque {
+#zone-banque-vignettes {
   min-height: 120px;
   display: flex;
   flex-wrap: wrap;
@@ -200,12 +200,11 @@ main {
 }
 
 /* Cartes dans la banque sur 2 colonnes */
-#zone-banque .carte-item {
+#zone-banque-vignettes .carte-item {
   flex: 0 0 calc(50% - 5px); /* 50% moins la moitié du gap */
   box-sizing: border-box;
 }
-
-#zone-banque.drop-target {
+#zone-banque-vignettes.drop-target {
   background: #e8f5e9;
   border-color: #4caf50;
 }
