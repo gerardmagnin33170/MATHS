@@ -200,6 +200,30 @@ main {
   font-size: 0.9rem;
 }
 
+#banque-actions-tooltip {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #555;
+}
+
+.tooltip-text {
+  display: none;
+  padding: 8px 0;
+}
+
+#btn-import-cards:hover ~ #banque-actions-tooltip .tooltip-import {
+  display: block;
+}
+
+#btn-export-cards:hover ~ #banque-actions-tooltip .tooltip-export {
+  display: block;
+}
+
 #zone-banque-vignettes {
   min-height: 120px;
   display: flex;

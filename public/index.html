@@ -36,13 +36,23 @@
             Importer un fichier de cartes
           </button>
           <button id="btn-export-cards" class="btn-export-cards">Exporter les cartes</button>
-          <div class="banque-actions">
-            <button id="btn-new-card" class="btn-new-card">➕ Créer une carte vierge</button>
+          <div id="banque-actions-tooltip">
+            <p class="tooltip-text tooltip-import">
+              Importer : Charger un fichier csv contenant des cartes.
+              <br />Le format doit être conforme à celui utilisé pour l'export.
+            </p>
+            <p class="tooltip-text tooltip-export">
+              Exporter : Enregistrer les cartes actuelles dans un fichier csv.
+              <br />Ce fichier peut être réimporté plus tard pour restaurer l'état des cartes.
+            </p>
           </div>
         </div>
         <div id="zone-vignettes" class="zone-banque">
           <div class="titre-section">
             <span>Banque de compétences à répartir</span>
+          </div>
+          <div class="banque-actions">
+            <button id="btn-new-card" class="btn-new-card">➕ Créer une carte vierge</button>
           </div>
           <div
             id="zone-banque-vignettes"
