@@ -845,7 +845,9 @@ function filterBank(category) {
       card.classList.add("hidden");
     } else if (cardCategory === category) {
       // Ne rendre visible que si la carte n'est pas déjà déposée
-      if (!isDropped) {
+      if (isDropped) {
+        card.classList.add("hidden");
+      } else {
         card.classList.remove("hidden");
       }
     } else {

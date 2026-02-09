@@ -17,8 +17,8 @@
 
     <div class="barre-outils">
       <button id="btn-reset" class="btn-reset">Réinitialiser tout</button>
-      <button id="btn-save-state" class="btn-save-state">💾 Sauvegarder l'état</button>
-      <button id="btn-load-state" class="btn-load-state">📂 Charger un état</button>
+      <button id="btn-save-state" class="btn-save-state">💾 Sauvegarder la session</button>
+      <button id="btn-load-state" class="btn-load-state">📂 Charger une session</button>
       <button id="btn-print-table" class="btn-print hidden">🖨️ Imprimer en Tableau</button>
       <div class="edit-mode-controls">
         <button id="btn-edit-mode" class="btn-edit-mode hidden">✏️ Mode édition</button>
@@ -30,7 +30,7 @@
       <div class="banque-container">
         <div id="zone-banque-actions" class="zone-actions">
           <div class="titre-section">
-            <span>Actions</span>
+            <!-- <span>Actions</span> -->
           </div>
           <button id="btn-import-cards" class="btn-import-cards">
             Importer un fichier de cartes
@@ -38,12 +38,16 @@
           <button id="btn-export-cards" class="btn-export-cards">Exporter les cartes</button>
           <div id="banque-actions-tooltip">
             <p class="tooltip-text tooltip-import">
-              Importer : Charger un fichier csv contenant des cartes.
-              <br />Le format doit être conforme à celui utilisé pour l'export.
+              <b>Importer un fichier de cartes</b><br />
+              Charger un fichier csv contenant des définitions de cartes.
+              <br />Le format est le suivant :<br />
+              <code>id,categorie,"texte",niveauMin</code>
             </p>
             <p class="tooltip-text tooltip-export">
-              Exporter : Enregistrer les cartes actuelles dans un fichier csv.
-              <br />Ce fichier peut être réimporté plus tard pour restaurer l'état des cartes.
+              <b>Exporter les cartes</b><br />
+              Enregistrer les cartes actuelles dans un fichier csv.
+              <br />Ce fichier peut être réimporté plus tard pour restaurer des cartes qui ont été
+              supprimées ou modifiées.
             </p>
           </div>
         </div>
