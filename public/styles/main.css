@@ -134,9 +134,9 @@ button:hover {
 
 main {
   flex: 1;
-  padding: 1rem;
+  padding: 0.5rem;
   max-width: 1920px;
-  margin: 0 auto;
+  margin: 0;
   width: 100%;
   display: flex;
   gap: 15px;
