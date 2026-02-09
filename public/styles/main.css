@@ -172,8 +172,8 @@ main {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border: 1px solid #e0e0e0;
-  width: 330px;
-  min-width: 300px;
+  width: 550px;
+  min-width: 500px;
   height: 100%;
   overflow-y: auto;
   flex-shrink: 0;
@@ -203,7 +203,7 @@ main {
 #zone-banque-vignettes {
   min-height: 120px;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 10px;
   padding: 15px;
   background-color: #f8f9fa;
@@ -211,9 +211,9 @@ main {
   border-radius: 6px;
 }
 
-/* Cartes dans la banque en colonne unique */
+/* Cartes dans la banque sur 2 colonnes */
 #zone-banque-vignettes .carte-item {
-  width: 100%;
+  flex: 0 0 calc(50% - 5px);
   box-sizing: border-box;
 }
 #zone-banque-vignettes.drop-target {
