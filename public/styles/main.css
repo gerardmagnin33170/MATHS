@@ -2,8 +2,7 @@
   --couleur-fond: #f4f6f8;
   --couleur-texte: #2c3e50;
   --police-principale:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
-    Arial, sans-serif;
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
   /* Couleurs des catégories */
   --coul-savoir: #f1c40f; /* f39c12*/
@@ -11,22 +10,14 @@
   --coul-apprendre: #2ecc71; /* 27ae60 */
 
   /* Couleurs pour les cartes et bordures */
-  --coul-bord-savoir: hsl(
-    from var(--coul-savoir) h s calc(l - 2)
-  ); /* Orange foncé */
-  --coul-bord-enjeux: hsl(
-    from var(--coul-enjeux) h s calc(l - 5)
-  ); /* Bleu foncé */
-  --coul-bord-apprendre: hsl(
-    from var(--coul-apprendre) h s calc(l - 5)
-  ); /* Vert foncé */
+  --coul-bord-savoir: hsl(from var(--coul-savoir) h s calc(l - 2)); /* Orange foncé */
+  --coul-bord-enjeux: hsl(from var(--coul-enjeux) h s calc(l - 5)); /* Bleu foncé */
+  --coul-bord-apprendre: hsl(from var(--coul-apprendre) h s calc(l - 5)); /* Vert foncé */
 
   /* Couleurs pour le tableau d'impression / synthèse */
   --coul-fond-tableau-savoir: hsl(from var(--coul-savoir) h s calc(l + 45));
   --coul-fond-tableau-enjeux: hsl(from var(--coul-enjeux) h s calc(l + 45));
-  --coul-fond-tableau-apprendre: hsl(
-    from var(--coul-apprendre) h s calc(l + 45)
-  );
+  --coul-fond-tableau-apprendre: hsl(from var(--coul-apprendre) h s calc(l + 45));
   --coul-fond-tableau-niveau: #34495e;
 }
 
@@ -153,16 +144,36 @@ main {
   min-height: 0;
 }
 
-/* --- ZONE BANQUE (Colonne Gauche) --- */
+/* Conteneur pour zone-banque-actions et zone-vignettes */
+.banque-container {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* --- ZONE ACTIONS (Colonne Gauche) --- */
+.zone-actions {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+  width: 220px;
+  min-width: 200px;
+  height: 100%;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* --- ZONE BANQUE (Colonne Droite) --- */
 .zone-banque {
   background: #fff;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   border: 1px solid #e0e0e0;
-
-  width: 550px;
-  min-width: 500px;
+  width: 330px;
+  min-width: 300px;
   height: 100%;
   overflow-y: auto;
   flex-shrink: 0;
@@ -180,18 +191,19 @@ main {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 10px 0 5px;
 }
 
 #zone-banque-actions .btn-import-cards,
 #zone-banque-actions .btn-export-cards {
   width: 100%;
+  padding: 8px 12px;
+  font-size: 0.9rem;
 }
 
 #zone-banque-vignettes {
   min-height: 120px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 10px;
   padding: 15px;
   background-color: #f8f9fa;
@@ -199,9 +211,9 @@ main {
   border-radius: 6px;
 }
 
-/* Cartes dans la banque sur 2 colonnes */
+/* Cartes dans la banque en colonne unique */
 #zone-banque-vignettes .carte-item {
-  flex: 0 0 calc(50% - 5px); /* 50% moins la moitié du gap */
+  width: 100%;
   box-sizing: border-box;
 }
 #zone-banque-vignettes.drop-target {
@@ -537,35 +549,19 @@ main {
   border-left-color: var(--coul-bord-savoir);
 }
 .carte-savoir[data-min-level="0"] {
-  border-left-color: color-mix(
-    in hsl,
-    hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  border-left-color: color-mix(in hsl, hsl(from var(--coul-savoir) h s calc(l + 30)) 90%, white 5%);
 }
 .carte-savoir[data-min-level="1"] {
-  border-left-color: color-mix(
-    in hsl,
-    hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  border-left-color: color-mix(in hsl, hsl(from var(--coul-savoir) h s calc(l + 30)) 90%, white 5%);
 }
 .carte-enjeux {
   border-left-color: var(--coul-bord-enjeux);
 }
 .carte-enjeux[data-min-level="0"] {
-  border-left-color: color-mix(
-    in hsl,
-    hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  border-left-color: color-mix(in hsl, hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%, white 5%);
 }
 .carte-enjeux[data-min-level="1"] {
-  border-left-color: color-mix(
-    in hsl,
-    hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  border-left-color: color-mix(in hsl, hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%, white 5%);
 }
 .carte-apprendre {
   border-left-color: var(--coul-bord-apprendre);
@@ -711,11 +707,7 @@ main {
 
 .tab-pane.savoir .stair-step[data-level="Sixième"],
 .tab-pane.savoir .stair-step[data-level="Cinquième"] {
-  background: color-mix(
-    in hsl,
-    hsl(from var(--coul-savoir) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  background: color-mix(in hsl, hsl(from var(--coul-savoir) h s calc(l + 30)) 90%, white 5%);
   /* background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); */
 }
 
@@ -730,11 +722,7 @@ main {
 
 .tab-pane.enjeux .stair-step[data-level="Sixième"],
 .tab-pane.enjeux .stair-step[data-level="Cinquième"] {
-  background: color-mix(
-    in hsl,
-    hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  background: color-mix(in hsl, hsl(from var(--coul-enjeux) h s calc(l + 30)) 90%, white 5%);
   /* background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%); */
 }
 
@@ -749,11 +737,7 @@ main {
 
 .tab-pane.apprendre .stair-step[data-level="Sixième"],
 .tab-pane.apprendre .stair-step[data-level="Cinquième"] {
-  background: color-mix(
-    in hsl,
-    hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%,
-    white 5%
-  );
+  background: color-mix(in hsl, hsl(from var(--coul-apprendre) h s calc(l + 30)) 90%, white 5%);
   /* background: linear-gradient(135deg, #55efc4 0%, #00b894 100%); */
 }
 

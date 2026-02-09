@@ -56,9 +56,7 @@ async function loadLevels() {
     const content = await response.text();
     const data = yaml.load(content);
     // console.log("Données brutes chargées depuis YAML:", data);
-    const levels = data.map(
-      (item) => new Level(item.structure || "", item.classe || ""),
-    );
+    const levels = data.map((item) => new Level(item.structure || "", item.classe || ""));
     console.log("Niveaux chargés depuis YAML:", levels);
     sessionStorage.setItem("niveaux", JSON.stringify(levels));
   } catch (e) {
@@ -72,9 +70,7 @@ async function loadCategories() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const content = await response.text();
     const data = yaml.load(content);
-    const categories = data.map(
-      (item) => new Category(item.id || "", item.titre || ""),
-    );
+    const categories = data.map((item) => new Category(item.id || "", item.titre || ""));
     // console.log('Catégories chargées depuis YAML:', categories);
     sessionStorage.setItem("categories", JSON.stringify(categories));
   } catch (e) {
@@ -89,13 +85,7 @@ async function loadCards() {
     const content = await response.text();
     const data = Papa.parse(content, { encoding: "UTF-8", header: true }).data;
     const cards = data.map(
-      (item) =>
-        new Card(
-          item.categorie || "",
-          item.texte || "",
-          item.niveauMin || 0,
-          item.id,
-        ),
+      (item) => new Card(item.categorie || "", item.texte || "", item.niveauMin || 0, item.id),
     );
     // console.log("Cartes chargées depuis CSV:", cards);
     sessionStorage.setItem("cartes", JSON.stringify(cards));
@@ -113,9 +103,7 @@ async function importCards() {
       if (!file) return;
 
       if (file.type !== "text/csv") {
-        console.error(
-          `Invalid file type ${file.type}. Please upload a CSV file.`,
-        );
+        console.error(`Invalid file type ${file.type}. Please upload a CSV file.`);
         return;
       }
 
@@ -127,31 +115,20 @@ async function importCards() {
           header: true,
         }).data;
         const cards = data.map(
-          (item) =>
-            new Card(
-              item.categorie || "",
-              item.texte || "",
-              item.niveauMin || 0,
-              item.id,
-            ),
+          (item) => new Card(item.categorie || "", item.texte || "", item.niveauMin || 0, item.id),
         );
         // console.log("Cartes chargées depuis CSV:", cards);
         sessionStorage.setItem("cartes", JSON.stringify(cards));
         // une fois le sessionStorage à jour, il faut mettre à jour la banque de cartes
         CARDS = cards;
         TILE_COUNTS = Object.fromEntries(
-          CATEGORIES.map((cat) => [
-            cat.id,
-            CARDS.filter((c) => c.categorie === cat.id).length,
-          ]),
+          CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length]),
         );
         generateCards();
         filterBank(currentTab);
       };
       reader.onerror = () => {
-        console.error(
-          `Error reading the file. Please try again. ${reader.error}`,
-        );
+        console.error(`Error reading the file. Please try again. ${reader.error}`);
       };
       reader.readAsText(file);
     };
@@ -217,9 +194,7 @@ function saveState() {
     console.log("État sauvegardé:", state);
   } catch (e) {
     console.error("Erreur lors de la sauvegarde de l'état:", e);
-    alert(
-      "Erreur lors de la sauvegarde de l'état. Consultez la console pour plus de détails.",
-    );
+    alert("Erreur lors de la sauvegarde de l'état. Consultez la console pour plus de détails.");
   }
 }
 
@@ -243,17 +218,12 @@ function loadState() {
           }
 
           // Restaurer les cartes
-          CARDS = state.cards.map(
-            (c) => new Card(c.categorie, c.texte, c.niveauMin, c.id),
-          );
+          CARDS = state.cards.map((c) => new Card(c.categorie, c.texte, c.niveauMin, c.id));
           sessionStorage.setItem("cartes", JSON.stringify(CARDS));
 
           // Recalculer les compteurs
           TILE_COUNTS = Object.fromEntries(
-            CATEGORIES.map((cat) => [
-              cat.id,
-              CARDS.filter((c) => c.categorie === cat.id).length,
-            ]),
+            CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length]),
           );
 
           // Réinitialiser les tuiles déposées
@@ -271,9 +241,7 @@ function loadState() {
 
           // Restaurer les cartes déposées
           state.droppedTiles.forEach((tileData) => {
-            const originalCard = document.getElementById(
-              `c-${tileData.cardId}`,
-            );
+            const originalCard = document.getElementById(`c-${tileData.cardId}`);
             if (originalCard && stairs[tileData.category]) {
               // Masquer la carte originale
               originalCard.classList.add("hidden");
@@ -303,11 +271,7 @@ function loadState() {
                 droppedTiles[tileData.tileId] = tile;
 
                 // Vérifier les alertes
-                checkTileAlert(
-                  tileData.category,
-                  tileData.stepIndex,
-                  tileData.tileId,
-                );
+                checkTileAlert(tileData.category, tileData.stepIndex, tileData.tileId);
               }
             }
           });
@@ -323,9 +287,7 @@ function loadState() {
           alert("État chargé avec succès !");
         } catch (e) {
           console.error("Erreur lors du chargement de l'état:", e);
-          alert(
-            "Erreur lors du chargement de l'état. Vérifiez que le fichier est valide.",
-          );
+          alert("Erreur lors du chargement de l'état. Vérifiez que le fichier est valide.");
         }
       };
       reader.onerror = () => {
@@ -356,8 +318,7 @@ function generateCards() {
     card.dataset.category = c.categorie;
     card.dataset.text = c.texte;
     card.dataset.tileId = `tile-${c.id}`;
-    card.dataset.minLevel =
-      c.niveauMin !== null && c.niveauMin !== "" ? c.niveauMin : 0;
+    card.dataset.minLevel = c.niveauMin !== null && c.niveauMin !== "" ? c.niveauMin : 0;
 
     // contenu texte
     const textSpan = document.createElement("span");
@@ -488,8 +449,7 @@ function createStairs(category) {
   stairs[category].steps = [];
 
   const totalCategoryTiles = TILE_COUNTS[category];
-  const requiredHeightForOffset =
-    (totalCategoryTiles / 2) * TILE_HEIGHT_ESTIMATE + 10;
+  const requiredHeightForOffset = (totalCategoryTiles / 2) * TILE_HEIGHT_ESTIMATE + 10;
   const heightOffset = requiredHeightForOffset;
   const topMargin = 5; // marge haute minimale
   const bottomMargin = 10; // marge basse minimale
@@ -515,8 +475,7 @@ function createStairs(category) {
     step.setAttribute("ondrop", "dropOnStep(event)");
 
     const progression = 0.9 * Math.pow((i + 1) / numSteps, 1.75);
-    const minStepHeight =
-      progression * baseHeightAvailableForProgression + heightOffset;
+    const minStepHeight = progression * baseHeightAvailableForProgression + heightOffset;
     const left = horizontalMargin + i * stepWidth + i * stepSpacing;
     const top = containerHeight - minStepHeight - bottomMargin;
 
@@ -638,11 +597,9 @@ function setupDragAndDrop() {
 
   document.addEventListener("dragend", function (e) {
     e.target.classList.remove("drag-source");
-    document
-      .querySelectorAll(".stair-step, #zone-banque-vignettes")
-      .forEach((el) => {
-        el.classList.remove("drop-target");
-      });
+    document.querySelectorAll(".stair-step, #zone-banque-vignettes").forEach((el) => {
+      el.classList.remove("drop-target");
+    });
   });
 }
 
@@ -833,14 +790,10 @@ function updateStairAlerts(category) {
 function switchTab(tabName) {
   currentTab = tabName;
 
-  document
-    .querySelectorAll(".tab-button")
-    .forEach((btn) => btn.classList.remove("active"));
+  document.querySelectorAll(".tab-button").forEach((btn) => btn.classList.remove("active"));
   document.querySelector(`.tab-button.${tabName}`).classList.add("active");
 
-  document
-    .querySelectorAll(".tab-pane")
-    .forEach((pane) => pane.classList.remove("active"));
+  document.querySelectorAll(".tab-pane").forEach((pane) => pane.classList.remove("active"));
   document.getElementById(`tab-${tabName}`).classList.add("active");
 
   const bankElement = document.getElementById("zone-vignettes");
@@ -987,10 +940,7 @@ function deleteCard(cardId) {
 
   // on reset les compteurs et on régénére les cartes
   TILE_COUNTS = Object.fromEntries(
-    CATEGORIES.map((cat) => [
-      cat.id,
-      CARDS.filter((c) => c.categorie === cat.id).length,
-    ]),
+    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length]),
   );
 
   generateCards();
@@ -1007,9 +957,7 @@ function makeCardEditable(cardId) {
 
   const originalText = cardData.texte;
   const originalMinLevel =
-    cardData.niveauMin !== null && cardData.niveauMin !== ""
-      ? cardData.niveauMin
-      : 0;
+    cardData.niveauMin !== null && cardData.niveauMin !== "" ? cardData.niveauMin : 0;
   const isNewCard = originalText.startsWith("Nouvelle carte ");
 
   // on masque les éléments existants
@@ -1097,8 +1045,7 @@ function makeCardEditable(cardId) {
     const newText = input.value.trim();
     if (newText.length > 0) {
       cardData.texte = newText;
-      cardData.niveauMin =
-        minLevelSelect.value === "" ? null : parseInt(minLevelSelect.value);
+      cardData.niveauMin = minLevelSelect.value === "" ? null : parseInt(minLevelSelect.value);
       sessionStorage.setItem("cartes", JSON.stringify(CARDS));
     }
     editContainer.remove();
@@ -1122,10 +1069,7 @@ function makeCardEditable(cardId) {
 
         // resetter les compteurs
         TILE_COUNTS = Object.fromEntries(
-          CATEGORIES.map((cat) => [
-            cat.id,
-            CARDS.filter((c) => c.categorie === cat.id).length,
-          ]),
+          CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length]),
         );
 
         generateCards();
@@ -1192,10 +1136,7 @@ async function init() {
   CARDS = JSON.parse(sessionStorage.getItem("cartes"));
 
   TILE_COUNTS = Object.fromEntries(
-    CATEGORIES.map((cat) => [
-      cat.id,
-      CARDS.filter((c) => c.categorie === cat.id).length,
-    ]),
+    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length]),
   );
 
   stairs = Object.fromEntries(
@@ -1210,31 +1151,15 @@ async function init() {
   setupLevelFilters();
 
   // on ajoute les event listeners pour les boutons d'édition, de verrouillage et de création de carte
-  document
-    .getElementById("btn-import-cards")
-    .addEventListener("click", importCards);
-  document
-    .getElementById("btn-export-cards")
-    .addEventListener("click", exportCards);
+  document.getElementById("btn-import-cards").addEventListener("click", importCards);
+  document.getElementById("btn-export-cards").addEventListener("click", exportCards);
   document.getElementById("btn-reset").addEventListener("click", reset);
-  document
-    .getElementById("btn-save-state")
-    .addEventListener("click", saveState);
-  document
-    .getElementById("btn-load-state")
-    .addEventListener("click", loadState);
-  document
-    .getElementById("btn-edit-mode")
-    .addEventListener("click", toggleEditMode);
-  document
-    .getElementById("btn-lock-mode")
-    .addEventListener("click", lockEditMode);
-  document
-    .getElementById("btn-print-table")
-    .addEventListener("click", printTable);
-  document
-    .getElementById("btn-new-card")
-    .addEventListener("click", createEmptyCard);
+  document.getElementById("btn-save-state").addEventListener("click", saveState);
+  document.getElementById("btn-load-state").addEventListener("click", loadState);
+  document.getElementById("btn-edit-mode").addEventListener("click", toggleEditMode);
+  document.getElementById("btn-lock-mode").addEventListener("click", lockEditMode);
+  document.getElementById("btn-print-table").addEventListener("click", printTable);
+  document.getElementById("btn-new-card").addEventListener("click", createEmptyCard);
 
   // on ajoute les event listeners pour les onglets
   const tabs = document.getElementsByClassName("tab-button");
