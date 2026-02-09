@@ -1046,6 +1046,15 @@ function makeCardEditable(cardId) {
     if (newText.length > 0) {
       cardData.texte = newText;
       cardData.niveauMin = minLevelSelect.value === "" ? null : parseInt(minLevelSelect.value);
+
+      // Mettre à jour la dropped-tile si elle existe
+      const tileId = `tile-${cardId}`;
+      const droppedTile = droppedTiles[tileId];
+      if (droppedTile) {
+        droppedTile.textContent = newText;
+        droppedTile.dataset.text = newText;
+        droppedTile.dataset.minLevel = cardData.niveauMin || "";
+      }
       sessionStorage.setItem("cartes", JSON.stringify(CARDS));
     }
     editContainer.remove();
