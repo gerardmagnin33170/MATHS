@@ -1145,7 +1145,7 @@ function makeCardEditable(cardId) {
 // =============================================================================
 // ACTIONS UTILISATEUR
 // =============================================================================
-function reset() {
+async function reset() {
   Object.values(droppedTiles).forEach((tile) => tile.remove());
   Object.keys(droppedTiles).forEach((key) => delete droppedTiles[key]);
 
@@ -1154,6 +1154,15 @@ function reset() {
       step.tiles = [];
     });
   });
+
+  // Recharger les cartes originales depuis les fichiers YAML
+  await loadCards();
+  CARDS = JSON.parse(sessionStorage.getItem("cartes"));
+
+  // Recalculer les compteurs
+  TILE_COUNTS = Object.fromEntries(
+    CATEGORIES.map((cat) => [cat.id, CARDS.filter((c) => c.categorie === cat.id).length]),
+  );
 
   generateCards();
   switchTab(currentTab);
