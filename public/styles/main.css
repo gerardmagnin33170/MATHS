@@ -131,8 +131,23 @@ h1 {
   white-space: normal;
 }
 
+.tooltip-reset {
+  width: 180px;
+  top: 300%;
+  left: 0%;
+  margin-left: 10px;
+  margin-top: -65px;
+}
+
+.tooltip-save-state, .tooltip-load-state {
+  width: 250px;
+  bottom: 130%;
+  left: 50%;
+  margin-left: -125px;
+}
+
 .tooltip-export {
-  width: 600px;
+  width: 550px;
   bottom: 130%;
   left: 50%;
   margin-left: -300px;
@@ -146,6 +161,14 @@ h1 {
   margin-top: -65px;
 }
 
+.tooltip-lock-edit-mode {
+  width: 200px;
+  top: 300%;
+  left: -42.5%;
+  margin-left: 10px;
+  margin-top: -65px;
+}
+
 .tooltip-text::after {
   content: "";
   position: absolute;
@@ -153,7 +176,14 @@ h1 {
   border-style: solid;
 }
 
-.tooltip-export::after {
+.tooltip-reset::after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-color: transparent transparent #333 transparent;
+}
+
+.tooltip-save-state::after, .tooltip-load-state::after, .tooltip-export::after {
   top: 100%;
   left: 50%;
   margin-left: -5px;
@@ -167,12 +197,39 @@ h1 {
   border-color: transparent #333 transparent transparent;
 }
 
+.tooltip-lock-edit-mode::after {
+  bottom: 100%;
+  left: 62.5%;
+  margin-left: -5px;
+  border-color: transparent transparent #333 transparent;
+}
+
+.tooltip-container:hover .tooltip-reset {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-container:hover .tooltip-save-state {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-container:hover .tooltip-load-state {
+  visibility: visible;
+  opacity: 1;
+}
+
 .tooltip-container:hover .tooltip-export {
   visibility: visible;
   opacity: 1;
 }
 
 .tooltip-container:hover .tooltip-import {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-container:hover .tooltip-lock-edit-mode {
   visibility: visible;
   opacity: 1;
 }

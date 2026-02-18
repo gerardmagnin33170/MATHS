@@ -31,21 +31,39 @@
     </header>
 
     <div class="barre-outils">
-      <button
-        id="btn-reset"
-        class="btn-reset">
-        Réinitialiser tout
-      </button>
-      <button
-        id="btn-save-state"
-        class="btn-save-state">
-        💾 Sauvegarder l'état
-      </button>
-      <button
-        id="btn-load-state"
-        class="btn-load-state">
-        📂 Charger un état
-      </button>
+      <div class="tooltip-container">
+        <button
+          id="btn-reset"
+          class="btn-reset">
+          Réinitialiser tout
+        </button>
+        <div class="tooltip-text tooltip-reset">
+          <b>Réinitialiser la session</b><br />
+          Pour repartir de zéro, comme si de rien n'était.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-save-state"
+          class="btn-save-state">
+          Sauvegarder la session
+        </button>
+        <div class="tooltip-text tooltip-save-state">
+          <b>Sauvegarder la session</b><br />
+          Sauvegarde au format <code>json</code> le travail effectué dans l'outil.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-load-state"
+          class="btn-load-state">
+          Charger une session
+        </button>
+        <div class="tooltip-text tooltip-load-state">
+          <b>Charger la session</b><br />
+          Permet d'importer le contenu du travail effectué dans une session précédente.
+        </div>
+      </div>
       <div class="tooltip-container">
         <button
           id="btn-export-cards"
@@ -81,16 +99,22 @@
         🖨️ Imprimer en Tableau
       </button>
       <div class="edit-mode-controls">
-        <button
-          id="btn-edit-mode"
-          class="btn-edit-mode hidden">
-          ✏️ Mode édition
-        </button>
-        <button
-          id="btn-lock-mode"
-          class="btn-lock-mode">
-          🔒 Verrouiller
-        </button>
+        <div class="tooltip-container">
+          <button
+            id="btn-edit-mode"
+            class="btn-edit-mode hidden">
+            ✏️ Mode édition
+          </button>
+          <button
+            id="btn-lock-mode"
+            class="btn-lock-mode">
+            🔒 Verrouiller
+          </button>
+          <div class="tooltip-text tooltip-lock-edit-mode">
+            <b>Verrouiller / Mode édition</b><br />
+            Autorise ou non l'ajout et l'édition des cartes.
+          </div>
+        </div>
       </div>
     </div>
 
