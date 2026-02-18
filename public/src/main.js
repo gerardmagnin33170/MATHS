@@ -797,6 +797,7 @@ function switchTab(tabName) {
   document.getElementById(`tab-${tabName}`).classList.add("active");
 
   const bankElement = document.getElementById("zone-vignettes");
+  const leftContainerElement = document.getElementById("left-container");
   const tabsContainerElement = document.querySelector(".tabs-container");
   const printButton = document.getElementById("btn-print-table");
   const levelsFilters = document.querySelector(".tabs-levels");
@@ -804,11 +805,13 @@ function switchTab(tabName) {
   if (tabName === "synthese") {
     generateSummaryTable();
     bankElement.classList.add("hidden");
+    if (leftContainerElement) leftContainerElement.classList.add("hidden");
     tabsContainerElement.classList.add("full-width");
     printButton.classList.remove("hidden");
     if (levelsFilters) levelsFilters.classList.add("hidden");
   } else {
     bankElement.classList.remove("hidden");
+    if (leftContainerElement) leftContainerElement.classList.remove("hidden");
     tabsContainerElement.classList.remove("full-width");
     printButton.classList.add("hidden");
     if (levelsFilters) levelsFilters.classList.remove("hidden");

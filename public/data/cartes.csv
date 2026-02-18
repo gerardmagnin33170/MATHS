@@ -1,13 +1,13 @@
 id,categorie,texte,niveauMin
 0,"savoir","Comprendre ce qu'est un algorithme",0
 1,"savoir","Comprendre ce qu'est un token",0
-2,"savoir","Estimer le coût environnemental et social des usages des IA",0
-3,"savoir","Comprendre les biais des réponses générées par les IA",0
-4,"savoir","Comprendre l'approche statistique des réponses",0
-5,"savoir","Comprendre l'entrainement des IA génératives",0
-6,"savoir","Distinguer IA adaptative et IA générative",0
-7,"savoir","Prendre conscience de la diversité des réponses selon l'IA utilisée et le prompt",0
-8,"savoir","Connaitre des applications des IA et leurs évolutions technologiques",0
+2,"savoir","Comprendre les biais des réponses générées par les IA",0
+3,"savoir","Comprendre l'approche statistique des réponses",0
+4,"savoir","Comprendre l'entrainement des IA génératives",0
+5,"savoir","Distinguer IA adaptative et IA générative",0
+6,"savoir","Prendre conscience de la diversité des réponses selon l'IA utilisée et le prompt",0
+7,"savoir","Connaitre des applications des IA et leurs évolutions technologiques",0
+8,"enjeux","Estimer le coût environnemental et social des usages des IA",0
 9,"enjeux","Identifier des métiers impactés par l'essor de l'IA",0
 10,"enjeux","Savoir faire des choix éclairés dans l'utilisation ou non des IA",0
 11,"enjeux","Prendre conscience de l'importance de la vérification et de l'appropriation des contenus générés pas les IA",0

@@ -9,58 +9,126 @@
   </head>
   <body>
     <header>
-      <h1>Progression IA - Élèves</h1>
-      <div class="sous-titre">
-        Outil d'explicitation d'une progression des compétences IA dans le secondaire
+      <div class="logo-region">
+        <img
+          src="https://pia.ac-paris.fr/img/2020_logo_region_IDF_200.jpg"
+          alt="Région Académique Île-de-France" />
+      </div>
+      <div class="header-text">
+        <h1>Progression IA - Élèves</h1>
+        <div class="sous-titre">
+          Outil d'explicitation d'une progression des compétences IA dans le
+          secondaire
+        </div>
       </div>
     </header>
 
     <div class="barre-outils">
-      <button id="btn-reset" class="btn-reset">Réinitialiser tout</button>
-      <button id="btn-save-state" class="btn-save-state">💾 Sauvegarder la session</button>
-      <button id="btn-load-state" class="btn-load-state">📂 Charger une session</button>
-      <button id="btn-print-table" class="btn-print hidden">🖨️ Imprimer en Tableau</button>
+      <div class="tooltip-container">
+        <button
+          id="btn-reset"
+          class="btn-reset">
+          Réinitialiser tout
+        </button>
+        <div class="tooltip-text tooltip-reset">
+          <b>Réinitialiser la session</b><br />
+          Pour repartir de zéro, comme si de rien n'était.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-save-state"
+          class="btn-save-state">
+          Sauvegarder la session
+        </button>
+        <div class="tooltip-text tooltip-save-state">
+          <b>Sauvegarder la session</b><br />
+          Sauvegarde au format <code>json</code> le travail effectué dans l'outil.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-load-state"
+          class="btn-load-state">
+          Charger une session
+        </button>
+        <div class="tooltip-text tooltip-load-state">
+          <b>Charger la session</b><br />
+          Permet d'importer le contenu du travail effectué dans une session précédente.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-export-cards"
+          class="btn-export-cards">
+          Exporter les cartes
+        </button>
+        <div class="tooltip-text tooltip-export">
+          <b>Exporter les cartes</b><br />
+          Enregistrer les cartes actuelles dans un fichier csv.
+          <br />Ce fichier peut être réimporté plus tard pour restaurer des cartes qui ont été
+          supprimées ou modifiées.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-import-cards"
+          class="btn-import-cards">
+          Importer un fichier de cartes
+        </button>
+        <div class="tooltip-text tooltip-import">
+          <b>Importer un fichier de cartes</b><br />
+          Charger un fichier csv contenant des définitions de cartes.<br />
+          Le format est le suivant :<br /><br />
+          <code>id,categorie,"texte",niveauMin</code><br />
+          <br />
+          Pour commencer, vous pouvez exporter les cartes actuelles pour obtenir un exemple de
+          fichier csv à modifier et à importer.
+        </div>
+      </div>
+      <button
+        id="btn-print-table"
+        class="btn-print hidden">
+        🖨️ Imprimer en Tableau
+      </button>
       <div class="edit-mode-controls">
-        <button id="btn-edit-mode" class="btn-edit-mode hidden">✏️ Mode édition</button>
-        <button id="btn-lock-mode" class="btn-lock-mode">🔒 Verrouiller</button>
+        <div class="tooltip-container">
+          <button
+            id="btn-edit-mode"
+            class="btn-edit-mode hidden">
+            ✏️ Mode édition
+          </button>
+          <button
+            id="btn-lock-mode"
+            class="btn-lock-mode">
+            🔒 Verrouiller
+          </button>
+          <div class="tooltip-text tooltip-lock-edit-mode">
+            <b>Verrouiller / Mode édition</b><br />
+            Autorise ou non l'ajout et l'édition des cartes.
+          </div>
+        </div>
       </div>
     </div>
 
     <main>
-      <div class="banque-container">
-        <div id="zone-banque-actions" class="zone-actions">
-          <div class="titre-section">
-            <!-- <span>Actions</span> -->
-          </div>
-          <button id="btn-import-cards" class="btn-import-cards">
-            Importer un fichier de cartes
-          </button>
-          <button id="btn-export-cards" class="btn-export-cards">Exporter les cartes</button>
-          <div id="banque-actions-tooltip">
-            <p class="tooltip-text tooltip-import">
-              <b>Importer un fichier de cartes</b><br />
-              Charger un fichier csv contenant des définitions de cartes.<br />
-              Le format est le suivant :<br /><br />
-              <code>id,categorie,"texte",niveauMin</code><br />
-              <br />
-              Pour commencer, vous pouvez exporter les cartes actuelles pour obtenir un exemple de
-              fichier csv à modifier et à importer.
-            </p>
-            <p class="tooltip-text tooltip-export">
-              <b>Exporter les cartes</b><br />
-              Enregistrer les cartes actuelles dans un fichier csv.
-              <br />Ce fichier peut être réimporté plus tard pour restaurer des cartes qui ont été
-              supprimées ou modifiées.
-            </p>
-          </div>
-        </div>
-        <div id="zone-vignettes" class="zone-banque">
+      <div id="left-container">
+        <div
+          id="zone-vignettes"
+          class="zone-banque">
           <div class="titre-section">
             <span>Banque de compétences à répartir</span>
           </div>
-          <div class="banque-actions">
-            <button id="btn-new-card" class="btn-new-card">➕ Créer une carte vierge</button>
+          <div id="zone-banque-actions">
+            <div class="banque-actions">
+              <button
+                id="btn-new-card"
+                class="btn-new-card">
+                ➕ Créer une carte vierge
+              </button>
+            </div>
           </div>
+
           <div
             id="zone-banque-vignettes"
             ondragover="allowDrop(event)"
@@ -108,10 +176,10 @@
     </main>
 
     <footer>
-      <p>
-        Auteur : DRANE IdF | Licence :
+            <p>
+        Interface réalisée par la DRANE IDF à partir des travaux de réflexions d'un groupe d'inspecteur de l'académie de Créteil | Licence :
         <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL v3</a>
-      </p>
+            </p>
     </footer>
 
     <div id="tableau-impression"></div>
