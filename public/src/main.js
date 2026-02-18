@@ -892,7 +892,9 @@ function filterBank(category) {
       card.classList.add("hidden");
     } else if (cardCategory === category) {
       // Ne rendre visible que si la carte n'est pas déjà déposée
-      if (!isDropped) {
+      if (isDropped) {
+        card.classList.add("hidden");
+      } else {
         card.classList.remove("hidden");
       }
     } else {
@@ -1097,8 +1099,16 @@ function makeCardEditable(cardId) {
     const newText = input.value.trim();
     if (newText.length > 0) {
       cardData.texte = newText;
-      cardData.niveauMin =
-        minLevelSelect.value === "" ? null : parseInt(minLevelSelect.value);
+      cardData.niveauMin = minLevelSelect.value === "" ? null : parseInt(minLevelSelect.value);
+
+      // Mettre à jour la dropped-tile si elle existe
+      const tileId = `tile-${cardId}`;
+      const droppedTile = droppedTiles[tileId];
+      if (droppedTile) {
+        droppedTile.textContent = newText;
+        droppedTile.dataset.text = newText;
+        droppedTile.dataset.minLevel = cardData.niveauMin || "";
+      }
       sessionStorage.setItem("cartes", JSON.stringify(CARDS));
     }
     editContainer.remove();
