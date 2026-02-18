@@ -48,22 +48,53 @@ body {
 
 header {
   background-color: #fff;
-  padding: 0.8rem 2rem;
+  padding: 1.2rem 2rem;
+  min-height: 120px;
   text-align: center;
   border-bottom: 1px solid #ddd;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.logo-region {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0;
+  position: absolute;
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.logo-region img {
+  height: 100px;
+  width: auto;
+  max-height: 100%;
 }
 
 h1 {
   font-size: 1.5rem;
   color: #2c3e50;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0;
 }
 .sous-titre {
   font-size: 0.95rem;
   color: #7f8c8d;
   font-weight: 400;
+  margin: 0;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .barre-outils {
