@@ -76,26 +76,28 @@
     </div>
 
     <main>
-      <div
-        id="zone-vignettes"
-        class="zone-banque">
-        <div class="titre-section">
-          <span>Banque de compétences à répartir</span>
-        </div>
-        <div id="zone-banque-actions">
-          <div class="banque-actions">
-            <button
-              id="btn-new-card"
-              class="btn-new-card">
-              ➕ Créer une carte vierge
-            </button>
-          </div>
-        </div>
-
+      <div id="left-container">
         <div
-          id="zone-banque-vignettes"
-          ondragover="allowDrop(event)"
-          ondrop="dropOnBank(event)"></div>
+          id="zone-vignettes"
+          class="zone-banque">
+          <div class="titre-section">
+            <span>Banque de compétences à répartir</span>
+          </div>
+          <div id="zone-banque-actions">
+            <div class="banque-actions">
+              <button
+                id="btn-new-card"
+                class="btn-new-card">
+                ➕ Créer une carte vierge
+              </button>
+            </div>
+          </div>
+
+          <div
+            id="zone-banque-vignettes"
+            ondragover="allowDrop(event)"
+            ondrop="dropOnBank(event)"></div>
+        </div>
       </div>
 
       <div class="tabs-container">
