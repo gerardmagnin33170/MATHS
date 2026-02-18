@@ -46,16 +46,35 @@
         class="btn-load-state">
         📂 Charger un état
       </button>
-      <button
-        id="btn-export-cards"
-        class="btn-export-cards">
-        Exporter les cartes
-      </button>
-      <button
-        id="btn-import-cards"
-        class="btn-import-cards">
-        Importer un fichier de cartes
-      </button>
+      <div class="tooltip-container">
+        <button
+          id="btn-export-cards"
+          class="btn-export-cards">
+          Exporter les cartes
+        </button>
+        <div class="tooltip-text tooltip-export">
+          <b>Exporter les cartes</b><br />
+          Enregistrer les cartes actuelles dans un fichier csv.
+          <br />Ce fichier peut être réimporté plus tard pour restaurer des cartes qui ont été
+          supprimées ou modifiées.
+        </div>
+      </div>
+      <div class="tooltip-container">
+        <button
+          id="btn-import-cards"
+          class="btn-import-cards">
+          Importer un fichier de cartes
+        </button>
+        <div class="tooltip-text tooltip-import">
+          <b>Importer un fichier de cartes</b><br />
+          Charger un fichier csv contenant des définitions de cartes.<br />
+          Le format est le suivant :<br /><br />
+          <code>id,categorie,"texte",niveauMin</code><br />
+          <br />
+          Pour commencer, vous pouvez exporter les cartes actuelles pour obtenir un exemple de
+          fichier csv à modifier et à importer.
+        </div>
+      </div>
       <button
         id="btn-print-table"
         class="btn-print hidden">
