@@ -3,7 +3,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
   root: './public',
-  base: '/pole-socle-numerique/progression_ia/',
+  base: './',
   build: {
     outDir: '../build',
     emptyOutDir: true,
