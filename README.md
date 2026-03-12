@@ -119,4 +119,4 @@ Les contributions sont bienvenues via issue ou merge request sur le dépôt Forg
 
 ---
 
-Dernière mise à jour : 12 mars 2026
+Dernière mise à jour: 12 mars 2026
