@@ -256,4 +256,4 @@ Les contributions sont bienvenues. Pour toute question ou suggestion, veuillez o
 
 ---
 
-**Dernière mise à jour** : 8 février 2026
+**Dernière mise à jour** : 12 mars 2026
