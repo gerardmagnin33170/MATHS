@@ -240,7 +240,15 @@ Utilise les événements HTML5 natifs (`dragstart`, `dragover`, `drop`) avec val
 
 ## Licence
 
-Ce projet est sous licence **GNU General Public License v3.0**. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Ce projet est sous licence **GNU Affero General Public License v3.0 ou ultérieure**.
+
+Concrètement :
+
+- la mention de copyright et de licence doit être conservée ;
+- la source du projet doit rester indiquée ;
+- si une version modifiée de l'application est déployée sur le web, les utilisateurs doivent pouvoir accéder au code source correspondant.
+
+Voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ## Contribution
 
