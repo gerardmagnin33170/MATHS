@@ -1107,13 +1107,19 @@ footer {
   }
 }
 
-/* BADGE PIX */
+/* badge pix */
 .carte-pix-badge {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  height: 32px;
+  height: 32px;        /* ← 32px → 20px */
   width: auto;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.9;
+  transform: rotate(-15deg);           /* ← effet tampon */
+  transform-origin: bottom right;      /* ← pivot sur le coin bas-droit */
+}
+
+.has-pix-badge {
+  padding-right: 38px; /* largeur badge ~43px - un peu de chevauchement toléré */
 }

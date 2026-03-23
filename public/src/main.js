@@ -269,15 +269,16 @@ function loadState() {
 
                 if (tile.dataset.pix === "1") {           // ← ajout
                   const pixBadge = document.createElement("img");
-                  pixBadge.src = "./assets/pix-logo.svg";
+                  pixBadge.src = "./assets/pix-badge.svg";
                   pixBadge.className = "carte-pix-badge";
                   pixBadge.alt = "Pix";
                   pixBadge.title = "Compétence Pix";
+                  tile.classList.add("has-pix-badge");
                   tile.appendChild(pixBadge);
                 }
 
                 step.element.appendChild(tile);
-                tile.style.position = "static";
+                tile.style.position = "relative";
 
                 step.tiles.push({ id: tileData.tileId, element: tile });
                 droppedTiles[tileData.tileId] = tile;
@@ -380,10 +381,11 @@ function generateCards() {
     // on ajoute le badge pix si besoin
     if (c.pix) {
       const pixBadge = document.createElement("img");
-      pixBadge.src = "./assets/pix-logo.svg";
+      pixBadge.src = "./assets/pix-badge.svg";
       pixBadge.className = "carte-pix-badge";
       pixBadge.alt = "Pix";
       pixBadge.title = "Compétence Pix";
+      card.classList.add("has-pix-badge");
       card.appendChild(pixBadge);
     }
 
@@ -536,7 +538,7 @@ function createStairs(category) {
         newStepObj.tiles.push({ id: tile.id, element: tile });
         tile.setAttribute("draggable", "true");
         tile.setAttribute("ondragstart", "drag(event)");
-        tile.style.position = "static";
+        tile.style.position = "relative";
         tile.style.transform = "none";
 
         // on vérifie l'alerte pour cette carte
@@ -715,15 +717,16 @@ function createDroppedTile(originalTile, category, stepIndex) {
 
   if (tile.dataset.pix === "1") {
     const pixBadge = document.createElement("img");
-    pixBadge.src = "./assets/pix-logo.svg";
+    pixBadge.src = "./assets/pix-badge.svg";
     pixBadge.className = "carte-pix-badge";
     pixBadge.alt = "Pix";
     pixBadge.title = "Compétence Pix";
+    tile.classList.add("has-pix-badge");
     tile.appendChild(pixBadge);
   }
 
   step.element.appendChild(tile);
-  tile.style.position = "static";
+  tile.style.position = "relative";
 
   step.tiles.push({ id: tileId, element: tile });
   droppedTiles[tileId] = tile;
@@ -741,7 +744,7 @@ function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
   newStep.element.appendChild(tile);
   tile.dataset.stepIndex = newStepIndex;
   newStep.tiles.push({ id: tileId, element: tile });
-  tile.style.position = "static";
+  tile.style.position = "relative";
   tile.style.transform = "none";
 
   // on vérifie les alertes
@@ -1118,13 +1121,15 @@ function makeCardEditable(cardId) {
         const existingBadge = droppedTile.querySelector(".carte-pix-badge");
         if (cardData.pix && !existingBadge) {
           const pixBadge = document.createElement("img");
-          pixBadge.src = "./assets/pix-logo.svg";
+          pixBadge.src = "./assets/pix-badge.svg";
           pixBadge.className = "carte-pix-badge";
           pixBadge.alt = "Pix";
           pixBadge.title = "Compétence Pix";
+          droppedTile.classList.add("has-pix-badge");
           droppedTile.appendChild(pixBadge);
         } else if (!cardData.pix && existingBadge) {
           existingBadge.remove();
+          droppedTile.classList.remove("has-pix-badge");
         }
       }
       sessionStorage.setItem("cartes", JSON.stringify(CARDS));
