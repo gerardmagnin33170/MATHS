@@ -570,6 +570,7 @@ function generateSummaryTable() {
       tableData[levelKey][category].push({
         text: tile.dataset.text,
         category: category,
+        pix: tile.dataset.pix === "1",
       });
     }
   });
@@ -597,7 +598,10 @@ function generateSummaryTable() {
                 <div class="synthese-card-wrapper">`;
 
       cards.forEach((card) => {
-        htmlTable += `<div class="synthese-card ${card.category}">${card.text}</div>`;
+        const pixBadge = card.pix
+          ? `<img src="./assets/pix-badge.svg" class="carte-pix-badge synthese-pix-badge" alt="Pix" title="Compétence Pix">`
+          : "";
+        htmlTable += `<div class="synthese-card ${card.category}">${card.text}${pixBadge}</div>`;
       });
 
       htmlTable += `</div></td>`;

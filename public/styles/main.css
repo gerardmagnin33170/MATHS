@@ -1112,7 +1112,7 @@ footer {
   position: absolute;
   bottom: 4px;
   right: 4px;
-  height: 32px;        /* ← 32px → 20px */
+  height: 32px;
   width: auto;
   pointer-events: none;
   opacity: 0.9;
@@ -1121,5 +1121,27 @@ footer {
 }
 
 .has-pix-badge {
-  padding-right: 38px; /* largeur badge ~43px - un peu de chevauchement toléré */
+  padding-right: 38px;
+}
+
+.synthese-card {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  background: #fff;
+  line-height: 1.2;
+  position: relative;
+}
+
+.synthese-pix-badge {
+  position: static;
+  display: inline-block;
+  vertical-align: middle;
+  height: 32px;
+  width: auto;
+  margin-left: 5px;
+  transform: rotate(-15deg);
+  transform-origin: center;
 }
