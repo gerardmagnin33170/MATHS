@@ -14,6 +14,10 @@ export default defineConfig({
         {
           src: 'data',
           dest: ''
+        },
+        {
+          src: 'assets',
+          dest: ''
         }
       ]
     })
