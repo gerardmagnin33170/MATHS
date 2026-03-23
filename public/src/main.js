@@ -22,7 +22,7 @@ const levelFilters = {
 // =============================================================================
 // CLASSES DE DONNÉES
 // =============================================================================
-function Card(category, text, minLevel = 0, id = null) {
+function Card(category, text, minLevel = 0, id = null, pix = false) {
   if (id !== null) {
     this.id = id;
     Card.nextId = Math.max(Card.nextId || 0, id + 1);
@@ -33,6 +33,7 @@ function Card(category, text, minLevel = 0, id = null) {
   this.categorie = category;
   this.texte = text;
   this.niveauMin = minLevel; // 0 = 6ème+, 2 = 4ème+
+  this.pix = parseInt(pix) === 1; // on convertit en bool
 }
 
 function Category(id, title) {
@@ -85,7 +86,7 @@ async function loadCards() {
     const content = await response.text();
     const data = Papa.parse(content, { encoding: "UTF-8", header: true }).data;
     const cards = data.map(
-      (item) => new Card(item.categorie || "", item.texte || "", item.niveauMin || 0, item.id),
+      (item) => new Card(item.categorie || "", item.texte || "", item.niveauMin || 0, item.id, item.pix || false),
     );
     // console.log("Cartes chargées depuis CSV:", cards);
     sessionStorage.setItem("cartes", JSON.stringify(cards));
@@ -115,7 +116,7 @@ async function importCards() {
           header: true,
         }).data;
         const cards = data.map(
-          (item) => new Card(item.categorie || "", item.texte || "", item.niveauMin || 0, item.id),
+          (item) => new Card(item.categorie || "", item.texte || "", item.niveauMin || 0, item.id, item.pix || false),
         );
         // console.log("Cartes chargées depuis CSV:", cards);
         sessionStorage.setItem("cartes", JSON.stringify(cards));
@@ -169,6 +170,7 @@ function saveState() {
         category: tile.dataset.category,
         text: tile.dataset.text,
         minLevel: tile.dataset.minLevel || "",
+        pix: tile.dataset.pix || "0",
       };
     });
 
@@ -218,7 +220,7 @@ function loadState() {
           }
 
           // Restaurer les cartes
-          CARDS = state.cards.map((c) => new Card(c.categorie, c.texte, c.niveauMin, c.id));
+          CARDS = state.cards.map((c) => new Card(c.categorie, c.texte, c.niveauMin, c.id, c.pix));
           sessionStorage.setItem("cartes", JSON.stringify(CARDS));
 
           // Recalculer les compteurs
@@ -263,6 +265,16 @@ function loadState() {
                 tile.dataset.category = tileData.category;
                 tile.dataset.text = tileData.text;
                 tile.dataset.minLevel = tileData.minLevel;
+                tile.dataset.pix = tileData.pix || "0";   // ← ajout
+
+                if (tile.dataset.pix === "1") {           // ← ajout
+                  const pixBadge = document.createElement("img");
+                  pixBadge.src = "./assets/pix-logo.svg";
+                  pixBadge.className = "carte-pix-badge";
+                  pixBadge.alt = "Pix";
+                  pixBadge.title = "Compétence Pix";
+                  tile.appendChild(pixBadge);
+                }
 
                 step.element.appendChild(tile);
                 tile.style.position = "static";
@@ -319,6 +331,7 @@ function generateCards() {
     card.dataset.text = c.texte;
     card.dataset.tileId = `tile-${c.id}`;
     card.dataset.minLevel = c.niveauMin !== null && c.niveauMin !== "" ? c.niveauMin : 0;
+    card.dataset.pix = c.pix ? "1" : "0";
 
     // contenu texte
     const textSpan = document.createElement("span");
@@ -363,6 +376,17 @@ function generateCards() {
 
     card.appendChild(textSpan);
     card.appendChild(actionsDiv);
+
+    // on ajoute le badge pix si besoin
+    if (c.pix) {
+      const pixBadge = document.createElement("img");
+      pixBadge.src = "./assets/pix-logo.svg";
+      pixBadge.className = "carte-pix-badge";
+      pixBadge.alt = "Pix";
+      pixBadge.title = "Compétence Pix";
+      card.appendChild(pixBadge);
+    }
+
     cardBank.appendChild(card);
   });
 }
@@ -687,6 +711,16 @@ function createDroppedTile(originalTile, category, stepIndex) {
   tile.dataset.category = category;
   tile.dataset.text = originalTile.dataset.text;
   tile.dataset.minLevel = originalTile.dataset.minLevel || "";
+  tile.dataset.pix = originalTile.dataset.pix || "0";
+
+  if (tile.dataset.pix === "1") {
+    const pixBadge = document.createElement("img");
+    pixBadge.src = "./assets/pix-logo.svg";
+    pixBadge.className = "carte-pix-badge";
+    pixBadge.alt = "Pix";
+    pixBadge.title = "Compétence Pix";
+    tile.appendChild(pixBadge);
+  }
 
   step.element.appendChild(tile);
   tile.style.position = "static";
@@ -1023,6 +1057,23 @@ function makeCardEditable(cardId) {
   minLevelContainer.appendChild(minLevelLabel);
   minLevelContainer.appendChild(minLevelSelect);
 
+  // conteneur pour le champ pix
+  const pixContainer = document.createElement("div");
+  pixContainer.className = "card-edit-pix";
+
+  const pixCheckbox = document.createElement("input");
+  pixCheckbox.type = "checkbox";
+  pixCheckbox.id = `pix-${cardId}`;
+  pixCheckbox.className = "card-edit-pix-checkbox";
+  pixCheckbox.checked = cardData.pix === true;
+
+  const pixLabel = document.createElement("label");
+  pixLabel.htmlFor = `pix-${cardId}`;
+  pixLabel.textContent = "Badge Pix";
+
+  pixContainer.appendChild(pixCheckbox);
+  pixContainer.appendChild(pixLabel);
+
   const saveBtn = document.createElement("button");
   saveBtn.textContent = "✓";
   saveBtn.className = "card-edit-btn-save";
@@ -1038,6 +1089,7 @@ function makeCardEditable(cardId) {
 
   editContainer.appendChild(input);
   editContainer.appendChild(minLevelContainer);
+  editContainer.appendChild(pixContainer);
   editContainer.appendChild(btnContainer);
 
   // on insère à la place de la carte
@@ -1051,6 +1103,7 @@ function makeCardEditable(cardId) {
     if (newText.length > 0) {
       cardData.texte = newText;
       cardData.niveauMin = minLevelSelect.value === "" ? null : parseInt(minLevelSelect.value);
+      cardData.pix = pixCheckbox.checked;
 
       // Mettre à jour la dropped-tile si elle existe
       const tileId = `tile-${cardId}`;
@@ -1059,6 +1112,20 @@ function makeCardEditable(cardId) {
         droppedTile.textContent = newText;
         droppedTile.dataset.text = newText;
         droppedTile.dataset.minLevel = cardData.niveauMin || "";
+        droppedTile.dataset.pix = cardData.pix ? "1" : "0";
+
+        // mettre à jour le badge sur la dropped-tile
+        const existingBadge = droppedTile.querySelector(".carte-pix-badge");
+        if (cardData.pix && !existingBadge) {
+          const pixBadge = document.createElement("img");
+          pixBadge.src = "./assets/pix-logo.svg";
+          pixBadge.className = "carte-pix-badge";
+          pixBadge.alt = "Pix";
+          pixBadge.title = "Compétence Pix";
+          droppedTile.appendChild(pixBadge);
+        } else if (!cardData.pix && existingBadge) {
+          existingBadge.remove();
+        }
       }
       sessionStorage.setItem("cartes", JSON.stringify(CARDS));
     }
