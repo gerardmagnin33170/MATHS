@@ -1076,7 +1076,7 @@ function makeCardEditable(cardId) {
 
   const pixLabel = document.createElement("label");
   pixLabel.htmlFor = `pix-${cardId}`;
-  pixLabel.textContent = "Badge Pix";
+  pixLabel.textContent = " Badge Pix";
 
   pixContainer.appendChild(pixCheckbox);
   pixContainer.appendChild(pixLabel);
