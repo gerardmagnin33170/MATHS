@@ -905,7 +905,7 @@ main {
 
 /* --- CARTES DÉPOSÉES (Tiles) --- */
 .dropped-tile {
-  position: static;
+  position: relative;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 11px;
@@ -1105,4 +1105,15 @@ footer {
   .print-col-apprendre {
     background-color: var(--coul-fond-tableau-apprendre) !important;
   }
+}
+
+/* BADGE PIX */
+.carte-pix-badge {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  height: 32px;
+  width: auto;
+  pointer-events: none;
+  opacity: 0.85;
 }
