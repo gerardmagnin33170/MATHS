@@ -1,31 +1,31 @@
 id,categorie,texte,niveauMin,pix
 0,"savoir","Comprendre ce qu'est un algorithme",0,0
-1,"savoir","Comprendre ce qu'est un token",0,1
-2,"savoir","Comprendre les biais des réponses générées par les IA",0,1
+1,"savoir","Comprendre ce qu'est un token",0,0
+2,"savoir","Comprendre les biais des réponses générées par les IA",0,0
 3,"savoir","Comprendre l'approche statistique des réponses",0,0
-4,"savoir","Comprendre l'entrainement des IA génératives",0,1
+4,"savoir","Comprendre l'entrainement des IA génératives",0,0
 5,"savoir","Distinguer IA adaptative et IA générative",0,0
-6,"savoir","Prendre conscience de la diversité des réponses selon l'IA utilisée et le prompt",0,1
-7,"savoir","Connaitre des applications des IA et leurs évolutions technologiques",0,1
-8,"enjeux","Estimer le coût environnemental et social des usages des IA",0,1
-9,"enjeux","Identifier des métiers impactés par l'essor de l'IA",0,1
+6,"savoir","Prendre conscience de la diversité des réponses selon l'IA utilisée et le prompt",0,0
+7,"savoir","Connaitre des applications des IA et leurs évolutions technologiques",0,0
+8,"enjeux","Estimer le coût environnemental et social des usages des IA",0,0
+9,"enjeux","Identifier des métiers impactés par l'essor de l'IA",0,0
 10,"enjeux","Savoir faire des choix éclairés dans l'utilisation ou non des IA",0,0
-11,"enjeux","Prendre conscience de l'importance de la vérification et de l'appropriation des contenus générés pas les IA",0,1
+11,"enjeux","Prendre conscience de l'importance de la vérification et de l'appropriation des contenus générés pas les IA",0,0
 12,"enjeux","Identifier les usages qui favorisent l'autonomie et la liberté de penser",0,0
 13,"enjeux","Conserver une maîtrise des décisions par l'humain",0,0
 14,"enjeux","Sensibiliser à des usages des IA qui préservent santé mentale et lien social",0,0
 15,"enjeux","Comprendre le lien entre plagiat, IA et fraude",0,0
-16,"enjeux","Comprendre le financement des IA et l'intérêt des IA souveraines",0,1
+16,"enjeux","Comprendre le financement des IA et l'intérêt des IA souveraines",0,0
 17,"enjeux","Sensibiliser à des usages démocratiques et égalitaires des IA",0,0
 18,"enjeux","Interroger ce que signifie apprendre au regard du rapport à la connaissance qu'impliquent les IA",0,0
 19,"apprendre","Confronter un texte original à un texte rendu accessible par une IA, pour prendre conscience de la richesse et de la complexité de la langue.",0,0
 20,"apprendre","Utiliser les IA pour aider à mémoriser",0,0
-21,"apprendre","Confronter production personnelle à IA pour exercer son esprit critique",0,1
+21,"apprendre","Confronter production personnelle à IA pour exercer son esprit critique",0,0
 22,"apprendre","S'entraîner à l'oral en interaction, en autonomie, en complément d'autres échanges",0,0
 23,"apprendre","Identifier des pistes d'amélioration de sa production écrite",0,0
 24,"apprendre","Soumettre son travail aux IA afin d'approfondir sa réflexion",0,0
-25,"apprendre","Identifier des usages créatifs des IA qui soient respectueux des personnes et du droit",0,1
+25,"apprendre","Identifier des usages créatifs des IA qui soient respectueux des personnes et du droit",0,0
 26,"apprendre","Connaître les stratégies d'apprentissage efficaces pour faire des choix d'usage (ou non) d'une IA",0,0
 27,"apprendre","Utiliser les IA pour renforcer la compréhension d'une consigne ou d'une procédure",0,0
 28,"apprendre","S'entraîner à automatiser des apprentissages à l'aide d'IA adaptatives",0,0
-29,"apprendre","Identifier ce qui peut être pris en charge par les IA dans une consigne",0,1
+29,"apprendre","Identifier ce qui peut être pris en charge par les IA dans une consigne",0,0
