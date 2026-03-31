@@ -977,7 +977,7 @@ main {
 
 .synthese-label {
   /* background-color: var(--coul-fond-tableau-niveau); */
-  color: red;
+  /* color: red; */
   font-weight: bold;
   text-align: center !important;
   width: 160px;
