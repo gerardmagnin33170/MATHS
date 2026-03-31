@@ -974,12 +974,17 @@ main {
   background-color: #f8f8f8;
   text-align: center;
 }
-.synthese-col-niveau {
+
+.synthese-label {
   background-color: var(--coul-fond-tableau-niveau);
   color: #fff;
   font-weight: bold;
   text-align: center !important;
-  width: 120px;
+  width: 160px;
+  vertical-align: middle !important;
+}
+th.synthese-label {
+  color: var(--coul-texte);
 }
 .synthese-cell-savoir {
   background-color: var(--coul-fond-tableau-savoir);

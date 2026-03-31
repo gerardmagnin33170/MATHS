@@ -401,6 +401,8 @@ function normalizeStructure(value) {
     .replace(/\p{Diacritic}/gu, "");
 }
 
+// gestion des filtrages d'affichage
+//
 function isLevelVisible(level) {
   const normalized = normalizeStructure(level?.structure);
   if (!normalized) return true;
@@ -438,6 +440,7 @@ function setupLevelFilters() {
   collegeCheckbox.addEventListener("change", onChange);
   lyceeCheckbox.addEventListener("change", onChange);
 }
+/////////////////////////////////////////////////////////////////////////
 
 function createStairs(category) {
   const container = stairs[category].container;
@@ -519,7 +522,7 @@ function createStairs(category) {
 
     const newStepObj = {
       element: step,
-      index: i,
+      index: levelIndex,
       left: left,
       top: top,
       width: stepWidth,
@@ -551,13 +554,84 @@ function createStairs(category) {
   updateStairAlerts(category);
 }
 
+// function generateSummaryTable() {
+//   const container = document.getElementById("tab-synthese");
+//
+//   const tableData = {};
+//   LEVELS.forEach((level) => {
+//     if ( isLevelVisible(level) ) {
+//       const levelKey = level?.classe || level?.niveau || level;
+//       tableData[levelKey] = { savoir: [], enjeux: [], apprendre: [] };
+//     }
+//   });
+//
+//   Object.values(droppedTiles).forEach((tile) => {
+//     const category = tile.dataset.category;
+//     const stepIndex = parseInt(tile.dataset.stepIndex);
+//     const level = LEVELS[stepIndex];
+//     const levelKey = level?.classe || level?.niveau || level;
+//
+//     if (levelKey && tableData[levelKey]) {
+//       tableData[levelKey][category].push({
+//         text: tile.dataset.text,
+//         category: category,
+//         pix: tile.dataset.pix === "1",
+//       });
+//     }
+//   });
+//
+//   let htmlTable = `
+//         <table id="tableau-synthese">
+//             <thead>
+//                 <tr>
+//                     <th class="synthese-label">Niveau</th>
+//                     <th class="synthese-cell-savoir">${CATEGORIES.find((c) => c.id === "savoir").title}</th>
+//                     <th class="synthese-cell-enjeux">${CATEGORIES.find((c) => c.id === "enjeux").title}</th>
+//                     <th class="synthese-cell-apprendre">${CATEGORIES.find((c) => c.id === "apprendre").title}</th>
+//                 </tr>
+//             </thead>
+//             <tbody>`;
+//
+//   LEVELS.forEach((level) => {
+//     if ( isLevelVisible(level) ) {
+//       const levelKey = level?.classe || level?.niveau || level;
+//       htmlTable += `<tr>
+//               <td class="synthese-label">${levelKey}</td>`;
+//
+//       CATEGORIES.forEach((cat) => {
+//         const cards = tableData[levelKey][cat.id];
+//         htmlTable += `<td class="synthese-cell-${cat.id}">
+//                   <div class="synthese-card-wrapper">`;
+//
+//         cards.forEach((card) => {
+//           const pixBadge = card.pix
+//             ? `<img src="./assets/pix-badge.svg" class="carte-pix-badge synthese-pix-badge" alt="Pix" title="Compétence Pix">`
+//             : "";
+//           htmlTable += `<div class="synthese-card ${card.category}">${card.text}${pixBadge}</div>`;
+//         });
+//
+//         htmlTable += `</div></td>`;
+//       });
+//
+//       htmlTable += `</tr>`;
+//     }
+//   });
+//
+//   htmlTable += `</tbody></table>`;
+//
+//   container.innerHTML = htmlTable;
+// }
+
 function generateSummaryTable() {
   const container = document.getElementById("tab-synthese");
 
+  // tableData inchangé - on garde la même structure de données
   const tableData = {};
   LEVELS.forEach((level) => {
-    const levelKey = level?.classe || level?.niveau || level;
-    tableData[levelKey] = { savoir: [], enjeux: [], apprendre: [] };
+    if (isLevelVisible(level)) {
+      const levelKey = level?.classe || level?.niveau || level;
+      tableData[levelKey] = { savoir: [], enjeux: [], apprendre: [] };
+    }
   });
 
   Object.values(droppedTiles).forEach((tile) => {
@@ -566,7 +640,7 @@ function generateSummaryTable() {
     const level = LEVELS[stepIndex];
     const levelKey = level?.classe || level?.niveau || level;
 
-    if (levelKey) {
+    if (levelKey && tableData[levelKey]) {
       tableData[levelKey][category].push({
         text: tile.dataset.text,
         category: category,
@@ -575,27 +649,32 @@ function generateSummaryTable() {
     }
   });
 
+  // thead : 1 colonne "Catégorie" + 1 colonne par niveau visible
+  const visibleLevelKeys = LEVELS
+    .filter((level) => isLevelVisible(level))
+    .map((level) => level?.classe || level?.niveau || level);
+
   let htmlTable = `
-        <table id="tableau-synthese">
-            <thead>
-                <tr>
-                    <th class="synthese-col-niveau">Niveau</th>
-                    <th class="synthese-cell-savoir">${CATEGORIES.find((c) => c.id === "savoir").title}</th>
-                    <th class="synthese-cell-enjeux">${CATEGORIES.find((c) => c.id === "enjeux").title}</th>
-                    <th class="synthese-cell-apprendre">${CATEGORIES.find((c) => c.id === "apprendre").title}</th>
-                </tr>
-            </thead>
-            <tbody>`;
+    <table id="tableau-synthese">
+      <thead>
+        <tr>
+          <th class="synthese-label">Catégorie</th>`;
 
-  LEVELS.forEach((level) => {
-    const levelKey = level?.classe || level?.niveau || level;
+  visibleLevelKeys.forEach((levelKey) => {
+    htmlTable += `<th class="synthese-label">${levelKey}</th>`;
+  });
+
+  htmlTable += `</tr></thead><tbody>`;
+
+  // tbody : 1 ligne par catégorie
+  CATEGORIES.forEach((cat) => {
     htmlTable += `<tr>
-            <td class="synthese-col-niveau">${levelKey}</td>`;
+      <td class="synthese-label">${cat.title}</td>`;
 
-    CATEGORIES.forEach((cat) => {
+    visibleLevelKeys.forEach((levelKey) => {
       const cards = tableData[levelKey][cat.id];
       htmlTable += `<td class="synthese-cell-${cat.id}">
-                <div class="synthese-card-wrapper">`;
+        <div class="synthese-card-wrapper">`;
 
       cards.forEach((card) => {
         const pixBadge = card.pix
@@ -702,7 +781,10 @@ function dropOnBank(ev) {
 // GESTION DES TUILES
 // =============================================================================
 function createDroppedTile(originalTile, category, stepIndex) {
-  const step = stairs[category].steps[stepIndex];
+  const step = stairs[category].steps.find((s) => s.index === stepIndex);
+
+  if (!step) return;
+
   const originalNumId = originalTile.id.split("-")[1];
   const tileId = `tile-${originalNumId}`;
 
@@ -741,8 +823,10 @@ function createDroppedTile(originalTile, category, stepIndex) {
 
 function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
   const tileId = tile.id;
-  const oldStep = stairs[category].steps[oldStepIndex];
-  const newStep = stairs[category].steps[newStepIndex];
+  const oldStep = stairs[category].steps.find((s) => s.index === oldStepIndex);
+  const newStep = stairs[category].steps.find((s) => s.index === newStepIndex);
+
+  if (!oldStep || !newStep) return;
 
   oldStep.tiles = oldStep.tiles.filter((t) => t.id !== tileId);
   newStep.element.appendChild(tile);
@@ -756,10 +840,10 @@ function moveDroppedTile(tile, category, oldStepIndex, newStepIndex) {
 }
 
 function removeTile(tileId, category, stepIndex) {
-  const step = stairs[category].steps[stepIndex];
+  const step = stairs[category].steps.find((s) => s.index === stepIndex);
   const tile = droppedTiles[tileId];
 
-  if (tile) {
+  if (tile && step) {
     delete droppedTiles[tileId];
     step.tiles = step.tiles.filter((t) => t.id !== tileId);
   }
