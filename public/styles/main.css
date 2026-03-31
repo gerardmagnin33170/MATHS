@@ -126,7 +126,7 @@ h1 {
   width: 180px;
   top: 300%;
   left: 0%;
-  margin-left: 10px;
+  margin-left: auto;
   margin-top: -65px;
 }
 
@@ -160,10 +160,10 @@ h1 {
 }
 
 .tooltip-lock-edit-mode {
-  width: 200px;
+  width: 240px;
   top: 300%;
-  left: -42.5%;
-  margin-left: 10px;
+  left: -100%;
+  margin-left: auto;
   margin-top: -65px;
 }
 
@@ -956,6 +956,10 @@ main {
 }
 
 /* --- Styles du Tableau de Synthèse (Écran) --- */
+#tab-synthese {
+  overflow-y: auto;
+}
+
 #tableau-synthese {
   width: 100%;
   border-collapse: collapse;
@@ -1034,6 +1038,14 @@ footer {
   flex-shrink: 0;
 }
 
+footer a {
+  color: #90caf9; /* bleu clair lisible sur fond sombre */
+}
+
+footer a:hover {
+  color: #ffffff;
+
+}
 /* --- STYLE D'IMPRESSION (A3 PAYSAGE - TABLEAU) --- */
 @media print {
   @page {
