@@ -669,7 +669,7 @@ function generateSummaryTable() {
   // tbody : 1 ligne par catégorie
   CATEGORIES.forEach((cat) => {
     htmlTable += `<tr>
-      <td class="synthese-label">${cat.title}</td>`;
+      <td class="synthese-label synthese-cell-${cat.id}">${cat.title}</td>`;
 
     visibleLevelKeys.forEach((levelKey) => {
       const cards = tableData[levelKey][cat.id];

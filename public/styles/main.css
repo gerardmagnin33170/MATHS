@@ -976,8 +976,8 @@ main {
 }
 
 .synthese-label {
-  background-color: var(--coul-fond-tableau-niveau);
-  color: #fff;
+  /* background-color: var(--coul-fond-tableau-niveau); */
+  color: red;
   font-weight: bold;
   text-align: center !important;
   width: 160px;
@@ -986,6 +986,10 @@ main {
 th.synthese-label {
   color: var(--coul-texte);
 }
+td.synthese-label {
+  color: var(--coul-texte);
+}
+
 .synthese-cell-savoir {
   background-color: var(--coul-fond-tableau-savoir);
 }
