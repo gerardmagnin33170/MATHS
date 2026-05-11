@@ -1,4 +1,18 @@
 {
+  "name": "@gerardmagnin33170/maths",
+  "version": "1.0.0",
+  "description": "Mathematics project for learning and development",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gerardmagnin33170/MATHS.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "vite": "^7.2.7",
