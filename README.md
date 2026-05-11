@@ -1,10 +1,10 @@
-# Progressivité IA
+# Progressivité MATHEMATIQUES
 
 Application web permettant d'organiser des cartes-compétences en intelligence artificielle sur un escalier de progression, de la 6e à la Terminale.
 
 ## Objectif
 
-- Visualiser la progression des compétences sur 7 niveaux scolaires.
+- Visualiser la progression des compétences sur plusieurs niveaux scolaires.
 - Travailler par 3 catégories : Savoir, Enjeux, Apprendre.
 - Produire une vue de synthèse exploitable à l'écran et à l'impression.
 
