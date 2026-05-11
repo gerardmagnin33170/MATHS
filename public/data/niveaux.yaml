@@ -1,14 +1,13 @@
+ - classe: CP
+  structure: Collège
+- classe: CE1
+  structure: Collège  
+- classe: CE2
+  structure: Collège  
+- classe: CM1
+  structure: Lycée
+- classe: CM2
+  structure: Lycée
 - classe: Sixième
-  structure: Collège
-- classe: Cinquième
-  structure: Collège
-- classe: Quatrième
-  structure: Collège
-- classe: Troisième
-  structure: Collège
-- classe: Seconde
   structure: Lycée
-- classe: Première
-  structure: Lycée
-- classe: Terminale
-  structure: Lycée
+
