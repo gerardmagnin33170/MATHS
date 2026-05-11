@@ -1149,21 +1149,24 @@ function makeCardEditable(cardId) {
   minLevelContainer.appendChild(minLevelSelect);
 
   // conteneur pour le champ pix
-  const pixContainer = document.createElement("div");
-  pixContainer.className = "card-edit-pix";
+    //const pixContainer = document.createElement("div");
+    //pixContainer.className = "card-edit-pix";
 
-  const pixCheckbox = document.createElement("input");
-  pixCheckbox.type = "checkbox";
-  pixCheckbox.id = `pix-${cardId}`;
-  pixCheckbox.className = "card-edit-pix-checkbox";
-  pixCheckbox.checked = cardData.pix === true;
+    //const pixCheckbox = document.createElement("input");
+    //pixCheckbox.type = "checkbox";
+    //pixCheckbox.id = `pix-${cardId}`;
+    //pixCheckbox.className = "card-edit-pix-checkbox";
+    //pixCheckbox.checked = cardData.pix === true;
 
-  const pixLabel = document.createElement("label");
-  pixLabel.htmlFor = `pix-${cardId}`;
-  pixLabel.textContent = " Badge Pix";
+    //const pixLabel = document.createElement("label");
+   // pixLabel.htmlFor = `pix-${cardId}`;
+    //pixLabel.textContent = " Badge Pix";
 
-  pixContainer.appendChild(pixCheckbox);
-  pixContainer.appendChild(pixLabel);
+    //pixContainer.appendChild(pixCheckbox);
+    //pixContainer.appendChild(pixLabel);
+  
+  
+  
 
   const saveBtn = document.createElement("button");
   saveBtn.textContent = "✓";
