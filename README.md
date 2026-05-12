@@ -1,6 +1,6 @@
 # Progressivité MATHEMATIQUES
 
-Application web permettant d'organiser des cartes-compétences en intelligence artificielle sur un escalier de progression, de la 6e à la Terminale.
+Application web permettant d'organiser des cartes-compétences en mathématiques sur un escalier de progression, du CP à la 6e .
 
 ## Objectif
 
@@ -56,7 +56,7 @@ npm run preview
 - Glisser-déposer vers l'escalier correspondant
 - Mode édition des cartes (boutons « Mode édition » et « Verrouiller »)
 - Création, modification et suppression de cartes
-- Import et export de cartes au format CSV
+- Import et export des cartes au format CSV
 - Vue de synthèse par niveau et catégorie
 
 ## Données
