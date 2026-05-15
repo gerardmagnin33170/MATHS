@@ -1,0 +1,279 @@
+ <!DOCTYPE html>
+<html lang="fr">
+<head>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8">
+    <title>Paramètres</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+
+    <link rel="stylesheet" crossorigin href="index-BHmtg3_j.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: var(--couleur-fond);
+            color: var(--couleur-texte);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .category {
+		width:50%;
+            margin-bottom: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: inline-block;
+            width: auto;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 5px;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 35px;
+            vertical-align: middle;
+            border: none;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: grey;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        textarea {
+            width: 30%;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+		
+		
+ 
+label
+{
+ 
+   margin-left: 2 px;
+}
+    </style>
+</head>
+
+<body>
+
+<h1>Paramètres</h1>
+<br>&nbsp<br>&nbsp  
+
+
+<div id="categories-container"></div>
+
+
+
+ <span> </span><br>
+
+<!--<table><th><td></td><td></td></th></table>-->
+
+<label for="yamlContent"><span>Contenu actuel du fichier <a target=_blanck href="https://academ.magnin.info/data/categories.yaml">categories.yaml</a></span></label>
+<textarea id="yamlContent" rows="10" readonly  ></textarea><!---->
+
+ 
+
+
+<label for="yamlContent">Nouveau</label>
+<textarea id="newyaml" rows="10" ></textarea>
+
+
+
+<p id="error" style="color:red;"></p>
+<div class="buttons">
+    <button id="save-btn">Enregistrer</button>
+    <button id="quit-btn">Quitter</button>
+</div>
+<script>
+
+let categories = [];
+
+// ============================================
+// Chargement du fichier YAML
+// ============================================
+
+fetch('/data/categories.yaml')
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Impossible de charger le fichier YAML");
+        }
+
+        return response.text();
+    })
+
+    .then(yamlText => {
+
+        // Affiche le YAML brut
+        document.getElementById('yamlContent').value = yamlText;
+
+        // Conversion YAML -> JS
+        categories = jsyaml.load(yamlText);
+
+        // Affichage des champs
+        renderCategories();
+		updateYamlTextarea();
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        document.getElementById('error').textContent =
+            "Erreur de chargement du fichier categories.yaml";
+    });
+
+
+// ============================================
+// Affichage des catégories
+// ============================================
+
+function renderCategories() {
+
+    const container = document.getElementById('categories-container');
+
+    container.innerHTML = '';
+
+    categories.forEach(cat => {
+
+        const div = document.createElement('div');
+
+        div.className = 'category';
+
+        div.innerHTML = `
+            <label for="${cat.id}">Onglet ${cat.id}</label>
+
+            <input
+                type="text"
+                id="${cat.id}"
+                value="${cat.titre}"
+				  oninput="updateYamlTextarea()"
+            >
+
+            <input
+                type="color"
+                id="color-${cat.id}"
+                value="${cat.couleur}"
+				  oninput="updateYamlTextarea()"
+            >
+
+      
+ 
+				   
+           
+			
+			
+			
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+
+// ============================================
+// Bouton enregistrer
+// ============================================
+
+// Bouton Enregistrer
+
+document.getElementById('save-btn')
+.addEventListener('click', () => {
+
+    // Contenu du textarea
+    const yamlContent =
+        document.getElementById('yamlContent').value;
+
+    // Envoi au serveur
+    fetch('save_yaml.php', {
+
+        method: 'POST',
+
+        headers: {
+            'Content-Type': 'text/plain'
+        },
+
+        body: yamlContent
+    })
+
+    .then(response => response.text())
+
+    .then(result => {
+
+        alert(result);
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Erreur lors de l'enregistrement.");
+    });
+
+});
+// ============================================
+// Bouton quitter
+// ============================================
+
+document.getElementById('quit-btn')
+    .addEventListener('click', () => {
+
+    if (confirm("Voulez-vous vraiment quitter ?")) {
+        window.close();
+    }
+});
+
+</script>
+<script>
+function updateYamlTextarea() {
+
+    // Relit tous les champs
+    categories.forEach(cat => {
+
+        // titre
+        cat.titre =
+            document.getElementById(cat.id).value;
+
+        // couleur
+        cat.couleur =
+            document.getElementById(`color-${cat.id}`).value;
+    });
+
+    // Conversion en YAML
+    const newYaml = jsyaml.dump(categories);
+
+    // Mise à jour du textarea
+    document.getElementById('newyaml').value = newYaml;
+}
+</script>
+</body>
+ 
